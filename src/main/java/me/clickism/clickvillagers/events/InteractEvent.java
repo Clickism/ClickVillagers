@@ -8,7 +8,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -27,13 +26,11 @@ public class InteractEvent implements Listener {
                     if (villager.getPotionEffect(PotionEffectType.SLOW) == null) {
                         //Make anchored
                         villager.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, true, false));
-//                        villager.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 200, true, false));
                         e.getPlayer().sendMessage(ChatColor.GOLD + ">> " + ChatColor.GREEN + "You anchored the villager.");
                         e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_BEEHIVE_SHEAR, 1f, 1f);
                     } else {
                         //Make moving
                         villager.removePotionEffect(PotionEffectType.SLOW);
-//                        villager.removePotionEffect(PotionEffectType.JUMP);
                         e.getPlayer().sendMessage(ChatColor.GOLD + ">> " + ChatColor.RED + "You removed the villager's anchor.");
                         Utils.playFailSound(e.getPlayer());
                     }
