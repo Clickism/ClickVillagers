@@ -24,12 +24,12 @@ public class InteractEvent implements Listener {
                     e.setCancelled(true);
                     Villager villager = (Villager) e.getRightClicked();
                     if (villager.getPotionEffect(PotionEffectType.SLOW) == null) {
-                        //Make anchored
+                        //Make villager anchored
                         villager.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, true, false));
                         e.getPlayer().sendMessage(ChatColor.GOLD + ">> " + ChatColor.GREEN + "You anchored the villager.");
                         e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_BEEHIVE_SHEAR, 1f, 1f);
                     } else {
-                        //Make moving
+                        //Make villager moving
                         villager.removePotionEffect(PotionEffectType.SLOW);
                         e.getPlayer().sendMessage(ChatColor.GOLD + ">> " + ChatColor.RED + "You removed the villager's anchor.");
                         Utils.playFailSound(e.getPlayer());

@@ -110,7 +110,6 @@ public final class ClickVillagers extends JavaPlugin {
         Bukkit.addRecipe(hopperRecipe);
 
         checkHoppers();
-
         Bukkit.getLogger().info("ClickVillagers activated.");
     }
 
