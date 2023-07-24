@@ -122,6 +122,8 @@ public final class ClickVillagers extends JavaPlugin {
         return data;
     }
 
+    private static HashMap<UUID, Villager> tempVillagerMap = new HashMap<>();
+
     public static ItemStack getVillagerHead(Villager villager) {
         ItemStack item = getVillagerHeadItem(villager);
         ItemMeta meta = item.getItemMeta();
@@ -142,6 +144,7 @@ public final class ClickVillagers extends JavaPlugin {
         villager.setGravity(false);
         villager.setAI(false);
         villager.teleport(new Location(villager.getWorld(), 1, -70, 1));
+        tempVillagerMap.put(villager.getUniqueId(), villager);
         return item;
     }
 
@@ -153,6 +156,10 @@ public final class ClickVillagers extends JavaPlugin {
             UUID uuid = UUID.fromString(dataContainer.get(new NamespacedKey(plugin, "villager_uuid"), PersistentDataType.STRING));
             if (Bukkit.getEntity(uuid) != null) {
                 return (Villager) Bukkit.getEntity(uuid);
+            } else if (tempVillagerMap.containsKey(uuid)) {
+                Villager villager = tempVillagerMap.get(uuid);
+                tempVillagerMap.remove(uuid);
+                return villager;
             }
             return (Villager) Bukkit.getWorlds().get(0).spawnEntity(new Location(Bukkit.getWorlds().get(0), 1, -70, 1), EntityType.VILLAGER);
         }
