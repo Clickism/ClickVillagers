@@ -6,11 +6,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Hopper;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class BlockEvent implements Listener {
 
@@ -52,6 +54,11 @@ public class BlockEvent implements Listener {
             if (ClickVillagers.isVillagerHopper(e.getBlock().getLocation())) {
                 //Remove Villager Hopper
                 e.setCancelled(true);
+                for (ItemStack content : ((Hopper) e.getBlock().getState()).getInventory().getContents()) {
+                    if (content != null) {
+                        e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), content);
+                    }
+                }
                 e.getBlock().setType(Material.AIR);
                 e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), ClickVillagers.getVillagerHopper());
                 ClickVillagers.removeVillagerHopper(e.getBlock().getLocation());
