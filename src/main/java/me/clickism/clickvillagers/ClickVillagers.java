@@ -30,6 +30,7 @@ import java.util.*;
 
 public final class ClickVillagers extends JavaPlugin {
 
+    //test
     private static DataManager data;
     private static Plugin plugin;
 
