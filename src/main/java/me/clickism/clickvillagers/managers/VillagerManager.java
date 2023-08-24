@@ -32,7 +32,7 @@ public class VillagerManager {
         entity.setInvulnerable(true);
         entity.setGravity(false);
         entity.setAI(false);
-        entity.teleport(new Location(Bukkit.getWorlds().get(0), 55000, -70, -55000));
+        entity.teleport(new Location(Bukkit.getWorlds().get(0), 0, -70, 0));
         return item;
     }
 

@@ -52,7 +52,7 @@ public final class ClickVillagers extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InteractEvent(), this);
         Bukkit.getPluginManager().registerEvents(new BlockEvent(), this);
 
-        new Location(Bukkit.getWorlds().get(0), 55000, -70, -55000).getChunk().setForceLoaded(true);
+        new Location(Bukkit.getWorlds().get(0), 0, -70, 0).getChunk().setForceLoaded(true);
 
         HopperManager.checkHoppers();
 
