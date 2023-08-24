@@ -7,6 +7,7 @@ import me.clickism.clickvillagers.managers.VillagerManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
+import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -57,7 +58,7 @@ public class InteractEvent implements Listener {
                     Utils.playConfirmSound(e.getPlayer());
                 }
             }
-        } else if (e.getRightClicked() instanceof Minecart || e.getRightClicked() instanceof Boat) {
+        } else if (e.getRightClicked() instanceof RideableMinecart || e.getRightClicked() instanceof Boat) {
             // Put villagers into Minecarts/Boats
             if (e.getPlayer().getInventory().getItemInMainHand().getType() == Material.PLAYER_HEAD) {
                 LivingEntity villager = VillagerManager.getVillagerFromHead(e.getPlayer().getInventory().getItemInMainHand());
