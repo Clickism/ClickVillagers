@@ -1,14 +1,16 @@
 package me.clickism.clickvillagers.events;
 
-import me.clickism.clickvillagers.ClickVillagers;
 import me.clickism.clickvillagers.Utils;
-import org.bukkit.ChatColor;
+import me.clickism.clickvillagers.config.Messages;
+import me.clickism.clickvillagers.config.Settings;
+import me.clickism.clickvillagers.managers.VillagerManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -17,28 +19,33 @@ public class InteractEvent implements Listener {
 
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
-        if (e.getRightClicked() instanceof Villager) {
+        if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
+        if (e.getRightClicked() instanceof Villager || e.getRightClicked() instanceof ZombieVillager) {
             if (e.getPlayer().isSneaking()) {
                 if (e.getPlayer().getInventory().getItemInMainHand().getType() == Material.SHEARS) {
                     //Anchored villager
                     e.setCancelled(true);
-                    Villager villager = (Villager) e.getRightClicked();
-                    if (villager.getPotionEffect(PotionEffectType.SLOW) == null) {
-                        //Make villager anchored
-                        villager.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, true, false));
-                        e.getPlayer().sendMessage(ChatColor.GOLD + ">> " + ChatColor.GREEN + "You anchored the villager.");
+                    if (!Settings.get("enable-anchor")) {
+                        e.getPlayer().sendMessage(Messages.get("anchor-disabled"));
+                        return;
+                    }
+                    LivingEntity entity = (LivingEntity) e.getRightClicked();
+                    if (entity.getPotionEffect(PotionEffectType.SLOW) == null) {
+                        //Anchor villager
+                        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, true, false));
+                        e.getPlayer().sendMessage(Messages.get("add-anchor"));
                         e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_BEEHIVE_SHEAR, 1f, 1f);
                     } else {
-                        //Make villager moving
-                        villager.removePotionEffect(PotionEffectType.SLOW);
-                        e.getPlayer().sendMessage(ChatColor.GOLD + ">> " + ChatColor.RED + "You removed the villager's anchor.");
+                        //Remove anchor
+                        entity.removePotionEffect(PotionEffectType.SLOW);
+                        e.getPlayer().sendMessage(Messages.get("remove-anchor"));
                         Utils.playFailSound(e.getPlayer());
                     }
 
                 } else {
                     //Pick villager up
                     e.setCancelled(true);
-                    ItemStack head = ClickVillagers.getVillagerHead((Villager) e.getRightClicked());
+                    ItemStack head = VillagerManager.turnVillagerIntoHead((LivingEntity) e.getRightClicked());
                     if (e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
                         e.getPlayer().getInventory().setItem(e.getPlayer().getInventory().getHeldItemSlot(), head);
                     } else {
@@ -46,8 +53,19 @@ public class InteractEvent implements Listener {
                             e.getPlayer().getWorld().dropItem(e.getPlayer().getLocation(), item);
                         });
                     }
-                    e.getPlayer().sendMessage(ChatColor.GOLD + ">> " + ChatColor.GREEN + "You picked a villager up.");
+                    e.getPlayer().sendMessage(Messages.get("picked-villager"));
                     Utils.playConfirmSound(e.getPlayer());
+                }
+            }
+        } else if (e.getRightClicked() instanceof Minecart || e.getRightClicked() instanceof Boat) {
+            // Put villagers into Minecarts/Boats
+            if (e.getPlayer().getInventory().getItemInMainHand().getType() == Material.PLAYER_HEAD) {
+                LivingEntity villager = VillagerManager.getVillagerFromHead(e.getPlayer().getInventory().getItemInMainHand());
+                if (villager != null) {
+                    villager.teleport(e.getRightClicked().getLocation());
+                    e.setCancelled(true);
+                    e.getRightClicked().addPassenger(villager);
+                    e.getPlayer().getInventory().removeItem(e.getPlayer().getInventory().getItemInMainHand());
                 }
             }
         }

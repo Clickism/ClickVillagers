@@ -17,6 +17,7 @@ public class Utils {
         array[0] = Character.toUpperCase(array[0]);
         return String.copyValueOf(array);
     }
+
     public static void playConfirmSound(Player player) {
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1f,1f);
         Bukkit.getScheduler().runTaskLater(plugin, task -> {

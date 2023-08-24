@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ClickVillagers:jar">
+    <output-path>$PROJECT_DIR$/../../../Server/plugins</output-path>
+    <root id="archive" name="ClickVillagers.jar">
+      <element id="module-output" name="ClickVillagers" />
+    </root>
+  </artifact>
+</component>

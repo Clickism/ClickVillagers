@@ -1,0 +1,15 @@
+#########################################################
+# ClickVillagers
+# NOTE: RELOAD/RESTART SERVER FOR CHANGES TO TAKE EFFECT
+#########################################################
+
+# Currently supported languages: en-US, de-DE, tr-TR, nl-NL, uk-UA, ru-RU
+language: en-US
+
+# Already placed villager hoppers will NOT work if this is disabled.
+enable-villager-hoppers: true
+enable-anchor: true
+
+# How often villager hoppers will be checked in TICKS.
+# You may INCREASE this value to save performance if your server has a lot of villager hoppers.
+hopper-check-interval: 20

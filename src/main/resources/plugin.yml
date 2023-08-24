@@ -1,6 +1,6 @@
 name: ClickVillagers
-version: '${project.version}'
+version: '0.2'
 main: me.clickism.clickvillagers.ClickVillagers
 api-version: '1.20'
 authors: [Clickism]
-description: A villagers plugin.
+description: A simple plugin that makes handling villagers a lot easier

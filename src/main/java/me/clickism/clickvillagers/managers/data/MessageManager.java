@@ -1,5 +1,6 @@
-package me.clickism.clickvillagers;
+package me.clickism.clickvillagers.managers.data;
 
+import me.clickism.clickvillagers.ClickVillagers;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -9,24 +10,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 
-public class DataManager {
+public class MessageManager {
 
     private final ClickVillagers plugin;
     private FileConfiguration dataConfig = null;
-    private File configFile = null;
+    private File messageFile = null;
 
-    public DataManager(ClickVillagers shop) {
-        this.plugin = shop;
+    public MessageManager(ClickVillagers clickVillagers) {
+        this.plugin = clickVillagers;
         saveDefaultConfig();
     }
 
     public void reloadConfig() {
-        if (configFile == null)
-            configFile = new File(plugin.getDataFolder(), "data.yml");
+        if (messageFile == null)
+            messageFile = new File(plugin.getDataFolder(), "messages.yml");
 
-        this.dataConfig = YamlConfiguration.loadConfiguration(configFile);
+        this.dataConfig = YamlConfiguration.loadConfiguration(messageFile);
 
-        InputStream defaultStream = plugin.getResource("data.yml");
+        InputStream defaultStream = plugin.getResource("messages.yml");
 
         if (defaultStream != null) {
             YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultStream));
@@ -42,22 +43,22 @@ public class DataManager {
     }
 
     public void saveConfig() {
-        if (dataConfig == null || configFile == null)
+        if (dataConfig == null || messageFile == null)
             return;
 
         try {
-            getConfig().save(configFile);
+            getConfig().save(messageFile);
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Couldn't save config to " + configFile, e);
+            plugin.getLogger().log(Level.SEVERE, "Couldn't save config to " + messageFile, e);
         }
     }
 
     public void saveDefaultConfig() {
-        if (configFile == null)
-            configFile = new File(plugin.getDataFolder(), "data.yml");
+        if (messageFile == null)
+            messageFile = new File(plugin.getDataFolder(), "messages.yml");
 
-        if (!configFile.exists()) {
-            plugin.saveResource("data.yml", false);
+        if (!messageFile.exists()) {
+            plugin.saveResource("messages.yml", false);
         }
     }
 }
