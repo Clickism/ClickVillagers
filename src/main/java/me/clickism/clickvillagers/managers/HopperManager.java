@@ -67,7 +67,9 @@ public class HopperManager {
                 task.cancel();
                 return;
             }
+            List<Location> toBeRemoved = new ArrayList<>();
             getHoppersList().forEach(hopper -> {
+                if (hopper.getBlock().getType() != Material.HOPPER) toBeRemoved.add(hopper);
                 hopper.getWorld().getNearbyEntities(hopper.clone().add(.5, 1, .5), 1, 1, 1).forEach(entity -> {
                     if (entity instanceof Villager || entity instanceof ZombieVillager) {
                         if (((Ageable) entity).isAdult() || entity instanceof ZombieVillager) {
@@ -78,6 +80,7 @@ public class HopperManager {
                     }
                 });
             });
+            toBeRemoved.forEach(HopperManager::removeVillagerHopper);
         }, Settings.getInt("hopper-check-interval"), Settings.getInt("hopper-check-interval"));
     }
 
@@ -113,7 +116,9 @@ public class HopperManager {
 
         data.getConfig().set("hoppers_list", hoppersList);
         if (data.getConfig().get("villager_hoppers." + location + ".display") != null) {
-            Bukkit.getEntity(UUID.fromString((String) data.getConfig().get("villager_hoppers." + location + ".display"))).remove();
+            if (Bukkit.getEntity(UUID.fromString((String) data.getConfig().get("villager_hoppers." + location + ".display"))) != null) {
+                Bukkit.getEntity(UUID.fromString((String) data.getConfig().get("villager_hoppers." + location + ".display"))).remove();
+            }
             data.getConfig().set("villager_hoppers." + location + ".display", null);
             data.saveConfig();
         }
