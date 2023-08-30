@@ -28,6 +28,12 @@ public class InteractEvent implements Listener {
                     e.setCancelled(true);
                     if (!Settings.get("enable-anchor")) {
                         e.getPlayer().sendMessage(Messages.get("anchor-disabled"));
+                        Utils.playFailSound(e.getPlayer());
+                        return;
+                    }
+                    if (!e.getPlayer().hasPermission("clickvillagers.anchor")) {
+                        e.getPlayer().sendMessage(Messages.get("no-permission"));
+                        Utils.playFailSound(e.getPlayer());
                         return;
                     }
                     LivingEntity entity = (LivingEntity) e.getRightClicked();
@@ -46,6 +52,11 @@ public class InteractEvent implements Listener {
                 } else {
                     //Pick villager up
                     e.setCancelled(true);
+                    if (!e.getPlayer().hasPermission("clickvillagers.pickup")) {
+                        e.getPlayer().sendMessage(Messages.get("no-permission"));
+                        Utils.playFailSound(e.getPlayer());
+                        return;
+                    }
                     ItemStack head = VillagerManager.turnVillagerIntoHead((LivingEntity) e.getRightClicked());
                     if (e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
                         e.getPlayer().getInventory().setItem(e.getPlayer().getInventory().getHeldItemSlot(), head);
@@ -60,13 +71,21 @@ public class InteractEvent implements Listener {
             }
         } else if (e.getRightClicked() instanceof RideableMinecart || e.getRightClicked() instanceof Boat) {
             // Put villagers into Minecarts/Boats
-            if (e.getPlayer().getInventory().getItemInMainHand().getType() == Material.PLAYER_HEAD) {
+            if (VillagerManager.isVillagerHead(e.getPlayer().getInventory().getItemInMainHand())) {
+                e.setCancelled(true);
+                if (!e.getPlayer().hasPermission("clickvillagers.pickup")) {
+                    e.getPlayer().sendMessage(Messages.get("no-permission"));
+                    Utils.playFailSound(e.getPlayer());
+                    return;
+                }
                 LivingEntity villager = VillagerManager.getVillagerFromHead(e.getPlayer().getInventory().getItemInMainHand());
                 if (villager != null) {
                     villager.teleport(e.getRightClicked().getLocation());
-                    e.setCancelled(true);
                     e.getRightClicked().addPassenger(villager);
                     e.getPlayer().getInventory().removeItem(e.getPlayer().getInventory().getItemInMainHand());
+                } else {
+                    e.getPlayer().sendMessage(Messages.get("no-data"));
+                    Utils.playFailSound(e.getPlayer());
                 }
             }
         }

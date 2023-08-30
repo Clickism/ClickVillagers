@@ -3,6 +3,7 @@ package me.clickism.clickvillagers.managers;
 import me.clickism.clickvillagers.ClickVillagers;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -55,5 +56,16 @@ public class VillagerManager {
             }
         }
         return null;
+    }
+
+    public static boolean isVillagerHead(ItemStack head) {
+        if (head.getType() == Material.PLAYER_HEAD || head.getType() == Material.PLAYER_WALL_HEAD) {
+            ItemMeta meta = head.getItemMeta();
+            PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
+            if (dataContainer.has(new NamespacedKey(plugin, "villager_uuid"), PersistentDataType.STRING)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

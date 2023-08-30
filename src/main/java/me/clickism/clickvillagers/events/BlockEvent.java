@@ -24,6 +24,14 @@ public class BlockEvent implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         if (e.getBlockPlaced().getType() == Material.PLAYER_HEAD || e.getBlockPlaced().getType() == Material.PLAYER_WALL_HEAD) {
+            //Place villager back
+            if (!VillagerManager.isVillagerHead(e.getItemInHand())) return;
+            if (!e.getPlayer().hasPermission("clickvillagers.pickup")) {
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(Messages.get("no-permission"));
+                Utils.playFailSound(e.getPlayer());
+                return;
+            }
             LivingEntity villager = VillagerManager.getVillagerFromHead(e.getItemInHand());
             if (villager != null) {
                 e.getBlockPlaced().setType(Material.AIR);
@@ -34,16 +42,25 @@ public class BlockEvent implements Listener {
             } else {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(Messages.get("no-data"));
+                Utils.playFailSound(e.getPlayer());
             }
         } else if (e.getBlockPlaced().getType() == Material.HOPPER) {
+            //Hopper
             if (!e.getItemInHand().hasItemMeta()) return;
             if (e.getItemInHand().getItemMeta().hasEnchant(Enchantment.DURABILITY)) {
+                //Create Villager Hopper
                 if (!Settings.get("enable-villager-hoppers")) {
                     e.setCancelled(true);
                     e.getPlayer().sendMessage(Messages.get("hopper-disabled"));
+                    Utils.playFailSound(e.getPlayer());
                     return;
                 }
-                //Create Villager Hopper
+                if (!e.getPlayer().hasPermission("clickvillagers.hopper")) {
+                    e.setCancelled(true);
+                    e.getPlayer().sendMessage(Messages.get("no-permission"));
+                    Utils.playFailSound(e.getPlayer());
+                    return;
+                }
                 HopperManager.addVillagerHopper(e.getBlockPlaced().getLocation());
                 e.getPlayer().sendMessage(Messages.get("place-hopper"));
                 Utils.playConfirmSound(e.getPlayer());

@@ -19,6 +19,7 @@ messages:
     villager-hopper-description: "Use this to automatically pick up villagers."
     anchor-disabled: "&6>> &cAnchors are disabled."
     update: "&6>> &eClickVillagers: &aNew version available."
+    no-permission: "&6>> &cYou don't have permission to do this."
   de-DE:
     picked-villager: "&6>> &aDu hast einen Dorfbewohner aufgehoben."
     add-anchor: "&6>> &aDu hast den Dorfbewohner verankert."
@@ -35,6 +36,7 @@ messages:
     villager-hopper-description: "Ermöglicht automatisches Aufheben von Dorfbewohnern."
     anchor-disabled: "&6>> &cAnker sind deaktiviert."
     update: "&6>> &eClickVillagers: &aNeue Version verfügbar."
+    no-permission: "&6>> &cSie sind nicht berechtigt, das zu tun."
   tr-TR:
     picked-villager: "&6>> &aBir köylüyü eline aldın."
     add-anchor: "&6>> &aKöylüyü sabitledin."
@@ -51,6 +53,7 @@ messages:
     villager-hopper-description: "Köylüleri otomatik toplamak için kullan."
     anchor-disabled: "&6>> &cSabitleme kapalı."
     update: "&6>> &eClickVillagers: &aYeni sürüm mevcut."
+    no-permission: "&6>> &cBunu yapmaya iznin yok."
   nl-NL:
     picked-villager: "&6>> &aJe hebt een dorpeling opgepakt."
     add-anchor: "&6>> &aJe hebt de dorpeling verankerd"
@@ -67,6 +70,7 @@ messages:
     villager-hopper-description: "Haal automatisch dorpelingen op."
     anchor-disabled: "&6>> &cAnkers zijn uitgeschakeld."
     update: "&6>> &eClickVillagers: &aNieuwe versie beschikbaar."
+    no-permission: "&6>> &cJe hebt het recht niet om dat te doen."
   uk-UA:
     picked-villager: "&6>> &aВи підняли селянина."
     add-anchor: "&6>> &aВи закріпили селянина."
@@ -83,6 +87,7 @@ messages:
     villager-hopper-description: "Використовуй це, щоб автоматично підбирати селян."
     anchor-disabled: "&6>> &cЯкорі відключені."
     update: "&6>> &eClickVillagers: &aДоступна нова версія."
+    no-permission: "&6>> &cУ вас немає дозволу на цю дію."
   ru-RU:
     picked-villager: "&6>> &aВы подняли крестьянина."
     add-anchor: "&6>> &aВы закрепили крестьянина."
@@ -99,3 +104,4 @@ messages:
     villager-hopper-description: "Используйте это, чтобы автоматически подбирать крестьян."
     anchor-disabled: "&6>> &cЯкоря отключены."
     update: "&6>> &eClickVillagers: &aДоступна новая версия."
+    no-permission: "&6>> &cУ вас нету прав на это действие."
