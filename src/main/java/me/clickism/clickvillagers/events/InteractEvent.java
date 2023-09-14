@@ -3,9 +3,13 @@ package me.clickism.clickvillagers.events;
 import me.clickism.clickvillagers.Utils;
 import me.clickism.clickvillagers.config.Messages;
 import me.clickism.clickvillagers.config.Settings;
+import me.clickism.clickvillagers.managers.VillagerData;
 import me.clickism.clickvillagers.managers.VillagerManager;
+import me.clickism.clickvillagers.menu.ClaimVillagerMenu;
+import me.clickism.clickvillagers.menu.EditVillagerMenu;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.Tag;
 import org.bukkit.entity.*;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
@@ -22,51 +26,111 @@ public class InteractEvent implements Listener {
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
         if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
         if (e.getRightClicked() instanceof Villager || e.getRightClicked() instanceof ZombieVillager) {
-            if (e.getPlayer().isSneaking()) {
-                if (e.getPlayer().getInventory().getItemInMainHand().getType() == Material.SHEARS) {
+            LivingEntity entity = (LivingEntity) e.getRightClicked();
+            Player player = e.getPlayer();
+            if (player.isSneaking()) {
+                if (player.getInventory().getItemInMainHand().getType() == Material.SHEARS) {
                     //Anchored villager
                     e.setCancelled(true);
                     if (!Settings.get("enable-anchor")) {
-                        e.getPlayer().sendMessage(Messages.get("anchor-disabled"));
-                        Utils.playFailSound(e.getPlayer());
+                        player.sendMessage(Messages.get("anchor-disabled"));
+                        Utils.playFailSound(player);
                         return;
                     }
-                    if (!e.getPlayer().hasPermission("clickvillagers.anchor")) {
-                        e.getPlayer().sendMessage(Messages.get("no-permission"));
-                        Utils.playFailSound(e.getPlayer());
+                    if (!player.hasPermission("clickvillagers.anchor")) {
+                        player.sendMessage(Messages.get("no-permission"));
+                        Utils.playFailSound(player);
                         return;
                     }
-                    LivingEntity entity = (LivingEntity) e.getRightClicked();
+                    if (VillagerData.isClaimed(entity)) {
+                        if (!VillagerData.getOwner(entity).equals(e.getPlayer().getName()) && !e.getPlayer().hasPermission("clickvillagers.bypass-claims")) {
+                            player.sendMessage(Messages.get("belongs-to") + VillagerData.getOwner(entity));
+                            Utils.playFailSound(player);
+                            return;
+                        }
+                    }
                     if (entity.getPotionEffect(PotionEffectType.SLOW) == null) {
                         //Anchor villager
                         entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 255, true, false));
-                        e.getPlayer().sendMessage(Messages.get("add-anchor"));
-                        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_BEEHIVE_SHEAR, 1f, 1f);
+                        player.sendMessage(Messages.get("add-anchor"));
+                        player.playSound(e.getPlayer().getLocation(), Sound.BLOCK_BEEHIVE_SHEAR, 1f, 1f);
                     } else {
                         //Remove anchor
                         entity.removePotionEffect(PotionEffectType.SLOW);
-                        e.getPlayer().sendMessage(Messages.get("remove-anchor"));
-                        Utils.playFailSound(e.getPlayer());
+                        player.sendMessage(Messages.get("remove-anchor"));
+                        Utils.playFailSound(player);
                     }
 
+                } else if (Tag.ITEMS_SHOVELS.getValues().contains(e.getPlayer().getInventory().getItemInMainHand().getType())) {
+                    //Claim villager
+                    ClickEvent.setLastClickedVillager(player, entity);
+                    if (!Settings.get("enable-claims")) {
+                        e.setCancelled(true);
+                        player.sendMessage(Messages.get("claims-disabled"));
+                        Utils.playFailSound(player);
+                        return;
+                    }
+                    if (VillagerData.isClaimed(entity)) {
+                        if (VillagerData.getOwner(entity).equals(player.getName()) || player.hasPermission("clickvillagers.bypass-claims")) {
+                            //Edit with bypass or shovel
+                            e.setCancelled(true);
+                            ClickEvent.setLastClickedVillager(player, entity);
+                            player.openInventory(EditVillagerMenu.get(entity));
+                            player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, .3f, 1f);
+                        }
+                    } else {
+                        e.setCancelled(true);
+                        ClickEvent.setLastClickedVillager(player, entity);
+                        player.openInventory(ClaimVillagerMenu.get());
+                        player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, .3f, 1f);
+                    }
+                } else if (VillagerData.isClaimed(entity)) {
+                    // Open right click edit
+                    e.setCancelled(true);
+                    if (VillagerData.getOwner(entity).equals(player.getName())) {
+                        ClickEvent.setLastClickedVillager(player, entity);
+                        player.openInventory(EditVillagerMenu.get(entity));
+                        player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, .3f, 1f);
+                    } else {
+                        player.sendMessage(Messages.get("belongs-to") + VillagerData.getOwner(entity));
+                        Utils.playFailSound(player);
+                    }
                 } else {
                     //Pick villager up
                     e.setCancelled(true);
-                    if (!e.getPlayer().hasPermission("clickvillagers.pickup")) {
-                        e.getPlayer().sendMessage(Messages.get("no-permission"));
-                        Utils.playFailSound(e.getPlayer());
+                    if (!player.hasPermission("clickvillagers.pickup")) {
+                        player.sendMessage(Messages.get("no-permission"));
+                        Utils.playFailSound(player);
                         return;
                     }
-                    ItemStack head = VillagerManager.turnVillagerIntoHead((LivingEntity) e.getRightClicked());
-                    if (e.getPlayer().getInventory().getItemInMainHand().getType() == Material.AIR) {
-                        e.getPlayer().getInventory().setItem(e.getPlayer().getInventory().getHeldItemSlot(), head);
+                    if (VillagerData.isClaimed(entity)) {
+                        if (!VillagerData.getOwner(entity).equals(player.getName()) && !player.hasPermission("clickvillagers.bypass-claims")) {
+                            player.sendMessage(Messages.get("belongs-to") + VillagerData.getOwner(entity));
+                            Utils.playFailSound(player);
+                            return;
+                        }
+                    }
+                    ItemStack head = VillagerManager.turnVillagerIntoHead(entity);
+                    if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+                        player.getInventory().setItem(e.getPlayer().getInventory().getHeldItemSlot(), head);
                     } else {
-                        e.getPlayer().getInventory().addItem(head).forEach((i, item) -> {
-                            e.getPlayer().getWorld().dropItem(e.getPlayer().getLocation(), item);
+                        player.getInventory().addItem(head).forEach((i, item) -> {
+                            player.getWorld().dropItem(player.getLocation(), item);
                         });
                     }
-                    e.getPlayer().sendMessage(Messages.get("picked-villager"));
-                    Utils.playConfirmSound(e.getPlayer());
+                    player.sendMessage(Messages.get("picked-villager"));
+                    Utils.playConfirmSound(player);
+                }
+            } else {
+                //Check if tradable
+                if (VillagerData.isClaimed(entity)) {
+                    if (!VillagerData.getOwner(entity).equals(player.getName()) && !player.hasPermission("clickvillagers.bypass-claims")) {
+                        if (!VillagerData.isTradable(entity)) {
+                            e.setCancelled(true);
+                            player.sendMessage(Messages.get("belongs-to") + VillagerData.getOwner(entity));
+                            Utils.playFailSound(player);
+                        }
+                    }
                 }
             }
         } else if (e.getRightClicked() instanceof RideableMinecart || e.getRightClicked() instanceof Boat) {
@@ -77,6 +141,13 @@ public class InteractEvent implements Listener {
                     e.getPlayer().sendMessage(Messages.get("no-permission"));
                     Utils.playFailSound(e.getPlayer());
                     return;
+                }
+                if (VillagerData.isClaimed(e.getPlayer().getInventory().getItemInMainHand())) {
+                    if (!VillagerData.getOwner(e.getPlayer().getInventory().getItemInMainHand()).equals(e.getPlayer().getName()) && !e.getPlayer().hasPermission("clickvillagers.bypass-claims")) {
+                        e.getPlayer().sendMessage(Messages.get("belongs-to") + VillagerData.getOwner(e.getPlayer().getInventory().getItemInMainHand()));
+                        Utils.playFailSound(e.getPlayer());
+                        return;
+                    }
                 }
                 LivingEntity villager = VillagerManager.getVillagerFromHead(e.getPlayer().getInventory().getItemInMainHand());
                 if (villager != null) {

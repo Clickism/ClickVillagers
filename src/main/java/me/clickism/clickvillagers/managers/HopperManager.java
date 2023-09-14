@@ -23,8 +23,8 @@ public class HopperManager {
 
     private static DataManager data;
 
-    public static void setPlugin(ClickVillagers plugin) {
-        HopperManager.plugin = plugin;
+    public static void setPlugin(ClickVillagers pl) {
+        plugin = pl;
     }
 
     static ClickVillagers plugin;
@@ -73,8 +73,10 @@ public class HopperManager {
                 hopper.getWorld().getNearbyEntities(hopper.clone().add(.5, 1, .5), 1, 1, 1).forEach(entity -> {
                     if (entity instanceof Villager || entity instanceof ZombieVillager) {
                         if (((Ageable) entity).isAdult() || entity instanceof ZombieVillager) {
-                            if (isHopperEmpty(((Hopper) hopper.getBlock().getState()).getInventory())) {
-                                ((Hopper) hopper.getBlock().getState()).getInventory().addItem(VillagerManager.turnVillagerIntoHead((LivingEntity) entity));
+                            if (!VillagerData.isClaimed((LivingEntity) entity)) {
+                                if (isHopperEmpty(((Hopper) hopper.getBlock().getState()).getInventory())) {
+                                    ((Hopper) hopper.getBlock().getState()).getInventory().addItem(VillagerManager.turnVillagerIntoHead((LivingEntity) entity));
+                                }
                             }
                         }
                     }

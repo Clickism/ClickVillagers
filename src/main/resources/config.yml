@@ -10,7 +10,15 @@ language: en-US
 enable-villager-hoppers: true
 # Already anchored villagers will keep their anchor.
 enable-anchor: true
+# Already claimed villagers will stay claimed.
+enable-claims: true
+# Already added trading partners will not be removed.
+enable-partners: true
 
+# Claimed villagers will not take damage if this is FALSE.
+claimed-villagers-damage: false
 # How often villager hoppers will be checked in TICKS.
 # You may INCREASE this value to save performance if your server has a lot of villager hoppers.
 hopper-check-interval: 20
+# Maximum number of trading partners
+partner-limit: 10

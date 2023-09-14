@@ -61,4 +61,9 @@ public class ConfigManager {
             plugin.saveResource("config.yml", false);
         }
     }
+
+    public void overrideConfig() {
+        configFile.delete();
+        saveDefaultConfig();
+    }
 }

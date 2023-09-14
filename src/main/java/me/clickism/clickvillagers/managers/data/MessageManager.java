@@ -22,8 +22,9 @@ public class MessageManager {
     }
 
     public void reloadConfig() {
-        if (messageFile == null)
+        if (messageFile == null) {
             messageFile = new File(plugin.getDataFolder(), "messages.yml");
+        }
 
         this.dataConfig = YamlConfiguration.loadConfiguration(messageFile);
 
@@ -60,5 +61,10 @@ public class MessageManager {
         if (!messageFile.exists()) {
             plugin.saveResource("messages.yml", false);
         }
+    }
+
+    public void overrideConfig() {
+        messageFile.delete();
+        saveDefaultConfig();
     }
 }

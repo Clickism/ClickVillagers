@@ -1,5 +1,5 @@
 name: ClickVillagers
-version: '0.3'
+version: '0.4'
 main: me.clickism.clickvillagers.ClickVillagers
 api-version: '1.20'
 authors: [Clickism]
@@ -14,3 +14,12 @@ permissions:
   clickvillagers.anchor:
     description: Allows players to anchor villagers.
     default: true
+  clickvillagers.claim:
+    description: Allows players to claim villagers.
+    default: true
+  clickvillagers.partner:
+    description: Allows players to add trading partners.
+    default: true
+  clickvillagers.bypass-claims:
+    description: Allows players to access claimed villagers.
+    default: op

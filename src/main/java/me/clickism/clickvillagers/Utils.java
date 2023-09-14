@@ -40,13 +40,21 @@ public class Utils {
      * &7 gray /
      * &8 dark gray /
      * &3 dark aqua /
+     * &5 dark purple /
+     * &4 dark red /
+     * &1 dark blue /
+     * &d light purple /
      * &e yellow /
+     * &f white /
      * &l bold /
      * &9 blue /
      *
      * @return colored version
      **/
     public static String colorize(String text) {
+        if (text == null) {
+            return "";
+        }
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 

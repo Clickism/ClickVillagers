@@ -16,17 +16,19 @@ import java.util.UUID;
 
 public class VillagerManager {
 
-    public static void setPlugin(ClickVillagers plugin) {
-        VillagerManager.plugin = plugin;
+    public static void setPlugin(ClickVillagers pl) {
+        plugin = pl;
     }
-
     static ClickVillagers plugin;
 
+    @Nullable
     public static ItemStack turnVillagerIntoHead(LivingEntity entity) {
         ItemStack item = SkullManager.getVillagerHeadItem(entity);
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
         dataContainer.set(new NamespacedKey(plugin, "villager_uuid"), PersistentDataType.STRING, entity.getUniqueId().toString());
+        dataContainer.set(new NamespacedKey(plugin, "villager_owner"), PersistentDataType.STRING, VillagerData.getOwner(entity));
+        dataContainer.set(new NamespacedKey(plugin, "villager_tradable"), PersistentDataType.BOOLEAN, VillagerData.isTradable(entity));
         item.setItemMeta(meta);
         entity.setRemoveWhenFarAway(false);
         entity.setInvisible(true);
@@ -40,11 +42,14 @@ public class VillagerManager {
     @Nullable
     public static LivingEntity getVillagerFromHead(ItemStack head) {
         ItemMeta meta = head.getItemMeta();
-        PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-        if (dataContainer.has(new NamespacedKey(plugin, "villager_uuid"), PersistentDataType.STRING)) {
-            UUID uuid = UUID.fromString(dataContainer.get(new NamespacedKey(plugin, "villager_uuid"), PersistentDataType.STRING));
+        PersistentDataContainer itemDataContainer = meta.getPersistentDataContainer();
+        if (itemDataContainer.has(new NamespacedKey(plugin, "villager_uuid"), PersistentDataType.STRING)) {
+            UUID uuid = UUID.fromString(itemDataContainer.get(new NamespacedKey(plugin, "villager_uuid"), PersistentDataType.STRING));
             LivingEntity entity = (LivingEntity) Bukkit.getEntity(uuid);
             if (entity != null) {
+                PersistentDataContainer entityDataContainer = meta.getPersistentDataContainer();
+                entityDataContainer.set(new NamespacedKey(plugin, "villager_owner"), PersistentDataType.STRING, VillagerData.getOwner(head));
+                entityDataContainer.set(new NamespacedKey(plugin, "villager_tradable"), PersistentDataType.BOOLEAN, VillagerData.isTradable(head));
                 entity.setRemoveWhenFarAway(true);
                 entity.setInvisible(false);
                 entity.setGravity(true);

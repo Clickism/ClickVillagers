@@ -4,6 +4,7 @@ import me.clickism.clickvillagers.*;
 import me.clickism.clickvillagers.config.Messages;
 import me.clickism.clickvillagers.config.Settings;
 import me.clickism.clickvillagers.managers.HopperManager;
+import me.clickism.clickvillagers.managers.VillagerData;
 import me.clickism.clickvillagers.managers.VillagerManager;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -31,6 +32,14 @@ public class BlockEvent implements Listener {
                 e.getPlayer().sendMessage(Messages.get("no-permission"));
                 Utils.playFailSound(e.getPlayer());
                 return;
+            }
+            if (VillagerData.isClaimed(e.getItemInHand())) {
+                if (!VillagerData.getOwner(e.getItemInHand()).equals(e.getPlayer().getName()) && !e.getPlayer().hasPermission("clickvillagers.bypass-claims")) {
+                    e.setCancelled(true);
+                    e.getPlayer().sendMessage(Messages.get("belongs-to") + VillagerData.getOwner(e.getItemInHand()));
+                    Utils.playFailSound(e.getPlayer());
+                    return;
+                }
             }
             LivingEntity villager = VillagerManager.getVillagerFromHead(e.getItemInHand());
             if (villager != null) {
@@ -74,7 +83,8 @@ public class BlockEvent implements Listener {
             if (HopperManager.isVillagerHopper(e.getBlock().getLocation())) {
                 //Remove Villager Hopper
                 e.getBlock().getDrops().clear();
-                e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), HopperManager.getVillagerHopper());
+                if (e.getPlayer().getGameMode() != GameMode.CREATIVE)
+                    e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), HopperManager.getVillagerHopper());
                 HopperManager.removeVillagerHopper(e.getBlock().getLocation());
                 e.getPlayer().sendMessage(Messages.get("break-hopper"));
                 Utils.playFailSound(e.getPlayer());
