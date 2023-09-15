@@ -8,6 +8,7 @@ import me.clickism.clickvillagers.managers.VillagerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,7 +33,7 @@ public class ChatEvent implements Listener {
     public void onChat(AsyncPlayerChatEvent e) {
         if (choosing.containsKey(e.getPlayer())) {
             e.setCancelled(true);
-            if (e.getMessage().contains(" ")) {
+            if (e.getMessage().contains(" ") || e.getMessage().length() < 3) {
                 e.getPlayer().sendMessage(Messages.get("invalid-player"));
             } else {
                 makeSelection(e.getPlayer(), e.getMessage());
@@ -40,14 +41,9 @@ public class ChatEvent implements Listener {
         }
     }
 
-    public static void startSelecting(Player player) {
+    public static void startSelecting(Player player, LivingEntity entity) {
         StringBuilder partners = new StringBuilder(ChatColor.WHITE + " ");
-        List<String> partnersList = VillagerData.getPartners(player.getName());
-        if (partnersList.size() > Settings.getInt("partner-limit")) {
-            player.sendMessage(String.format(Messages.get("max-partners"), Settings.getInt("partner-limit")));
-            Utils.playFailSound(player);
-            return;
-        }
+        List<String> partnersList = VillagerData.getPartners(VillagerData.getOwner(entity));
         if (!partnersList.isEmpty()) {
             for (int i = 0; i < partnersList.size(); i++) {
                 if (i == partnersList.size() - 1) {
@@ -56,7 +52,7 @@ public class ChatEvent implements Listener {
                     partners.append(partnersList.get(i)).append(ChatColor.GOLD).append(" / ").append(ChatColor.WHITE);
                 }
             }
-            player.sendMessage(Messages.get("partners") + partners);
+            player.sendMessage(String.format(Messages.get("partners"), VillagerData.getOwner(entity)) + partners);
         }
         // Select
         startTimer();
@@ -65,16 +61,29 @@ public class ChatEvent implements Listener {
         choosing.put(player, TIMEOUT);
     }
 
+    public static void cancelSelecting(Player player) {
+       if (choosing.remove(player) != null) {
+           player.sendMessage(Messages.get("partner-timeout"));
+           Utils.playFailSound(player);
+       }
+    }
+
     public static void makeSelection(Player player, String selection) {
         choosing.remove(player);
-        if (VillagerData.isPartner(selection, player.getName())) {
+        String owner = VillagerData.getOwner(ClickEvent.getLastClickedVillager(player));
+        if (VillagerData.isPartner(selection, owner)) {
             // Remove partner
-            VillagerData.removePartner(player.getName(), selection);
+            VillagerData.removePartner(owner, selection);
             player.sendMessage(Messages.get("remove-partner") + selection);
             Utils.playFailSound(player);
         } else {
             // Add partner
-            VillagerData.addPartner(player.getName(), selection);
+            if (VillagerData.getPartners(owner).size() >= Settings.getInt("partner-limit")) {
+                player.sendMessage(String.format(Messages.get("max-partners"), Settings.getInt("partner-limit")));
+                Utils.playFailSound(player);
+                return;
+            }
+            VillagerData.addPartner(owner, selection);
             player.sendMessage(Messages.get("add-partner") + selection);
             Utils.playConfirmSound(player);
         }
@@ -88,9 +97,7 @@ public class ChatEvent implements Listener {
                     if (i > 0) {
                         choosing.put(p, i - 1);
                     } else {
-                        choosing.remove(p);
-                        p.sendMessage(Messages.get("partner-timeout"));
-                        Utils.playFailSound(p);
+                        cancelSelecting(p);
                     }
                 });
                 if (choosing.isEmpty()) {

@@ -61,7 +61,7 @@ public class InteractEvent implements Listener {
                         Utils.playFailSound(player);
                     }
 
-                } else if (Tag.ITEMS_SHOVELS.getValues().contains(e.getPlayer().getInventory().getItemInMainHand().getType())) {
+                } else if (Tag.ITEMS_SHOVELS.getValues().contains(e.getPlayer().getInventory().getItemInMainHand().getType()) && !VillagerData.isClaimed(entity)) {
                     //Claim villager
                     ClickEvent.setLastClickedVillager(player, entity);
                     if (!Settings.get("enable-claims")) {
@@ -70,24 +70,13 @@ public class InteractEvent implements Listener {
                         Utils.playFailSound(player);
                         return;
                     }
-                    if (VillagerData.isClaimed(entity)) {
-                        if (VillagerData.getOwner(entity).equals(player.getName()) || player.hasPermission("clickvillagers.bypass-claims")) {
-                            //Edit with bypass or shovel
-                            e.setCancelled(true);
-                            ClickEvent.setLastClickedVillager(player, entity);
-                            player.openInventory(EditVillagerMenu.get(entity));
-                            player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, .3f, 1f);
-                        }
-                    } else {
-                        e.setCancelled(true);
-                        ClickEvent.setLastClickedVillager(player, entity);
-                        player.openInventory(ClaimVillagerMenu.get());
-                        player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, .3f, 1f);
-                    }
+                    e.setCancelled(true);
+                    player.openInventory(ClaimVillagerMenu.get());
+                    player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, .3f, 1f);
                 } else if (VillagerData.isClaimed(entity)) {
                     // Open right click edit
                     e.setCancelled(true);
-                    if (VillagerData.getOwner(entity).equals(player.getName())) {
+                    if (VillagerData.getOwner(entity).equals(player.getName()) || player.hasPermission("clickvillagers.bypass-claims")) {
                         ClickEvent.setLastClickedVillager(player, entity);
                         player.openInventory(EditVillagerMenu.get(entity));
                         player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, .3f, 1f);
@@ -102,13 +91,6 @@ public class InteractEvent implements Listener {
                         player.sendMessage(Messages.get("no-permission"));
                         Utils.playFailSound(player);
                         return;
-                    }
-                    if (VillagerData.isClaimed(entity)) {
-                        if (!VillagerData.getOwner(entity).equals(player.getName()) && !player.hasPermission("clickvillagers.bypass-claims")) {
-                            player.sendMessage(Messages.get("belongs-to") + VillagerData.getOwner(entity));
-                            Utils.playFailSound(player);
-                            return;
-                        }
                     }
                     ItemStack head = VillagerManager.turnVillagerIntoHead(entity);
                     if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
@@ -126,6 +108,9 @@ public class InteractEvent implements Listener {
                 if (VillagerData.isClaimed(entity)) {
                     if (!VillagerData.getOwner(entity).equals(player.getName()) && !player.hasPermission("clickvillagers.bypass-claims")) {
                         if (!VillagerData.isTradable(entity)) {
+                            if (VillagerData.isPartner(e.getPlayer().getName(), VillagerData.getOwner(entity))) {
+                                return;
+                            }
                             e.setCancelled(true);
                             player.sendMessage(Messages.get("belongs-to") + VillagerData.getOwner(entity));
                             Utils.playFailSound(player);

@@ -1,6 +1,5 @@
 package me.clickism.clickvillagers.menu;
 
-import me.clickism.clickvillagers.Utils;
 import me.clickism.clickvillagers.config.Messages;
 import me.clickism.clickvillagers.managers.VillagerData;
 import org.bukkit.entity.LivingEntity;
@@ -22,6 +21,6 @@ public class EditVillagerMenu {
     }
 
     public static String getTitle(LivingEntity entity) {
-        return Utils.colorize(Utils.colorize("&2⚒ &l" + VillagerData.getOwner(entity) + "&r&a&l" + Messages.get("menu-edit")));
+        return String.format(Messages.get("menu-edit"), VillagerData.getOwner(entity));
     }
 }

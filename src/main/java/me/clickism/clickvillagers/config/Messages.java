@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class Messages {
 
+    // Reset messages.yml for this version
+    private static final boolean RESET_MESSAGES = true;
     static MessageManager messages;
 
     public static void initializeConfig() {
@@ -24,9 +26,17 @@ public class Messages {
         Map<String, Object> values = messages.getConfig().getValues(true);
         messages.overrideConfig();
         messages.reloadConfig();
-        values.forEach((path, val) -> {
-            if (!(val instanceof MemorySection)) messages.getConfig().set(path, val);
-        });
+        if (!ClickVillagers.getData().getConfig().contains("reset")) {
+            ClickVillagers.getData().getConfig().set("reset", false);
+        }
+        if ((boolean) ClickVillagers.getData().getConfig().get("reset") || !RESET_MESSAGES) {
+            values.forEach((path, val) -> {
+                if (!(val instanceof MemorySection)) messages.getConfig().set(path, val);
+            });
+        } else {
+            ClickVillagers.getData().getConfig().set("reset", true);
+            ClickVillagers.getData().saveConfig();
+        }
         messages.saveConfig();
     }
 }

@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class ChangeBiomeMenu {
 
@@ -36,7 +36,7 @@ public class ChangeBiomeMenu {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + type.name());
         lore = Utils.colorize("&2" + ChatColor.stripColor(Messages.get("button-biome-lore-1")));
-        meta.setLore(Arrays.asList(lore));
+        meta.setLore(Collections.singletonList(lore));
         item.setItemMeta(meta);
         return item;
     }

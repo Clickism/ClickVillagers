@@ -14,8 +14,8 @@ import java.net.URL;
 
 public class UpdateChecker implements Listener {
 
-    private String url = "https://api.spigotmc.org/legacy/update.php?resource=";
-    private String id = "111424";
+    private final String url = "https://api.spigotmc.org/legacy/update.php?resource=";
+    private final String id = "111424";
 
     private boolean isAvailable;
 

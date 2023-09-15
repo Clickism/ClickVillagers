@@ -34,6 +34,7 @@ public class ClickEvent implements Listener {
     private static final Map<Player, LivingEntity> lastClickedVillager = new HashMap<>();
     public static void setLastClickedVillager(Player player, LivingEntity villager) {
         lastClickedVillager.put(player, villager);
+        ChatEvent.cancelSelecting(player);
     }
 
     public static LivingEntity getLastClickedVillager(Player player) {
@@ -109,7 +110,7 @@ public class ClickEvent implements Listener {
                     Utils.playFailSound(p);
                     return;
                 }
-                ChatEvent.startSelecting(p);
+                ChatEvent.startSelecting(p, getLastClickedVillager(p));
             }
         } else if (e.getView().getTitle().equals(ChangeBiomeMenu.getTitle())) {
             e.setCancelled(true);
