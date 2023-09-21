@@ -3,7 +3,7 @@
 # NOTE: RELOAD/RESTART SERVER FOR CHANGES TO TAKE EFFECT
 #########################################################
 
-# Currently supported languages: en-US, de-DE, tr-TR, uk-UA, ru-RU
+# Currently supported languages: en-US, de-DE, tr-TR, uk-UA, ru-RU, vi-VN
 language: en-US
 
 # Already placed villager hoppers will NOT work if this is disabled.
