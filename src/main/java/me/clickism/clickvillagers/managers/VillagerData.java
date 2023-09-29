@@ -23,6 +23,7 @@ public class VillagerData {
 
     public static String getOwner(ItemStack head) {
         ItemMeta meta = head.getItemMeta();
+        if (meta == null) return "";
         PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
         if (dataContainer.has(new NamespacedKey(plugin, "villager_owner"), PersistentDataType.STRING)) {
             return (dataContainer.get(new NamespacedKey(plugin, "villager_owner"), PersistentDataType.STRING));
@@ -31,6 +32,7 @@ public class VillagerData {
     }
 
     public static String getOwner(LivingEntity entity) {
+        if (entity == null) return "";
         PersistentDataContainer dataContainer = entity.getPersistentDataContainer();
         if (dataContainer.has(new NamespacedKey(plugin, "villager_owner"), PersistentDataType.STRING)) {
             return (dataContainer.get(new NamespacedKey(plugin, "villager_owner"), PersistentDataType.STRING));

@@ -8,12 +8,14 @@ import me.clickism.clickvillagers.managers.VillagerData;
 import me.clickism.clickvillagers.managers.VillagerManager;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Hopper;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class BlockEvent implements Listener {
 
@@ -82,7 +84,12 @@ public class BlockEvent implements Listener {
         if (e.getBlock().getType() == Material.HOPPER) {
             if (HopperManager.isVillagerHopper(e.getBlock().getLocation())) {
                 //Remove Villager Hopper
-                e.getBlock().getDrops().clear();
+                e.setDropItems(false);
+                for (ItemStack content : ((Hopper) e.getBlock().getState()).getInventory().getContents()) {
+                    if (content != null) {
+                        e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), content);
+                    }
+                }
                 if (e.getPlayer().getGameMode() != GameMode.CREATIVE)
                     e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), HopperManager.getVillagerHopper());
                 HopperManager.removeVillagerHopper(e.getBlock().getLocation());
