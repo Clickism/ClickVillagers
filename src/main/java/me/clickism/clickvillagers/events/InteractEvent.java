@@ -70,6 +70,11 @@ public class InteractEvent implements Listener {
                         Utils.playFailSound(player);
                         return;
                     }
+                    if (!player.hasPermission("clickvillagers.claim")) {
+                        player.sendMessage(Messages.get("no-permission"));
+                        Utils.playFailSound(player);
+                        return;
+                    }
                     e.setCancelled(true);
                     player.openInventory(ClaimVillagerMenu.get());
                     player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, .3f, 1f);

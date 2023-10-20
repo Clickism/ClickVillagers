@@ -100,13 +100,13 @@ public class ClickEvent implements Listener {
             } else if (e.getCurrentItem().equals(Buttons.ADD_TRADE_PARTNER.item())) {
                 // Add/remove trade partner
                 p.closeInventory();
-                if (!p.hasPermission("clickvillagers.partner")) {
-                    p.sendMessage(Messages.get("no-permission"));
+                if (!Settings.get("enable-partners")) {
+                    p.sendMessage(Messages.get("partner-disabled"));
                     Utils.playFailSound(p);
                     return;
                 }
-                if (!Settings.get("enable-partners")) {
-                    p.sendMessage(Messages.get("partner-disabled"));
+                if (!p.hasPermission("clickvillagers.partner")) {
+                    p.sendMessage(Messages.get("no-permission"));
                     Utils.playFailSound(p);
                     return;
                 }
