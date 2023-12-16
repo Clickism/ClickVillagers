@@ -1,4 +1,6 @@
 All Rights Reserved
+- You may use this software for personal use and commercial use only with credit.
+- You may not redistribute, nor recreate or use parts of this software as your own
 
 Copyright (c) 2023 Clickism
 
