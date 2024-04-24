@@ -3,6 +3,7 @@ package me.clickism.clickvillagers.events;
 import me.clickism.clickvillagers.Utils;
 import me.clickism.clickvillagers.config.Messages;
 import me.clickism.clickvillagers.config.Settings;
+import me.clickism.clickvillagers.integrations.LandsHook;
 import me.clickism.clickvillagers.managers.VillagerData;
 import me.clickism.clickvillagers.managers.VillagerManager;
 import me.clickism.clickvillagers.menu.ClaimVillagerMenu;
@@ -22,8 +23,12 @@ import org.bukkit.potion.PotionEffectType;
 
 public class InteractEvent implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
+
+        if(LandsHook.isEnabled() && !LandsHook.hasVillagerFlag(e.getPlayer(), e.getRightClicked().getLocation())) return;
+        if(e.isCancelled() && !LandsHook.isEnabled()) return;
+
         if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
         if (e.getRightClicked() instanceof Villager || e.getRightClicked() instanceof ZombieVillager) {
             LivingEntity entity = (LivingEntity) e.getRightClicked();

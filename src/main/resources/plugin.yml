@@ -3,6 +3,7 @@ version: '0.4.3'
 main: me.clickism.clickvillagers.ClickVillagers
 api-version: '1.20'
 authors: [Clickism]
+softdepend: [Lands]
 description: A simple plugin that makes handling villagers a lot easier
 permissions:
   clickvillagers.pickup:

@@ -3,6 +3,7 @@ package me.clickism.clickvillagers.events;
 import me.clickism.clickvillagers.*;
 import me.clickism.clickvillagers.config.Messages;
 import me.clickism.clickvillagers.config.Settings;
+import me.clickism.clickvillagers.integrations.LandsHook;
 import me.clickism.clickvillagers.managers.HopperManager;
 import me.clickism.clickvillagers.managers.VillagerData;
 import me.clickism.clickvillagers.managers.VillagerManager;
@@ -12,6 +13,7 @@ import org.bukkit.block.Hopper;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -24,8 +26,12 @@ public class BlockEvent implements Listener {
         plugin = pl;
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPlace(BlockPlaceEvent e) {
+
+        if(LandsHook.isEnabled() && !LandsHook.hasVillagerFlag(e.getPlayer(), e.getBlock().getLocation())) return;
+        if(e.isCancelled() && !LandsHook.isEnabled()) return;
+
         if (e.getBlockPlaced().getType() == Material.PLAYER_HEAD || e.getBlockPlaced().getType() == Material.PLAYER_WALL_HEAD) {
             //Place villager back
             if (!VillagerManager.isVillagerHead(e.getItemInHand())) return;

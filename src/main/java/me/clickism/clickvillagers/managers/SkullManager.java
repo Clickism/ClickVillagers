@@ -16,6 +16,21 @@ import java.util.UUID;
 
 public class SkullManager {
 
+    public static ItemStack getGenericHeadItem(){
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        if (meta == null) {
+            meta = (SkullMeta) Bukkit.getServer().getItemFactory().getItemMeta(Material.PLAYER_HEAD);
+        }
+        try {
+            PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
+            profile.getTextures().setSkin(new URL("http://textures.minecraft.net/texture/35e799dbfaf98287dfbafce970612c8f075168977aacc30989d34a4a5fcdf429"));
+            meta.setOwnerProfile(profile);
+        } catch (MalformedURLException ignored) {}
+        item.setItemMeta(meta);
+        return item;
+    }
+
     public static ItemStack getVillagerHeadItem(LivingEntity entity){
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) item.getItemMeta();

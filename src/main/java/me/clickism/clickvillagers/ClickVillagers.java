@@ -3,6 +3,7 @@ package me.clickism.clickvillagers;
 import me.clickism.clickvillagers.config.Messages;
 import me.clickism.clickvillagers.config.Settings;
 import me.clickism.clickvillagers.events.*;
+import me.clickism.clickvillagers.integrations.LandsHook;
 import me.clickism.clickvillagers.managers.HopperManager;
 import me.clickism.clickvillagers.managers.VillagerData;
 import me.clickism.clickvillagers.managers.VillagerManager;
@@ -19,6 +20,11 @@ public final class ClickVillagers extends JavaPlugin {
     private static ConfigManager config;
     private static MessageManager messages;
     private static String version;
+
+    @Override
+    public void onLoad(){
+        new LandsHook(this);
+    }
 
     @Override
     public void onEnable() {
