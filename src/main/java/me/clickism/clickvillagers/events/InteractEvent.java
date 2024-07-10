@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public class InteractEvent implements Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
         if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
         if (e.getRightClicked() instanceof Villager || e.getRightClicked() instanceof ZombieVillager) {

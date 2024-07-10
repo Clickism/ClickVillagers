@@ -1,5 +1,5 @@
 name: ClickVillagers
-version: '0.4.3'
+version: '0.5'
 main: me.clickism.clickvillagers.ClickVillagers
 api-version: '1.20'
 authors: [Clickism]

@@ -62,25 +62,26 @@ public class HopperManager {
     }
 
     public static void checkHoppers() {
+        if (!Settings.get("enable-villager-hoppers")) {
+            return;
+        }
         Bukkit.getScheduler().runTaskTimer(plugin, task -> {
-            if (!Settings.get("enable-villager-hoppers")) {
-                task.cancel();
-                return;
-            }
             List<Location> toBeRemoved = new ArrayList<>();
             getHoppersList().forEach(hopper -> {
-                if (hopper.getBlock().getType() != Material.HOPPER) toBeRemoved.add(hopper);
-                hopper.getWorld().getNearbyEntities(hopper.clone().add(.5, 1, .5), 1, 1, 1).forEach(entity -> {
-                    if (entity instanceof Villager || entity instanceof ZombieVillager) {
-                        if (((Ageable) entity).isAdult() || entity instanceof ZombieVillager) {
-                            if (!VillagerData.isClaimed((LivingEntity) entity)) {
-                                if (isHopperEmpty(((Hopper) hopper.getBlock().getState()).getInventory())) {
-                                    ((Hopper) hopper.getBlock().getState()).getInventory().addItem(VillagerManager.turnVillagerIntoHead((LivingEntity) entity));
+                try {
+                    if (hopper.getBlock().getType() != Material.HOPPER) toBeRemoved.add(hopper);
+                    hopper.getWorld().getNearbyEntities(hopper.clone().add(.5, 1, .5), 1, 1, 1).forEach(entity -> {
+                        if (entity instanceof Villager || entity instanceof ZombieVillager) {
+                            if (((Ageable) entity).isAdult() || entity instanceof ZombieVillager) {
+                                if (!VillagerData.isClaimed((LivingEntity) entity)) {
+                                    if (isHopperEmpty(((Hopper) hopper.getBlock().getState()).getInventory())) {
+                                        ((Hopper) hopper.getBlock().getState()).getInventory().addItem(VillagerManager.turnVillagerIntoHead((LivingEntity) entity));
+                                    }
                                 }
                             }
                         }
-                    }
-                });
+                    });
+                } catch (NullPointerException ignored) { }
             });
             toBeRemoved.forEach(HopperManager::removeVillagerHopper);
         }, Settings.getInt("hopper-check-interval"), Settings.getInt("hopper-check-interval"));

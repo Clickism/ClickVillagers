@@ -15,7 +15,18 @@ public class DamageEvent implements Listener {
     public void onDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Villager || e.getEntity() instanceof ZombieVillager) {
             if (Settings.get("claimed-villagers-damage")) return;
+            if (e.getCause() == EntityDamageEvent.DamageCause.KILL) return;
             if (VillagerData.isClaimed((LivingEntity) e.getEntity())) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPickedUpDamage(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Villager || e.getEntity() instanceof ZombieVillager) {
+            if (e.getEntity().getLocation().getY() < -64 &&
+            e.getEntity().isInvulnerable() && !e.getEntity().hasGravity()) {
                 e.setCancelled(true);
             }
         }

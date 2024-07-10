@@ -24,7 +24,7 @@ public class BlockEvent implements Listener {
         plugin = pl;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent e) {
         if (e.getBlockPlaced().getType() == Material.PLAYER_HEAD || e.getBlockPlaced().getType() == Material.PLAYER_WALL_HEAD) {
             //Place villager back

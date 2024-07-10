@@ -31,6 +31,7 @@ public class SkullManager {
                 Villager villager = (Villager) entity;
 
                 //Display Name
+                meta.setDisplayName(ChatColor.YELLOW + Messages.get("villager"));
                 if (Utils.capitalize(villager.getProfession().toString()).equals("None")) {
                     meta.setDisplayName(ChatColor.YELLOW + Messages.get("villager"));
                 } else {

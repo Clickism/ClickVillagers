@@ -21,7 +21,6 @@ public class VillagerManager {
     }
     static ClickVillagers plugin;
 
-    @Nullable
     public static ItemStack turnVillagerIntoHead(LivingEntity entity) {
         ItemStack item = SkullManager.getVillagerHeadItem(entity);
         ItemMeta meta = item.getItemMeta();
@@ -31,7 +30,6 @@ public class VillagerManager {
         dataContainer.set(new NamespacedKey(plugin, "villager_tradable"), PersistentDataType.BOOLEAN, VillagerData.isTradable(entity));
         item.setItemMeta(meta);
         entity.setRemoveWhenFarAway(false);
-        entity.setInvisible(true);
         entity.setInvulnerable(true);
         entity.setGravity(false);
         entity.setAI(false);
@@ -51,7 +49,6 @@ public class VillagerManager {
                 entityDataContainer.set(new NamespacedKey(plugin, "villager_owner"), PersistentDataType.STRING, VillagerData.getOwner(head));
                 entityDataContainer.set(new NamespacedKey(plugin, "villager_tradable"), PersistentDataType.BOOLEAN, VillagerData.isTradable(head));
                 entity.setRemoveWhenFarAway(true);
-                entity.setInvisible(false);
                 entity.setGravity(true);
                 entity.setAI(true);
                 Bukkit.getScheduler().runTaskLater(plugin, task -> {
