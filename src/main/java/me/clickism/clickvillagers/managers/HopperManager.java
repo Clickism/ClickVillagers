@@ -42,7 +42,7 @@ public class HopperManager {
         ItemMeta villagerHopperMeta = villagerHopperItem.getItemMeta();
         villagerHopperMeta.setDisplayName(ChatColor.GREEN + Messages.get("villager-hopper"));
         villagerHopperMeta.setLore(Collections.singletonList(ChatColor.DARK_GRAY + Messages.get("villager-hopper-description")));
-        villagerHopperMeta.addEnchant(Enchantment.DURABILITY, 1000, true);
+        villagerHopperMeta.addEnchant(Enchantment.DURABILITY, 1, true);
         villagerHopperMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         villagerHopperItem.setItemMeta(villagerHopperMeta);
         villagerHopper = villagerHopperItem;
