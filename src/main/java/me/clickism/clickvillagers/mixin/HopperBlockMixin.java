@@ -6,14 +6,12 @@ import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.HopperBlock;
 import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.ZombieVillagerEntity;
-import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(HopperBlock.class)
 public abstract class HopperBlockMixin extends BlockWithEntity {
@@ -24,7 +22,7 @@ public abstract class HopperBlockMixin extends BlockWithEntity {
     @Override
     public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         if (world.isClient()) return;
-        if (!(entity instanceof VillagerEntity) && !(entity instanceof ZombieVillagerEntity)) return;
+        if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return;
         if (!(world.getBlockEntity(pos) instanceof HopperBlockEntity hopper)) return;
         Integer slot = null;
         for (int i = 0; i < hopper.size(); i++) {
@@ -33,7 +31,8 @@ public abstract class HopperBlockMixin extends BlockWithEntity {
             break;
         }
         if (slot == null) return;
-        ItemStack itemStack = PickupHandler.toItemStack(entity);
+        var villager = (LivingEntity & VillagerDataContainer) entity;
+        ItemStack itemStack = PickupHandler.toItemStack(villager);
         hopper.setStack(slot, itemStack);
         hopper.markDirty();
     }
