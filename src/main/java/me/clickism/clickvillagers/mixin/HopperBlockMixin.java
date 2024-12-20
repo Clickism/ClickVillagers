@@ -1,6 +1,7 @@
 package me.clickism.clickvillagers.mixin;
 
 import me.clickism.clickvillagers.PickupHandler;
+import me.clickism.clickvillagers.VillagerHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.HopperBlock;
@@ -24,6 +25,14 @@ public abstract class HopperBlockMixin extends BlockWithEntity {
         if (world.isClient()) return;
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return;
         if (!(world.getBlockEntity(pos) instanceof HopperBlockEntity hopper)) return;
+        if (!world.getBlockState(pos.up()).isAir()) {
+            // If the hopper has a block above it, don't pick up the villager.
+            return;
+        }
+        if (new VillagerHandler<>((LivingEntity & VillagerDataContainer) entity).hasOwner()) {
+            // Claimed villagers can't be picked up by hoppers.
+            return;
+        }
         Integer slot = null;
         for (int i = 0; i < hopper.size(); i++) {
             if (!hopper.getStack(i).isEmpty()) continue;

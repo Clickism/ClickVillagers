@@ -1,5 +1,9 @@
 package me.clickism.clickvillagers.util;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+
 public class Utils {
     /**
      * Title cases a string. (i.E.: "HELLO world" -> "Hello World")
@@ -29,5 +33,15 @@ public class Utils {
 
     private static String capitalizeWord(String string) {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+    
+    public static void offerToHand(PlayerEntity player, ItemStack itemStack) {
+        PlayerInventory inventory = player.getInventory();
+        int selectedSlot = inventory.selectedSlot;
+        if (inventory.getStack(selectedSlot).isEmpty()) {
+            inventory.insertStack(selectedSlot, itemStack);
+            return;
+        }
+        inventory.offerOrDrop(itemStack);
     }
 }

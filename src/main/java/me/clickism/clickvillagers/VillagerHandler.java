@@ -24,7 +24,19 @@ public class VillagerHandler<T extends LivingEntity & VillagerDataContainer> {
         return ((ClaimedVillagerData) entity.getVillagerData()).clickVillagers_Fabric$getOwner();
     }
     
+    public boolean hasOwner() {
+        return getOwner() != null;
+    }
+    
     public boolean isOwner(UUID uuid) {
         return uuid.equals(getOwner());
+    }
+    
+    public boolean isTradingOpen() {
+        return ((ClaimedVillagerData) entity.getVillagerData()).clickVillagers_Fabric$isTradingOpen();
+    }
+    
+    public void setTradingOpen(boolean open) {
+        ((ClaimedVillagerData) entity.getVillagerData()).clickVillagers_Fabric$setTradingOpen(open);
     }
 }

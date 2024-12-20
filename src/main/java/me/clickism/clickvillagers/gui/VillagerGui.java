@@ -1,14 +1,13 @@
 package me.clickism.clickvillagers.gui;
 
-import net.minecraft.entity.LivingEntity;
+import me.clickism.clickvillagers.VillagerHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.village.VillagerDataContainer;
 
-public abstract class VillagerGui<T extends LivingEntity & VillagerDataContainer> extends DecoratedGui {
-    protected final T villager;
+public abstract class VillagerGui extends DecoratedGui {
+    protected final VillagerHandler<?> villagerHandler;
 
-    public VillagerGui(ServerPlayerEntity player, T villager) {
+    public VillagerGui(ServerPlayerEntity player, VillagerHandler<?> villagerHandler) {
         super(player);
-        this.villager = villager;
+        this.villagerHandler = villagerHandler;
     }
 }

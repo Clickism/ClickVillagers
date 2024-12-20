@@ -20,6 +20,8 @@ import java.util.function.Function;
 public abstract class VillagerDataMixin implements ClaimedVillagerData {
     @Unique
     private UUID owner;
+    @Unique
+    private boolean tradingOpen = true;
 
     @ModifyExpressionValue(
             method = "<clinit>",
@@ -34,10 +36,14 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
                 RecordCodecBuilder.create(
                         instance -> instance.group(
                                 MapCodec.assumeMapUnsafe(original).forGetter(Function.identity()),
-                                Uuids.CODEC.optionalFieldOf("owner").forGetter(villagerData ->
-                                        Optional.ofNullable(((ClaimedVillagerData) villagerData).clickVillagers_Fabric$getOwner()))
-                        ).apply(instance, (data, owner) -> {
-                            ((ClaimedVillagerData) data).clickVillagers_Fabric$setOwner(owner.orElse(null));
+                                Uuids.CODEC.optionalFieldOf("owner").orElse(null).forGetter(villagerData ->
+                                        Optional.ofNullable(((ClaimedVillagerData) villagerData).clickVillagers_Fabric$getOwner())),
+                                Codec.BOOL.fieldOf("tradingOpen").orElse(true).forGetter(villagerData ->
+                                        ((ClaimedVillagerData) villagerData).clickVillagers_Fabric$isTradingOpen())
+                        ).apply(instance, (data, owner, tradingOpen) -> {
+                            ClaimedVillagerData claimedData = (ClaimedVillagerData) data;
+                            claimedData.clickVillagers_Fabric$setOwner(owner.orElse(null));
+                            claimedData.clickVillagers_Fabric$setTradingOpen(tradingOpen);
                             return data;
                         })
                 ), original));
@@ -45,19 +51,24 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
 
     @ModifyReturnValue(method = "withType", at = @At("RETURN"))
     private VillagerData modifyWithType(VillagerData data) {
-        ((ClaimedVillagerData) data).clickVillagers_Fabric$setOwner(owner);
-        return data;
+        return modifyData(data);
     }
-    
+
     @ModifyReturnValue(method = "withProfession", at = @At("RETURN"))
     private VillagerData modifyWithProfession(VillagerData data) {
-        ((ClaimedVillagerData) data).clickVillagers_Fabric$setOwner(owner);
-        return data;
+        return modifyData(data);
     }
-    
+
     @ModifyReturnValue(method = "withLevel", at = @At("RETURN"))
     private VillagerData modifyWithLevel(VillagerData data) {
-        ((ClaimedVillagerData) data).clickVillagers_Fabric$setOwner(owner);
+        return modifyData(data);
+    }
+
+    @Unique
+    private VillagerData modifyData(VillagerData data) {
+        ClaimedVillagerData claimedData = (ClaimedVillagerData) data;
+        claimedData.clickVillagers_Fabric$setOwner(owner);
+        claimedData.clickVillagers_Fabric$setTradingOpen(tradingOpen);
         return data;
     }
 
@@ -70,5 +81,15 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
     @Override
     public void clickVillagers_Fabric$setOwner(@Nullable UUID owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public boolean clickVillagers_Fabric$isTradingOpen() {
+        return tradingOpen;
+    }
+
+    @Override
+    public void clickVillagers_Fabric$setTradingOpen(boolean open) {
+        tradingOpen = open;
     }
 }

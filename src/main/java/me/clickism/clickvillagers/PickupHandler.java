@@ -1,5 +1,6 @@
 package me.clickism.clickvillagers;
 
+import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
@@ -7,8 +8,10 @@ import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -24,8 +27,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class PickupHandler {
+
+    public static final MessageType PICKUP_MESSAGE = new MessageType(
+            Text.literal("[↑] ").formatted(Formatting.GREEN),
+            Text.literal("< ").formatted(Formatting.DARK_GRAY)
+                    .append(Text.literal("↑ ").formatted(Formatting.DARK_GREEN)),
+            Text.literal(" >").formatted(Formatting.DARK_GRAY),
+            Style.EMPTY.withColor(Formatting.GREEN)
+    ) {
+        @Override
+        public void playSound(PlayerEntity player) {
+            MessageType.CONFIRM.playSound(player);
+        }
+    };
     
-    private static final String TYPE_KEY = "PickupVillagerType";
+    private static final String TYPE_KEY = "EntityType";
     
     private enum PickupVillagerType {
         VILLAGER, ZOMBIE_VILLAGER
@@ -34,10 +50,12 @@ public class PickupHandler {
     public static <T extends LivingEntity & VillagerDataContainer> ItemStack toItemStack(T entity) {
         NbtCompound nbt = new NbtCompound();
         entity.writeNbt(nbt);
-        PickupVillagerType type = entity instanceof VillagerEntity 
-                ? PickupVillagerType.VILLAGER 
-                : PickupVillagerType.ZOMBIE_VILLAGER;
-        nbt.putString(TYPE_KEY, type.toString());
+        String id = EntityType.getId(entity.getType()).toString();
+        nbt.putString("EntityType", id);
+//        PickupVillagerType type = entity instanceof VillagerEntity 
+//                ? PickupVillagerType.VILLAGER 
+//                : PickupVillagerType.ZOMBIE_VILLAGER;
+//        nbt.putString(TYPE_KEY, type.toString());
         ItemStack itemStack = getItemStack(getDisplayName(entity), NbtComponent.of(nbt));
         VillagerTextures.setEntityTexture(itemStack, entity);
         entity.remove(Entity.RemovalReason.DISCARDED);
@@ -60,13 +78,13 @@ public class PickupHandler {
             NbtComponent nbtComponent = itemStack.get(DataComponentTypes.CUSTOM_DATA);
             if (nbtComponent == null) return null;
             NbtCompound nbt = nbtComponent.copyNbt();
-            PickupVillagerType type = PickupVillagerType.valueOf(nbt.getString(TYPE_KEY));
-            Entity entity;
-            if (type == PickupVillagerType.VILLAGER) {
-                entity = new VillagerEntity(EntityType.VILLAGER, world);
-            } else {
-                entity = new ZombieVillagerEntity(EntityType.ZOMBIE_VILLAGER, world);
-            }
+            // PickupVillagerType type = PickupVillagerType.valueOf(nbt.getString(TYPE_KEY));
+            String id = nbt.getString(TYPE_KEY);
+            if (id == null) return null;
+            EntityType<?> type = EntityType.get(id).orElse(null);
+            if (type == null) return null;
+            Entity entity = type.create(world, SpawnReason.SPAWN_ITEM_USE);
+            if (entity == null) return null;
             entity.readNbt(nbt);
             return entity;
         } catch (Exception e) {
@@ -93,5 +111,9 @@ public class PickupHandler {
             return Text.literal("Villager");
         }
         return Text.literal(Utils.titleCase(profession.toString()));
+    }
+    
+    public static void notifyPickup(PlayerEntity player) {
+        PICKUP_MESSAGE.sendActionbar(player, Text.literal("You picked a villager up"));
     }
 }

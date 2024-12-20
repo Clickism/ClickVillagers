@@ -1,11 +1,13 @@
 package me.clickism.clickvillagers.callback;
 
 import me.clickism.clickvillagers.AnchorHandler;
-import me.clickism.clickvillagers.VillagerHandler;
+import me.clickism.clickvillagers.PartnerState;
 import me.clickism.clickvillagers.PickupHandler;
+import me.clickism.clickvillagers.VillagerHandler;
 import me.clickism.clickvillagers.gui.VillagerClaimGui;
-import me.clickism.clickvillagers.gui.VillagerEditMenu;
+import me.clickism.clickvillagers.gui.VillagerEditGui;
 import me.clickism.clickvillagers.util.MessageType;
+import me.clickism.clickvillagers.util.Utils;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -18,10 +20,8 @@ import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.village.VillagerDataContainer;
@@ -30,25 +30,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class VillagerUseEntityCallback implements UseEntityCallback {
-    private static final MessageType PICKUP_MESSAGE = new MessageType(
-            Text.literal("[↑] ").formatted(Formatting.GREEN),
-            Text.literal("< ").formatted(Formatting.DARK_GRAY)
-                    .append(Text.literal("↑ ").formatted(Formatting.DARK_GREEN)),
-            Text.literal(" >").formatted(Formatting.DARK_GRAY),
-            Style.EMPTY.withColor(Formatting.GREEN)
-    ) {
-        @Override
-        public void playSound(PlayerEntity player) {
-            MessageType.CONFIRM.playSound(player);
-        }
-    };
     
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
+        if (world.isClient()) return ActionResult.PASS;
         if (!hand.equals(Hand.MAIN_HAND)) return ActionResult.PASS;
-        if (!player.isSneaking()) return ActionResult.PASS;
         if (player.isSpectator()) return ActionResult.PASS;
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return ActionResult.PASS;
+        var villager = (LivingEntity & VillagerDataContainer) entity;
+        VillagerHandler<?> villagerHandler = new VillagerHandler<>(villager);
+        if (!player.isSneaking()) {
+            return handleTrade(player, villagerHandler);
+        }
         if (hitResult == null) return ActionResult.CONSUME;
         PlayerInventory inventory = player.getInventory();
         ItemStack itemStack = inventory.getMainHandStack();
@@ -57,8 +50,6 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
             handleAnchor((LivingEntity) entity, player);
             return ActionResult.CONSUME;
         }
-        var villager = (LivingEntity & VillagerDataContainer) entity;
-        VillagerHandler<?> villagerHandler = new VillagerHandler<>(villager);
         if (itemStack.isIn(ItemTags.SHOVELS)) {
             handleClaim(player, villagerHandler);
             return ActionResult.CONSUME;
@@ -74,10 +65,9 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
     private void handleClaim(PlayerEntity player, VillagerHandler<?> villagerHandler) {
         UUID owner = villagerHandler.getOwner();
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
-        var villager = villagerHandler.getEntity();
         if (owner == null) {
             // Allow claim
-            new VillagerClaimGui<>(serverPlayer, villager).open();
+            new VillagerClaimGui(serverPlayer, villagerHandler).open();
             return;
         }
         if (villagerHandler.isOwner(player.getUuid())) {
@@ -88,20 +78,28 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         MessageType.WARN.send(player, Text.literal("This villager is already claimed."));
     }
     
+    private ActionResult handleTrade(PlayerEntity player, VillagerHandler<?> villagerHandler) {
+        if (villagerHandler.isTradingOpen()) return ActionResult.PASS;
+        if (!villagerHandler.hasOwner()) return ActionResult.PASS;
+        if (villagerHandler.isOwner(player.getUuid())) return ActionResult.PASS;
+        @SuppressWarnings("DataFlowIssue")
+        PartnerState partnerState = PartnerState.getServerState(player.getServer());
+        if (partnerState.isPartner(villagerHandler.getOwner(), player.getName().getString())) {
+            // Player is a partner
+            return ActionResult.PASS;
+        }
+        MessageType.FAIL.send(player, Text.literal("This villager is closed for trading."));
+        return ActionResult.CONSUME;
+    }
+    
     private void handleEdit(PlayerEntity player, VillagerHandler<?> villagerHandler) {
-        new VillagerEditMenu<>((ServerPlayerEntity) player, villagerHandler.getEntity()).open();
+        new VillagerEditGui((ServerPlayerEntity) player, villagerHandler).open();
     }
     
     private void handlePickup(PlayerEntity player, VillagerHandler<?> villagerHandler) {
-        PlayerInventory inventory = player.getInventory();
-        PICKUP_MESSAGE.sendActionbar(player, Text.literal("You picked a villager up"));
+        PickupHandler.notifyPickup(player);
         ItemStack itemStack = PickupHandler.toItemStack(villagerHandler.getEntity());
-        int selectedSlot = inventory.selectedSlot;
-        if (inventory.getStack(selectedSlot).isEmpty()) {
-            inventory.insertStack(selectedSlot, itemStack);
-            return;
-        }
-        inventory.offerOrDrop(itemStack);
+        Utils.offerToHand(player, itemStack);
     }
 
     private void handleAnchor(LivingEntity entity, PlayerEntity player) {
