@@ -5,7 +5,6 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
 import eu.pb4.sgui.api.gui.GuiInterface;
 import me.clickism.clickvillagers.PartnerState;
-import me.clickism.clickvillagers.VillagerHandler;
 import me.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
@@ -15,14 +14,10 @@ import net.minecraft.util.Formatting;
 import java.util.UUID;
 
 public class VillagerPartnerGui extends AnvilInputGui {
-    private final VillagerHandler<?> villagerHandler;
-    private final GuiInterface previous;
     private final MinecraftServer server;
 
-    public VillagerPartnerGui(ServerPlayerEntity player, VillagerHandler<?> villagerHandler, GuiInterface previous) {
+    public VillagerPartnerGui(ServerPlayerEntity player, GuiInterface previous) {
         super(player, false);
-        this.villagerHandler = villagerHandler;
-        this.previous = previous;
         this.server = player.getServer();
         if (this.server == null) throw new IllegalStateException("Server is null");
         setTitle(Text.literal("✍ ").formatted(Formatting.DARK_GRAY)

@@ -64,7 +64,7 @@ public class VillagerEditGui extends VillagerGui {
                 .hideDefaultTooltip()
                 .setCallback((index, type, action, gui) -> {
                     MessageType.CONFIRM.playSound(player);
-                    new VillagerPartnerGui(player, villagerHandler, this).open();
+                    new VillagerPartnerGui(player, this).open();
                 }))
                 .build());
     }
