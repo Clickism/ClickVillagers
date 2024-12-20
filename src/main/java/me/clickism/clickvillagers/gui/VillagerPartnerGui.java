@@ -28,6 +28,9 @@ public class VillagerPartnerGui extends AnvilInputGui {
         setTitle(Text.literal("✍ ").formatted(Formatting.DARK_GRAY)
                 .append(Text.literal("Add Partner").formatted(Formatting.DARK_GRAY, Formatting.BOLD)));
         setSlot(2, getConfirmButton(getInput()));
+        setSlot(1, new BackButton(previous));
+        setSlot(0, new GuiElementBuilder(Items.PLAYER_HEAD).build());
+        setDefaultInputValue("");
     }
 
     @Override
