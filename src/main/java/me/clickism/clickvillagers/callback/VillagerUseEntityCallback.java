@@ -24,6 +24,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -40,14 +41,14 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         var villager = (LivingEntity & VillagerDataContainer) entity;
         VillagerHandler<?> villagerHandler = new VillagerHandler<>(villager);
         if (!player.isSneaking()) {
-            return handleTrade(player, villagerHandler);
+            return handleTrade(player, villagerHandler, hitResult);
         }
         if (hitResult == null) return ActionResult.CONSUME;
         PlayerInventory inventory = player.getInventory();
         ItemStack itemStack = inventory.getMainHandStack();
         Item item = itemStack.getItem();
         if (item.equals(Items.SHEARS)) {
-            handleAnchor((LivingEntity) entity, player);
+            handleAnchor(player, villagerHandler);
             return ActionResult.CONSUME;
         }
         if (itemStack.isIn(ItemTags.SHOVELS)) {
@@ -75,10 +76,10 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
             handleEdit(player, villagerHandler);
             return;
         }
-        MessageType.WARN.send(player, Text.literal("This villager is already claimed."));
+        MessageType.FAIL.send(player, Text.literal("This villager is already claimed."));
     }
     
-    private ActionResult handleTrade(PlayerEntity player, VillagerHandler<?> villagerHandler) {
+    private ActionResult handleTrade(PlayerEntity player, VillagerHandler<?> villagerHandler, HitResult hitResult) {
         if (villagerHandler.isTradingOpen()) return ActionResult.PASS;
         if (!villagerHandler.hasOwner()) return ActionResult.PASS;
         if (villagerHandler.isOwner(player.getUuid())) return ActionResult.PASS;
@@ -88,6 +89,7 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
             // Player is a partner
             return ActionResult.PASS;
         }
+        if (hitResult == null) return ActionResult.PASS;
         MessageType.FAIL.send(player, Text.literal("This villager is closed for trading."));
         return ActionResult.CONSUME;
     }
@@ -97,12 +99,21 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
     }
     
     private void handlePickup(PlayerEntity player, VillagerHandler<?> villagerHandler) {
+        if (villagerHandler.hasOwner() && !villagerHandler.isOwner(player.getUuid())) {
+            MessageType.FAIL.send(player, Text.literal("You can't pick up this villager."));
+            return;
+        }
         PickupHandler.notifyPickup(player);
         ItemStack itemStack = PickupHandler.toItemStack(villagerHandler.getEntity());
         Utils.offerToHand(player, itemStack);
     }
 
-    private void handleAnchor(LivingEntity entity, PlayerEntity player) {
+    private void handleAnchor(PlayerEntity player, VillagerHandler<?> villagerHandler) {
+        if (villagerHandler.hasOwner() && !villagerHandler.isOwner(player.getUuid())) {
+            MessageType.FAIL.send(player, Text.literal("You can't anchor this villager."));
+            return;
+        }
+        LivingEntity entity = villagerHandler.getEntity();
         if (AnchorHandler.isAnchored(entity)) {
             AnchorHandler.removeAnchorEffect(entity);
             MessageType.WARN.send(player, Text.literal("Villager anchor removed."));

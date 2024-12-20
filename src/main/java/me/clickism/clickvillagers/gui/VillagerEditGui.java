@@ -92,7 +92,8 @@ public class VillagerEditGui extends VillagerGui {
                     .setItem(Items.REDSTONE)
                     .setItemName(Text.literal("❌ ").formatted(Formatting.DARK_RED)
                             .append(Text.literal("TRADING CLOSED").formatted(Formatting.DARK_RED, Formatting.BOLD)))
-                    .addLoreLine(Text.literal("Only you can trade with this villager.").formatted(Formatting.RED));
+                    .addLoreLine(Text.literal("Only you and you trading partners").formatted(Formatting.RED))
+                    .addLoreLine(Text.literal("can trade with this villager.").formatted(Formatting.RED));
         }
         return builder.build();
     }
