@@ -22,7 +22,7 @@ public class VillagerEditGui extends VillagerGui {
                 .append(Text.literal(player.getName().getString()).formatted(Formatting.DARK_GREEN, Formatting.BOLD))
                 .append(Text.literal("'s Villager").formatted(Formatting.DARK_GREEN)));
         setSlot(14, new GuiElementBuilder(Items.BRUSH)
-                .setItemName(Text.literal("🌲 ").formatted(Formatting.GOLD)
+                .setName(Text.literal("🌲 ").formatted(Formatting.GOLD)
                         .append(Text.literal("CHANGE BIOME").formatted(Formatting.GOLD, Formatting.BOLD)))
                 .addLoreLine(Text.literal("Click to change the villager's biome.").formatted(Formatting.YELLOW))
                 .hideDefaultTooltip()
@@ -32,7 +32,7 @@ public class VillagerEditGui extends VillagerGui {
                 })
                 .build());
         setSlot(10, new GuiElementBuilder(Items.PLAYER_HEAD)
-                .setItemName(Text.literal("↑ ").formatted(Formatting.GOLD)
+                .setName(Text.literal("↑ ").formatted(Formatting.GOLD)
                         .append(Text.literal("PICK UP VILLAGER").formatted(Formatting.GOLD, Formatting.BOLD)
                                 .append(Text.literal(" ↑").formatted(Formatting.GOLD))))
                 .addLoreLine(Text.literal("Click to pick up the villager.").formatted(Formatting.YELLOW))
@@ -44,7 +44,7 @@ public class VillagerEditGui extends VillagerGui {
                 })
                 .build());
         setSlot(16, new GuiElementBuilder(Items.BARRIER)
-                .setItemName(Text.literal("🔓 ").formatted(Formatting.DARK_RED)
+                .setName(Text.literal("🔓 ").formatted(Formatting.DARK_RED)
                         .append(Text.literal("UNCLAIM VILLAGER").formatted(Formatting.DARK_RED, Formatting.BOLD)))
                 .addLoreLine(Text.literal("Click to unclaim this villager.").formatted(Formatting.RED, Formatting.BOLD))
                 .addLoreLine(Text.literal("Unclaimed villagers can be picked up by anyone.").formatted(Formatting.RED))
@@ -57,7 +57,7 @@ public class VillagerEditGui extends VillagerGui {
                 .build());
         setSlot(13, getTradeOpenButton(villagerHandler));
         setSlot(12, addTradePartnersLore(new GuiElementBuilder(Items.WRITABLE_BOOK)
-                .setItemName(Text.literal("✍ ").formatted(Formatting.GOLD)
+                .setName(Text.literal("✍ ").formatted(Formatting.GOLD)
                         .append(Text.literal("ADD TRADING PARTNER").formatted(Formatting.WHITE, Formatting.BOLD)))
                 .addLoreLine(Text.literal("Click to add/remove a trading partner.").formatted(Formatting.GRAY))
                 .addLoreLine(Text.literal("Trading partners can trade with all of your villagers.").formatted(Formatting.GRAY))
@@ -83,14 +83,14 @@ public class VillagerEditGui extends VillagerGui {
                 });
         if (villagerHandler.isTradingOpen()) {
             builder
-                    .setItemName(Text.literal("$ ").formatted(Formatting.DARK_GREEN)
+                    .setName(Text.literal("$ ").formatted(Formatting.DARK_GREEN)
                             .append(Text.literal("TRADING OPEN").formatted(Formatting.DARK_GREEN, Formatting.BOLD)))
                     .addLoreLine(Text.literal("Everyone can trade with this villager.").formatted(Formatting.GREEN));
 
         } else {
             builder
                     .setItem(Items.REDSTONE)
-                    .setItemName(Text.literal("❌ ").formatted(Formatting.DARK_RED)
+                    .setName(Text.literal("❌ ").formatted(Formatting.DARK_RED)
                             .append(Text.literal("TRADING CLOSED").formatted(Formatting.DARK_RED, Formatting.BOLD)))
                     .addLoreLine(Text.literal("Only you and you trading partners").formatted(Formatting.RED))
                     .addLoreLine(Text.literal("can trade with this villager.").formatted(Formatting.RED));

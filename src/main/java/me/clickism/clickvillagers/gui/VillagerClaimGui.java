@@ -14,7 +14,7 @@ public class VillagerClaimGui extends VillagerGui {
         super(player, villagerHandler);
         setTitle(Text.literal("🔒 Claim Villager").formatted(Formatting.DARK_GRAY, Formatting.BOLD));
         setSlot(13, new GuiElementBuilder(Items.GOLDEN_SHOVEL)
-                .setItemName(Text.literal("🔒 ").formatted(Formatting.GOLD)
+                .setName(Text.literal("🔒 ").formatted(Formatting.GOLD)
                         .append(Text.literal("CLAIM VILLAGER").formatted(Formatting.GOLD, Formatting.BOLD)))
                 .hideDefaultTooltip()
                 .addLoreLine(Text.literal("Click to claim this villager.").formatted(Formatting.YELLOW))

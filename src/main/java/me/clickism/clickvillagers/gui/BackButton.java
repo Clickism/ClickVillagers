@@ -12,7 +12,7 @@ import net.minecraft.util.Formatting;
 
 public class BackButton extends GuiElement {
     private static final ItemStack item = new GuiElementBuilder(Items.MAP)
-            .setItemName(Text.literal("◀ ").formatted(Formatting.WHITE)
+            .setName(Text.literal("◀ ").formatted(Formatting.WHITE)
                     .append(Text.literal("BACK").formatted(Formatting.WHITE, Formatting.BOLD)))
             .addLoreLine(Text.literal("Go back to the previous menu.").formatted(Formatting.GRAY))
             .asStack();

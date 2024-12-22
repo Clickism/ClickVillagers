@@ -3,7 +3,7 @@ plugins {
 	id 'maven-publish'
 }
 
-version = project.mod_version
+version = property('mod.version') + "+" + stonecutter.current.version + "-fabric" 
 group = project.maven_group
 
 base {
@@ -11,31 +11,32 @@ base {
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
 	maven { url 'https://maven.nucleoid.xyz' }
 }
 
 dependencies {
 	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	minecraft "com.mojang:minecraft:${stonecutter.current.project}"
+	mappings "net.fabricmc:yarn:${property('deps.yarn_mappings')}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${property('deps.fabric_loader')}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation include("eu.pb4:sgui:1.8.1+1.21.4")
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${property('deps.fabric_api')}"
+	modImplementation include("eu.pb4:sgui:${property('deps.sgui')}")
 }
 
 processResources {
-	inputs.property "version", project.version
+	def properties = [
+			"version" : version,
+			"targetVersion" : project.property('mod.mc_version'),
+			"minecraftVersion" : stonecutter.current.version,
+			"fabricVersion" : project.property('deps.fabric_loader'),
+	]
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand properties
 	}
+	inputs.properties(properties)
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -47,9 +48,10 @@ java {
 	// if it is present.
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	def java = stonecutter.eval(version, ">=1.20.5")
+			? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+	sourceCompatibility = java
+	targetCompatibility = java
 }
 
 jar {
@@ -73,5 +75,12 @@ publishing {
 		// Notice: This block does NOT have the same function as the block in the top level.
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
+	}
+}
+
+loom {
+	runConfigs.all {
+		ideConfigGenerated true // Run configurations are not created for subprojects by default
+		runDir "../../run" // Use a shared run folder and create separate worlds
 	}
 }

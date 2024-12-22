@@ -50,7 +50,7 @@ public class VillagerBiomeChangeGui extends VillagerGui {
     private GuiElement getBiomeButton(VillagerType type, Item icon) {
         var villager = villagerHandler.getEntity();
         GuiElementBuilder builder = new GuiElementBuilder(icon)
-                .setItemName(Text.literal(type.toString().toUpperCase()).formatted(Formatting.GREEN, Formatting.BOLD))
+                .setName(Text.literal(type.toString().toUpperCase()).formatted(Formatting.GREEN, Formatting.BOLD))
                 .addLoreLine(Text.literal("Click to change the villager's biome.").formatted(Formatting.DARK_GREEN))
                 .setCallback((index, t, action, gui) -> {
                     if (villager.isRemoved()) return;

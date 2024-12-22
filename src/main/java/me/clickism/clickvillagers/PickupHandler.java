@@ -23,7 +23,6 @@ import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 
 public class PickupHandler {
@@ -52,10 +51,6 @@ public class PickupHandler {
         entity.writeNbt(nbt);
         String id = EntityType.getId(entity.getType()).toString();
         nbt.putString("EntityType", id);
-//        PickupVillagerType type = entity instanceof VillagerEntity 
-//                ? PickupVillagerType.VILLAGER 
-//                : PickupVillagerType.ZOMBIE_VILLAGER;
-//        nbt.putString(TYPE_KEY, type.toString());
         ItemStack itemStack = getItemStack(getDisplayName(entity), NbtComponent.of(nbt));
         VillagerTextures.setEntityTexture(itemStack, entity);
         entity.remove(Entity.RemovalReason.DISCARDED);
@@ -83,7 +78,10 @@ public class PickupHandler {
             if (id == null) return null;
             EntityType<?> type = EntityType.get(id).orElse(null);
             if (type == null) return null;
+            //? if >=1.21.4 {
             Entity entity = type.create(world, SpawnReason.SPAWN_ITEM_USE);
+            //?} else
+            /*Entity entity = type.create(world);*/
             if (entity == null) return null;
             entity.readNbt(nbt);
             return entity;

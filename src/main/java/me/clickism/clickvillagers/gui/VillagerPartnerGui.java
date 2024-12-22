@@ -1,5 +1,6 @@
 package me.clickism.clickvillagers.gui;
 
+import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
@@ -15,10 +16,12 @@ import java.util.UUID;
 
 public class VillagerPartnerGui extends AnvilInputGui {
     private final MinecraftServer server;
-
+    private final GuiInterface previous;
+    
     public VillagerPartnerGui(ServerPlayerEntity player, GuiInterface previous) {
         super(player, false);
         this.server = player.getServer();
+        this.previous = previous;
         if (this.server == null) throw new IllegalStateException("Server is null");
         setTitle(Text.literal("✍ ").formatted(Formatting.DARK_GRAY)
                 .append(Text.literal("Add Partner").formatted(Formatting.DARK_GRAY, Formatting.BOLD)));
@@ -35,7 +38,7 @@ public class VillagerPartnerGui extends AnvilInputGui {
 
     private GuiElement getConfirmButton(String input) {
         GuiElementBuilder builder = new GuiElementBuilder(Items.ANVIL)
-                .setItemName(Text.literal("✍ ").formatted(Formatting.WHITE)
+                .setName(Text.literal("✍ ").formatted(Formatting.WHITE)
                         .append(Text.literal("ADD PARTNER").formatted(Formatting.WHITE, Formatting.BOLD)))
                 .setCallback((index, type, action, gui) -> {
                     if (!isValid(input)) {
@@ -51,16 +54,17 @@ public class VillagerPartnerGui extends AnvilInputGui {
                         partnerState.addPartner(uuid, input);
                         MessageType.CONFIRM.send(player, Text.literal("Added " + input + " to your trading partners."));
                     }
+                    previous.open();
                 });
         if (isPartner(input)) {
             builder
                     .setItem(Items.BARRIER)
-                    .setItemName(Text.literal("✍ ").formatted(Formatting.DARK_RED)
+                    .setName(Text.literal("✍ ").formatted(Formatting.DARK_RED)
                             .append(Text.literal("REMOVE PARTNER").formatted(Formatting.DARK_RED, Formatting.BOLD)))
                     .addLoreLine(Text.literal("Click to remove \"" + input + "\" from your trading partners.").formatted(Formatting.RED));
         } else {
             builder
-                    .setItemName(Text.literal("✍ ").formatted(Formatting.DARK_GREEN)
+                    .setName(Text.literal("✍ ").formatted(Formatting.DARK_GREEN)
                             .append(Text.literal("ADD PARTNER").formatted(Formatting.DARK_GREEN, Formatting.BOLD)))
                     .addLoreLine(Text.literal("Click to add \"" + input + "\" to your trading partners.").formatted(Formatting.GREEN));
         }
