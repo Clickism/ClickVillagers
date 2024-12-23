@@ -2,9 +2,14 @@ package me.clickism.clickvillagers;
 
 import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
+//? if >=1.21.1 {
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.NbtComponent;
+//?} else {
+
+
+//?}
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +20,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -41,38 +48,70 @@ public class PickupHandler {
     };
     
     private static final String TYPE_KEY = "EntityType";
-    
-    private enum PickupVillagerType {
-        VILLAGER, ZOMBIE_VILLAGER
-    }
+    //? if <1.21.1
+    /*private static final String DATA_KEY = "ClickVillagersData";*/
 
     public static <T extends LivingEntity & VillagerDataContainer> ItemStack toItemStack(T entity) {
         NbtCompound nbt = new NbtCompound();
         entity.writeNbt(nbt);
         String id = EntityType.getId(entity.getType()).toString();
         nbt.putString("EntityType", id);
-        ItemStack itemStack = getItemStack(getDisplayName(entity), NbtComponent.of(nbt));
+        ItemStack itemStack = getItemStack(getDisplayName(entity), nbt);
         VillagerTextures.setEntityTexture(itemStack, entity);
         entity.remove(Entity.RemovalReason.DISCARDED);
         return itemStack;
     }
     
-    private static ItemStack getItemStack(Text name, NbtComponent data) {
+    private static ItemStack getItemStack(Text name, NbtCompound nbt) {
         ItemStack itemStack = Items.PLAYER_HEAD.getDefaultStack();
-        itemStack.set(DataComponentTypes.CUSTOM_DATA, data);
-        itemStack.set(DataComponentTypes.ITEM_NAME, name);
-        itemStack.set(DataComponentTypes.LORE, new LoreComponent(List.of(
+        writeCustomData(itemStack, nbt);
+        formatItem(itemStack, name, List.of(
                 Text.literal("Right click to place the villager back.")
-                        .fillStyle(Style.EMPTY.withItalic(false).withColor(Formatting.DARK_GRAY)))));
+                        .fillStyle(Style.EMPTY.withItalic(false).withColor(Formatting.DARK_GRAY)))
+        );
         return itemStack;
     }
+    
+    //? if >=1.21.1 {
+    private static void writeCustomData(ItemStack itemStack, NbtCompound nbt) {
+        itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
+    }
+    
+    @Nullable
+    private static NbtCompound readCustomData(ItemStack itemStack) {
+        NbtComponent nbt = itemStack.get(DataComponentTypes.CUSTOM_DATA);
+        if (nbt == null) return null;
+        return nbt.copyNbt();
+    }
+    
+    private static void formatItem(ItemStack itemStack, Text name, List<Text> lore) {
+        itemStack.set(DataComponentTypes.ITEM_NAME, name);
+        itemStack.set(DataComponentTypes.LORE, new LoreComponent(lore));
+    }
+    //?} else {
+    /*private static void writeCustomData(ItemStack itemStack, NbtCompound nbt) {
+        itemStack.getOrCreateNbt().put(DATA_KEY, nbt);
+    }
+    
+    @Nullable
+    private static NbtCompound readCustomData(ItemStack itemStack) {
+        return itemStack.getOrCreateNbt().getCompound(DATA_KEY);
+    }
+    
+    private static void formatItem(ItemStack itemStack, Text name, List<Text> lore) {
+        NbtList list = new NbtList();
+        lore.forEach(text -> list.add(NbtString.of(Text.Serializer.toJson(text))));
+        NbtCompound display = itemStack.getOrCreateSubNbt("display");
+        display.put("Lore", list);
+        display.put("Name", NbtString.of(Text.Serializer.toJson(name)));
+    }
+    *///?}
 
     @Nullable
     public static Entity readEntityFromItemStack(World world, ItemStack itemStack) {
         try {
-            NbtComponent nbtComponent = itemStack.get(DataComponentTypes.CUSTOM_DATA);
-            if (nbtComponent == null) return null;
-            NbtCompound nbt = nbtComponent.copyNbt();
+            NbtCompound nbt = readCustomData(itemStack);
+            if (nbt == null) return null;
             // PickupVillagerType type = PickupVillagerType.valueOf(nbt.getString(TYPE_KEY));
             String id = nbt.getString(TYPE_KEY);
             if (id == null) return null;

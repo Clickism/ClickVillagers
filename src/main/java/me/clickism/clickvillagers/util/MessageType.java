@@ -1,5 +1,6 @@
 package me.clickism.clickvillagers.util;
 
+import me.clickism.clickvillagers.VersionHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -16,8 +17,8 @@ public abstract class MessageType {
     ) {
         @Override
         public void playSound(PlayerEntity player) {
-            player.playSoundToPlayer(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.MASTER, 1, 1);
-            player.playSoundToPlayer(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.MASTER, 1, 2);
+            VersionHelper.playSound(player, SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.MASTER, 1, 1);
+            VersionHelper.playSound(player, SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.MASTER, 1, 2);
         }
     };
 
@@ -27,7 +28,7 @@ public abstract class MessageType {
     ) {
         @Override
         public void playSound(PlayerEntity player) {
-            player.playSoundToPlayer(SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.MASTER, 1, .5f);
+            VersionHelper.playSound(player, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.MASTER, 1, .5f);
         }
     };
 
@@ -37,7 +38,7 @@ public abstract class MessageType {
     ) {
         @Override
         public void playSound(PlayerEntity player) {
-            player.playSoundToPlayer(SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.MASTER, 1, 1f);
+            VersionHelper.playSound(player, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.MASTER, 1, 1f);
         }
     };
 

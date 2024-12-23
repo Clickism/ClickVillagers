@@ -25,7 +25,6 @@ public class VillagerEditGui extends VillagerGui {
                 .setName(Text.literal("🌲 ").formatted(Formatting.GOLD)
                         .append(Text.literal("CHANGE BIOME").formatted(Formatting.GOLD, Formatting.BOLD)))
                 .addLoreLine(Text.literal("Click to change the villager's biome.").formatted(Formatting.YELLOW))
-                .hideDefaultTooltip()
                 .setCallback((index, type, action, gui) -> {
                     MessageType.CONFIRM.playSound(player);
                     new VillagerBiomeChangeGui(player, villagerHandler, this).open();
@@ -48,7 +47,6 @@ public class VillagerEditGui extends VillagerGui {
                         .append(Text.literal("UNCLAIM VILLAGER").formatted(Formatting.DARK_RED, Formatting.BOLD)))
                 .addLoreLine(Text.literal("Click to unclaim this villager.").formatted(Formatting.RED, Formatting.BOLD))
                 .addLoreLine(Text.literal("Unclaimed villagers can be picked up by anyone.").formatted(Formatting.RED))
-                .hideDefaultTooltip()
                 .setCallback((index, type, action, gui) -> {
                     MessageType.WARN.send(player, Text.literal("You unclaimed this villager."));
                     villagerHandler.setOwner(null);
@@ -61,7 +59,6 @@ public class VillagerEditGui extends VillagerGui {
                         .append(Text.literal("ADD TRADING PARTNER").formatted(Formatting.WHITE, Formatting.BOLD)))
                 .addLoreLine(Text.literal("Click to add/remove a trading partner.").formatted(Formatting.GRAY))
                 .addLoreLine(Text.literal("Trading partners can trade with all of your villagers.").formatted(Formatting.GRAY))
-                .hideDefaultTooltip()
                 .setCallback((index, type, action, gui) -> {
                     MessageType.CONFIRM.playSound(player);
                     new VillagerPartnerGui(player, this).open();

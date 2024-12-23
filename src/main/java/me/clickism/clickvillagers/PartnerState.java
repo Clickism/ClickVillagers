@@ -14,16 +14,21 @@ import java.util.*;
 
 public class PartnerState extends PersistentState {
     
+    //? if >=1.21.1 {
     private static final Type<PartnerState> type = new Type<>(
             PartnerState::new,
             PartnerState::createFromNbt,
             null
     );
+    //?}
     
     private final Map<UUID, Set<String>> partners = new HashMap<>();
     
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+    public NbtCompound writeNbt(NbtCompound nbt
+            //? if >=1.21.1
+            , RegistryWrapper.WrapperLookup registries
+    ) {
         NbtCompound compound = new NbtCompound();
         partners.forEach((uuid, set) -> {
             if (set.isEmpty()) return;
@@ -53,7 +58,10 @@ public class PartnerState extends PersistentState {
         markDirty();
     }
     
-    public static PartnerState createFromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    public static PartnerState createFromNbt(NbtCompound nbt
+            //? if >=1.21.1
+            , RegistryWrapper.WrapperLookup registryLookup
+    ) {
         PartnerState state = new PartnerState();
         NbtCompound compound = nbt.getCompound("TradePartnerMap");
         compound.getKeys().forEach(uuid -> {
@@ -68,7 +76,15 @@ public class PartnerState extends PersistentState {
         ServerWorld world = server.getWorld(World.OVERWORLD);
         if (world == null) throw new IllegalStateException("Overworld is null");
         PersistentStateManager persistentStateManager = world.getPersistentStateManager();
+        //? if >=1.21.1 {
         PartnerState state = persistentStateManager.getOrCreate(type, ClickVillagers.MOD_ID);
+        //?} else {
+        /*PartnerState state = persistentStateManager.getOrCreate(
+                PartnerState::createFromNbt,
+                PartnerState::new,
+                ClickVillagers.MOD_ID
+        );
+        *///?}
         state.markDirty();
         return state;
     }

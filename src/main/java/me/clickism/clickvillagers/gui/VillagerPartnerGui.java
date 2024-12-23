@@ -1,10 +1,8 @@
 package me.clickism.clickvillagers.gui;
 
-import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
-import eu.pb4.sgui.api.gui.GuiInterface;
 import me.clickism.clickvillagers.PartnerState;
 import me.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Items;
@@ -16,9 +14,9 @@ import java.util.UUID;
 
 public class VillagerPartnerGui extends AnvilInputGui {
     private final MinecraftServer server;
-    private final GuiInterface previous;
+    private final VillagerGui previous;
     
-    public VillagerPartnerGui(ServerPlayerEntity player, GuiInterface previous) {
+    public VillagerPartnerGui(ServerPlayerEntity player, VillagerGui previous) {
         super(player, false);
         this.server = player.getServer();
         this.previous = previous;
@@ -54,7 +52,7 @@ public class VillagerPartnerGui extends AnvilInputGui {
                         partnerState.addPartner(uuid, input);
                         MessageType.CONFIRM.send(player, Text.literal("Added " + input + " to your trading partners."));
                     }
-                    previous.open();
+                    new VillagerEditGui(player, previous.villagerHandler).open();
                 });
         if (isPartner(input)) {
             builder

@@ -20,7 +20,10 @@ public class BackButton extends GuiElement {
     public BackButton(GuiInterface previous) {
         super(item, (index, type, action, gui) -> {
             previous.open();
+            //? if >=1.21.1 {
             previous.getPlayer().playSoundToPlayer(SoundEvents.UI_LOOM_SELECT_PATTERN, SoundCategory.MASTER, 1, 1);
+            //?} else
+            /*previous.getPlayer().playSound(SoundEvents.UI_LOOM_SELECT_PATTERN, SoundCategory.MASTER, 1, 1);*/
         });
     }
 }

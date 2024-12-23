@@ -1,13 +1,20 @@
 package me.clickism.clickvillagers;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+//? if >=1.21.1 {
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ProfileComponent;
+//?} else {
+
+//?}
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.village.VillagerProfession;
 
 import java.util.Map;
@@ -40,13 +47,21 @@ public class VillagerTextures {
     public static void setEntityTexture(ItemStack itemStack, Entity entity) {
         setTexture(itemStack, getTexture(entity));
     }
-    
+
+    //? if >=1.21.1 {
     private static void setTexture(ItemStack itemStack, String texture) {
         PropertyMap propertyMap = new PropertyMap();
         propertyMap.put("textures", new Property("textures", texture));
         itemStack.set(DataComponentTypes.PROFILE,
                 new ProfileComponent(Optional.empty(), Optional.of(UUID.randomUUID()), propertyMap));
     }
+    //?} else {
+    /*private static void setTexture(ItemStack itemStack, String texture) {
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures", texture));
+        itemStack.getOrCreateNbt().put("SkullOwner", NbtHelper.writeGameProfile(new NbtCompound(), profile));
+    }
+    *///?}
 
     public static String getTexture(Entity entity) {
         if (entity instanceof ZombieVillagerEntity) {

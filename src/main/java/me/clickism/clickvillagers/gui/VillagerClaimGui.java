@@ -16,7 +16,10 @@ public class VillagerClaimGui extends VillagerGui {
         setSlot(13, new GuiElementBuilder(Items.GOLDEN_SHOVEL)
                 .setName(Text.literal("🔒 ").formatted(Formatting.GOLD)
                         .append(Text.literal("CLAIM VILLAGER").formatted(Formatting.GOLD, Formatting.BOLD)))
+                //? if >=1.21.1 {
                 .hideDefaultTooltip()
+                //?} else
+                /*.hideFlags()*/
                 .addLoreLine(Text.literal("Click to claim this villager.").formatted(Formatting.YELLOW))
                 .setCallback((index, type, action, gui) -> {
                     MessageType.CONFIRM.send(player, Text.literal("You claimed this villager."));

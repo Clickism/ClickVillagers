@@ -1,12 +1,12 @@
-package me.clickism.clickvillagers;
+package me.clickism.clickvillagers.anchor;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.passive.VillagerEntity;
 
 public class AnchorHandler {
+    
+    private static final int ANCHOR_DURATION_THRESHOLD = Integer.MAX_VALUE / 4;
     
     public static boolean isAnchored(LivingEntity entity) {
         return entity.getStatusEffects().stream().anyMatch(AnchorHandler::isAnchorEffect);
@@ -14,7 +14,7 @@ public class AnchorHandler {
     
     public static void addAnchorEffect(LivingEntity entity) {
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, Integer.MAX_VALUE, 
-                StatusEffectInstance.MAX_AMPLIFIER, true, false, false));
+                255, true, false, false));
     }
     
     public static void removeAnchorEffect(LivingEntity entity) {
@@ -23,6 +23,6 @@ public class AnchorHandler {
     
     protected static boolean isAnchorEffect(StatusEffectInstance effect) {
         return effect.getEffectType().equals(StatusEffects.SLOWNESS) 
-               && effect.getAmplifier() == StatusEffectInstance.MAX_AMPLIFIER;
+               && effect.getDuration() > ANCHOR_DURATION_THRESHOLD;
     }
 }

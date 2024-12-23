@@ -1,9 +1,7 @@
 package me.clickism.clickvillagers.callback;
 
-import me.clickism.clickvillagers.AnchorHandler;
-import me.clickism.clickvillagers.PartnerState;
-import me.clickism.clickvillagers.PickupHandler;
-import me.clickism.clickvillagers.VillagerHandler;
+import me.clickism.clickvillagers.*;
+import me.clickism.clickvillagers.anchor.AnchorHandler;
 import me.clickism.clickvillagers.gui.VillagerClaimGui;
 import me.clickism.clickvillagers.gui.VillagerEditGui;
 import me.clickism.clickvillagers.util.MessageType;
@@ -120,7 +118,7 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         } else {
             AnchorHandler.addAnchorEffect(entity);
             MessageType.CONFIRM.sendSilently(player, Text.literal("Villager anchored."));
-            player.playSoundToPlayer(SoundEvents.BLOCK_BEEHIVE_SHEAR, SoundCategory.MASTER, 1, 1);
+            VersionHelper.playSound(player, SoundEvents.BLOCK_BEEHIVE_SHEAR, SoundCategory.MASTER, 1, 1);
         }
     }
 }

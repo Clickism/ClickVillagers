@@ -2,10 +2,13 @@ package me.clickism.clickvillagers.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.clickism.clickvillagers.ClaimedVillagerData;
+import me.clickism.clickvillagers.util.CodecUtils;
+import me.clickism.clickvillagers.util.LazyCodec;
 import net.minecraft.util.Uuids;
 import net.minecraft.village.VillagerData;
 import org.jetbrains.annotations.Nullable;
@@ -32,10 +35,10 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
             )
     )
     private static Codec<VillagerData> modifyCodec(Codec<VillagerData> original) {
-        return Codec.lazyInitialized(() -> Codec.withAlternative(
+        return LazyCodec.of(() -> CodecUtils.withAlternative(
                 RecordCodecBuilder.create(
                         instance -> instance.group(
-                                MapCodec.assumeMapUnsafe(original).forGetter(Function.identity()),
+                                CodecUtils.assumeMapUnsafe(original).forGetter(Function.identity()),
                                 Uuids.CODEC.optionalFieldOf("owner").orElse(null).forGetter(villagerData ->
                                         Optional.ofNullable(((ClaimedVillagerData) villagerData).clickVillagers_Fabric$getOwner())),
                                 Codec.BOOL.fieldOf("tradingOpen").orElse(true).forGetter(villagerData ->
@@ -46,7 +49,9 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
                             claimedData.clickVillagers_Fabric$setTradingOpen(tradingOpen);
                             return data;
                         })
-                ), original));
+                ),
+                original
+        ));
     }
 
     @ModifyReturnValue(method = "withType", at = @At("RETURN"))
