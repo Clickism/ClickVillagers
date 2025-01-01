@@ -1,0 +1,58 @@
+#########################################################
+# ClickVillagers Settings
+# NOTE: RELOAD/RESTART SERVER FOR CHANGES TO TAKE EFFECT
+#########################################################
+config-version: 1
+
+# Language of the plugin.
+# Currently supported languages: en_US, de_DE
+language: en_US
+
+# Whether to check for updates on server startup.
+# Strongly Recommended.
+check-update: true
+
+# Whether claimed villagers should take damage.
+# Default: false
+claimed-villagers-take-damage: false
+# Whether claimed villagers should be immune to the /kill command.
+# Won't do anything if "claimed-villagers-take-damage" is enabled.
+# Default: true
+claimed-villagers-immune-kill-command: true
+
+# Whether villager hoppers should tick and pick up villagers.
+# Turning this off will effectively disable villager hoppers.
+# Default: true
+tick-villager-hoppers: true
+# The rate at which villager hoppers should tick. (in ticks)
+# You can increase this value to reduce lag, but it will also reduce the speed at which villagers are picked up.
+# Default: 20
+villager-hopper-tick-rate: 20
+# The maximum amount of villager hoppers a chunk can hold.
+# You can use this to prevent lag/spam.
+# -1 will disable the limit.
+# Default: -1
+villager-hopper-limit-per-chunk: -1
+
+# Whether baby villagers should be ignored by villager hoppers.
+# Default: true
+ignore-baby-villagers: true
+# Whether claimed villagers should be ignored by villager hoppers.
+# Default: true
+ignore-claimed-villagers: true
+# Whether to register the villager hopper recipe.
+# If this is disabled, players won't be able to craft villager hoppers regularly.
+# Default: true
+villager-hopper-recipe: true
+# Weather to display the emerald frame on villager hoppers.
+# WARNING: It might be hard to distinguish villager hoppers from regular hoppers when this setting is disabled.
+# Default: true
+villager-hopper-block-display: true
+# How many trading partners a player can have.
+# Default: 10
+partner-limit-per-player: 10
+# Whether to validate partner names.
+# If this is enabled, players can only add players that played on the server before as trading partners.
+# If this is disabled, players can add any name as a trading partner, even if that player doesn't exist.
+# Default: true
+validate-partner-names: true
