@@ -38,6 +38,7 @@ public final class ClickVillagers extends JavaPlugin {
             Message.initialize(this);
         } catch (IOException exception) {
             LOGGER.log(Level.SEVERE, "Failed to load config/messages: ", exception);
+            getServer().getPluginManager().disablePlugin(this);
             return;
         }
         // Load data
