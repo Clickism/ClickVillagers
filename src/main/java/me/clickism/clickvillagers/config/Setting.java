@@ -50,8 +50,6 @@ public enum Setting {
         Object value = null;
         if (settingManager != null) {
             value = settingManager.get(path);
-        } else {
-            ClickVillagers.LOGGER.severe("SettingManager is null.");
         }
         if (!type.isInstance(value)) {
             ClickVillagers.LOGGER.warning("Invalid value for \"" + path + "\" in config.yml. Default value " +

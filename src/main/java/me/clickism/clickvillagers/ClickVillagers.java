@@ -32,14 +32,20 @@ public final class ClickVillagers extends JavaPlugin {
     public void onEnable() {
         INSTANCE = this;
         LOGGER = getLogger();
-        // Load data
-        PartnerManager partnerManager;
+        // Load config/messages
         try {
             Setting.initialize(this);
             Message.initialize(this);
+        } catch (IOException exception) {
+            LOGGER.log(Level.SEVERE, "Failed to load config/messages: ", exception);
+            return;
+        }
+        // Load data
+        PartnerManager partnerManager;
+        try {
             partnerManager = new PartnerManager(this);
         } catch (IOException exception) {
-            LOGGER.log(Level.SEVERE, "Failed to load data/config: ", exception);
+            LOGGER.log(Level.SEVERE, "Failed to load partners: ", exception);
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
