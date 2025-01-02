@@ -3,6 +3,7 @@ package me.clickism.clickvillagers.gui;
 import me.clickism.clickgui.menu.*;
 import me.clickism.clickvillagers.message.Message;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -51,9 +52,9 @@ public class VillagerBiomeChangeMenu extends Menu {
                     } else if (entity instanceof ZombieVillager villager) {
                         villager.setVillagerType(type);
                     }
-                    Message.BIOME_CHANGED.parameterizer()
-                            .put("biome", type.toString().toLowerCase())
-                            .send(player);
+                    player.playSound(entity, Sound.BLOCK_COMPOSTER_FILL_SUCCESS, 1, .5f);
+                    player.playSound(entity, Sound.BLOCK_AZALEA_LEAVES_PLACE, 1, 1);
+                    player.playSound(entity, Sound.BLOCK_AZALEA_PLACE, 1, 2);
                     view.refresh();
                 });
     }
