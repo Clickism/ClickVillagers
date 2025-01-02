@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 public enum Permission {
     PICKUP,
+    PLACE,
     HOPPER,
     ANCHOR,
     CLAIM,
