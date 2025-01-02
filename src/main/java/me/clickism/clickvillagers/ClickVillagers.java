@@ -25,13 +25,18 @@ import java.util.logging.Logger;
 public final class ClickVillagers extends JavaPlugin {
 
     public static final String RESOURCE_ID = "111424";
+    
     public static ClickVillagers INSTANCE;
     public static Logger LOGGER;
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         INSTANCE = this;
         LOGGER = getLogger();
+    }
+
+    @Override
+    public void onEnable() {
         // Load config/messages
         try {
             Setting.initialize(this);
