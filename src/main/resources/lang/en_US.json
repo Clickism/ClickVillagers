@@ -66,9 +66,9 @@
     "&cOnly you and your trading partners",
     "&ccan trade with this villager."
   ],
-  "button_redirect_change_biome_menu": "&2🌲 &lCHANGE BIOME",
+  "button_redirect_change_biome_menu": "&6🌲 &lCHANGE BIOME",
   "button_redirect_change_biome_menu.lore": [
-    "&aClick to change this villager's biome."
+    "&eClick to change this villager's biome."
   ],
   "button_change_biome.lore": [
     "&aClick to change this villager's biome."

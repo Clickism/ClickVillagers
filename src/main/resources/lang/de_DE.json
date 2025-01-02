@@ -68,9 +68,9 @@
     "&cNur du und deine Handelspartner können",
     "&cmit diesem Dorfbewohner handeln."
   ],
-  "button_redirect_change_biome_menu": "&2🌲 &lBIOM ÄNDERN",
+  "button_redirect_change_biome_menu": "&6🌲 &lBIOM ÄNDERN",
   "button_redirect_change_biome_menu.lore": [
-    "&aKlicke, um das Biom dieses Dorfbewohners zu ändern."
+    "&eKlicke, um das Biom dieses Dorfbewohners zu ändern."
   ],
   "button_change_biome.lore": [
     "&aKlicke, um das Biom dieses Dorfbewohners zu ändern."
