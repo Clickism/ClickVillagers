@@ -62,13 +62,16 @@ public class YAMLDataManager extends DataManager {
     }
 
     private void saveResourceIfNotExists(String path) throws IOException {
-        if (!file.exists()) {
+        if (file.exists()) return;
+        if (plugin.getResource(path) != null) {
             try {
                 plugin.saveResource(path, false);
-            } catch (IllegalArgumentException exception) {
-                file.createNewFile();
+                return;
+            } catch (Exception exception) {
+                plugin.getLogger().log(Level.SEVERE, "Couldn't save default resource \"" + path + "\".", exception);
             }
         }
+        file.createNewFile();
     }
 
     /**
