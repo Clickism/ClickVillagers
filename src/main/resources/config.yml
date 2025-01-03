@@ -3,6 +3,7 @@
 # NOTE: RELOAD/RESTART SERVER FOR CHANGES TO TAKE EFFECT
 #########################################################
 config-version: 1
+#########################################################
 
 # Language of the plugin.
 # Currently supported languages: en_US, de_DE
