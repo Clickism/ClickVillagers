@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageManager {
-    private static final boolean DEBUG_OVERRIDE_MESSAGES = true;
+    private static final boolean DEBUG_OVERRIDE_MESSAGES = false;
 
     private static final int VERSION = 1;
 
