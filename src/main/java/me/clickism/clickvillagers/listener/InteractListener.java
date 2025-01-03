@@ -21,6 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
+
 public class InteractListener implements Listener {
 
     private final ClaimManager claimManager;
@@ -87,9 +89,10 @@ public class InteractListener implements Listener {
         PlayerInventory inventory = player.getInventory();
         ItemStack item = inventory.getItemInMainHand();
         if (!pickupManager.isVillager(item)) return;
-        LivingEntity villager;
+        event.setCancelled(true);
+        if (!hasSpace(entity)) return;
         try {
-            villager = pickupManager.spawnFromItemStack(item, entity.getLocation());
+            LivingEntity villager = pickupManager.spawnFromItemStack(item, entity.getLocation());
             item.setAmount(item.getAmount() - 1);
             inventory.setItemInMainHand(item);
             World world = player.getWorld();
@@ -98,14 +101,22 @@ public class InteractListener implements Listener {
             } else {
                 world.playSound(player, Sound.BLOCK_WOOD_BREAK, 1, .5f);
             }
+            entity.addPassenger(villager);
         } catch (IllegalArgumentException exception) {
             Message.READ_ERROR.send(player);
             ClickVillagers.LOGGER.severe("Failed to read villager data: " + exception.getMessage());
-            return;
         }
-        event.setCancelled(true);
-        Vehicle vehicle = (Vehicle) entity;
-        if (!vehicle.addPassenger(villager)) return;
+    }
+    
+    private boolean hasSpace(Entity entity) {
+        List<Entity> passengers = entity.getPassengers();
+        if (entity instanceof Minecart || entity instanceof ChestBoat) {
+            return passengers.isEmpty();
+        }
+        if (entity instanceof Boat) {
+            return passengers.size() < 2;
+        }
+        return false;
     }
 
     private void handleTrade(Player player, LivingEntity villager, Cancellable event) {
