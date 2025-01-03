@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class LegacyHopperCompatibility {
 
     private static final String LOG_PREFIX = "[LegacyCompatibility] ";
-    
+
     public static void startConversionIfLegacy(JavaPlugin plugin) {
         File legacyDataFile = new File(plugin.getDataFolder(), "data.yml");
         if (!legacyDataFile.exists()) return;
@@ -51,7 +51,7 @@ public class LegacyHopperCompatibility {
 
     private static void convertHopper(Location location, UUID displayUUID) {
         try {
-            Hopper hopper = (Hopper) location.getBlock().getState(); 
+            Hopper hopper = (Hopper) location.getBlock().getState();
             HopperManager.markHopper(hopper, displayUUID);
             ClickVillagers.LOGGER.info(LOG_PREFIX + "Converted legacy villager hopper at: " + formatLocation(location));
         } catch (Exception exception) {

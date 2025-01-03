@@ -47,7 +47,7 @@ public class HopperManager implements Listener {
 
     private final PickupManager pickupManager;
     private final ClaimManager claimManager;
-    
+
     private final ItemStack villagerHopper;
 
     public HopperManager(JavaPlugin plugin, PickupManager pickupManager, ClaimManager claimManager) {
@@ -96,10 +96,10 @@ public class HopperManager implements Listener {
             return;
         }
         // Mark hopper as villager hopper
-        markHopper(hopper, createBlockDisplay(block).getUniqueId());
+        markHopper(hopper);
         sendHopperPlaceMessage(player, block);
     }
-    
+
     public static void markHopper(Hopper hopper) {
         if (Setting.HOPPER_BLOCK_DISPLAY.isEnabled()) {
             Block block = hopper.getBlock();

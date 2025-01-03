@@ -7,7 +7,7 @@ import java.io.File;
 public class LegacyMessagesCompatibility {
 
     private static final String LOG_PREFIX = "[LegacyCompatibility] ";
-    
+
     public static void removeLegacyMessageFile(JavaPlugin plugin) {
         try {
             File file = new File(plugin.getDataFolder(), "messages.yml");

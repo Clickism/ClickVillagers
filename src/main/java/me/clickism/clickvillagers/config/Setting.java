@@ -63,11 +63,11 @@ public enum Setting {
     public int getInt() {
         return get(Integer.class);
     }
-    
+
     public float getFloat() {
         return (float) getDouble();
     }
-    
+
     public double getDouble() {
         return get(Double.class);
     }

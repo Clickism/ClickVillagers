@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageManager {
-    private static final boolean DEBUG_OVERRIDE_MESSAGES = false;
-
+    
     private static final int VERSION = 1;
+    private static final boolean DEBUG_OVERRIDE_MESSAGES = false;
 
     private static final String DIRECTORY_NAME = "lang";
     private static final List<String> SUPPORTED_LANGUAGES = List.of(

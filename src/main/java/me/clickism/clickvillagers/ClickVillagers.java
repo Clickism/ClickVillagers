@@ -5,9 +5,9 @@ import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.gui.ChatInputListener;
 import me.clickism.clickvillagers.hopper.HopperManager;
 import me.clickism.clickvillagers.legacy.LegacyHopperCompatibility;
+import me.clickism.clickvillagers.legacy.LegacyMessagesCompatibility;
 import me.clickism.clickvillagers.listener.DispenserListener;
 import me.clickism.clickvillagers.listener.InteractListener;
-import me.clickism.clickvillagers.legacy.LegacyMessagesCompatibility;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.nbt.NBTHelper;
 import me.clickism.clickvillagers.nbt.NBTHelperFactory;
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 public final class ClickVillagers extends JavaPlugin {
 
     public static final String RESOURCE_ID = "111424";
-    
+
     public static ClickVillagers INSTANCE;
     public static Logger LOGGER;
 

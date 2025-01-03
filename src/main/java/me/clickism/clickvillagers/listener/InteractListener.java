@@ -9,7 +9,10 @@ import me.clickism.clickvillagers.gui.VillagerEditMenu;
 import me.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.util.Utils;
-import me.clickism.clickvillagers.villager.*;
+import me.clickism.clickvillagers.villager.AnchorManager;
+import me.clickism.clickvillagers.villager.ClaimManager;
+import me.clickism.clickvillagers.villager.PartnerManager;
+import me.clickism.clickvillagers.villager.PickupManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -108,7 +111,7 @@ public class InteractListener implements Listener {
             ClickVillagers.LOGGER.severe("Failed to read villager data: " + exception.getMessage());
         }
     }
-    
+
     private boolean hasSpace(Entity entity) {
         List<Entity> passengers = entity.getPassengers();
         if (entity instanceof Minecart || entity instanceof ChestBoat) {
