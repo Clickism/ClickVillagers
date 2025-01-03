@@ -17,6 +17,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
+import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -114,7 +115,7 @@ public class InteractListener implements Listener {
 
     private boolean hasSpace(Entity entity) {
         List<Entity> passengers = entity.getPassengers();
-        if (entity instanceof Minecart || entity instanceof ChestBoat) {
+        if (entity instanceof RideableMinecart || entity instanceof ChestBoat) {
             return passengers.isEmpty();
         }
         if (entity instanceof Boat) {
