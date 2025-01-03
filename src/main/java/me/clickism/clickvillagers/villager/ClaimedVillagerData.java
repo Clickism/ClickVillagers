@@ -1,4 +1,4 @@
-package me.clickism.clickvillagers;
+package me.clickism.clickvillagers.villager;
 
 import org.jetbrains.annotations.Nullable;
 

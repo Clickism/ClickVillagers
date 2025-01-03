@@ -1,11 +1,14 @@
 package me.clickism.clickvillagers.callback;
 
-import me.clickism.clickvillagers.*;
 import me.clickism.clickvillagers.anchor.AnchorHandler;
 import me.clickism.clickvillagers.gui.VillagerClaimGui;
 import me.clickism.clickvillagers.gui.VillagerEditGui;
 import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
+import me.clickism.clickvillagers.util.VersionHelper;
+import me.clickism.clickvillagers.villager.PartnerState;
+import me.clickism.clickvillagers.villager.PickupHandler;
+import me.clickism.clickvillagers.villager.VillagerHandler;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

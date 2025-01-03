@@ -1,4 +1,4 @@
-package me.clickism.clickvillagers;
+package me.clickism.clickvillagers.villager;
 
 import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
@@ -20,8 +20,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -150,7 +148,7 @@ public class PickupHandler {
         return Text.literal(Utils.titleCase(profession.toString()));
     }
     
-    public static void notifyPickup(PlayerEntity player) {
-        PICKUP_MESSAGE.sendActionbar(player, Text.literal("You picked a villager up"));
+    public static void notifyPickup(PlayerEntity player, Entity entity) {
+        PICKUP_MESSAGE.sendActionbar(player, Text.literal("You picked up a villager"));
     }
 }

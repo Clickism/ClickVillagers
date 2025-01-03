@@ -1,6 +1,6 @@
 package me.clickism.clickvillagers.gui;
 
-import me.clickism.clickvillagers.VillagerHandler;
+import me.clickism.clickvillagers.villager.VillagerHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public abstract class VillagerGui extends DecoratedGui {

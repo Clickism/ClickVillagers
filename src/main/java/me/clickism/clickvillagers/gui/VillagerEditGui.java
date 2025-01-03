@@ -2,10 +2,10 @@ package me.clickism.clickvillagers.gui;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import me.clickism.clickvillagers.PartnerState;
-import me.clickism.clickvillagers.PickupHandler;
-import me.clickism.clickvillagers.VillagerHandler;
-import me.clickism.clickvillagers.VillagerTextures;
+import me.clickism.clickvillagers.villager.PartnerState;
+import me.clickism.clickvillagers.villager.PickupHandler;
+import me.clickism.clickvillagers.villager.VillagerHandler;
+import me.clickism.clickvillagers.villager.VillagerTextures;
 import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
 import net.minecraft.item.Items;

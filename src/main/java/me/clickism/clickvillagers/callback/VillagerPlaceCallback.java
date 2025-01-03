@@ -1,6 +1,6 @@
 package me.clickism.clickvillagers.callback;
 
-import me.clickism.clickvillagers.PickupHandler;
+import me.clickism.clickvillagers.villager.PickupHandler;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

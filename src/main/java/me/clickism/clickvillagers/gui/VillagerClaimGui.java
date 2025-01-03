@@ -1,7 +1,7 @@
 package me.clickism.clickvillagers.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import me.clickism.clickvillagers.VillagerHandler;
+import me.clickism.clickvillagers.villager.VillagerHandler;
 import me.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;

@@ -1,4 +1,4 @@
-package me.clickism.clickvillagers;
+package me.clickism.clickvillagers.villager;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.village.VillagerDataContainer;

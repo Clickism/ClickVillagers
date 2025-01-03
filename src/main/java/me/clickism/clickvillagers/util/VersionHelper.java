@@ -1,9 +1,8 @@
-package me.clickism.clickvillagers;
+package me.clickism.clickvillagers.util;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 
 public class VersionHelper {
     public static void playSound(PlayerEntity player, SoundEvent soundEvent, SoundCategory category, float volume, float pitch) {

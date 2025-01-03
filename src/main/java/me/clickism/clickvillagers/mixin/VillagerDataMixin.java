@@ -2,11 +2,9 @@ package me.clickism.clickvillagers.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import me.clickism.clickvillagers.ClaimedVillagerData;
+import me.clickism.clickvillagers.villager.ClaimedVillagerData;
 import me.clickism.clickvillagers.util.CodecUtils;
 import me.clickism.clickvillagers.util.LazyCodec;
 import net.minecraft.util.Uuids;

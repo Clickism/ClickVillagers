@@ -1,7 +1,7 @@
 package me.clickism.clickvillagers.mixin;
 
-import me.clickism.clickvillagers.PickupHandler;
-import me.clickism.clickvillagers.VillagerHandler;
+import me.clickism.clickvillagers.villager.PickupHandler;
+import me.clickism.clickvillagers.villager.VillagerHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.HopperBlock;

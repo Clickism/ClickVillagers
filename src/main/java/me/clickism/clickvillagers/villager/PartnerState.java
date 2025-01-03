@@ -1,5 +1,6 @@
-package me.clickism.clickvillagers;
+package me.clickism.clickvillagers.villager;
 
+import me.clickism.clickvillagers.ClickVillagers;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;

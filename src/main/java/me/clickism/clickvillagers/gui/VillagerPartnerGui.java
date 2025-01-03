@@ -3,7 +3,7 @@ package me.clickism.clickvillagers.gui;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
-import me.clickism.clickvillagers.PartnerState;
+import me.clickism.clickvillagers.villager.PartnerState;
 import me.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
