@@ -84,6 +84,7 @@ public final class ClickVillagers extends JavaPlugin {
 
     private void checkUpdates() {
         if (Setting.CHECK_UPDATE.isDisabled()) return;
+        LOGGER.info("Checking for updates...");
         new UpdateChecker(this, RESOURCE_ID).checkVersion(version -> {
             if (getDescription().getVersion().equals(version)) return;
             LOGGER.info("New version available: " + version);
