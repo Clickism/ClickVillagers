@@ -56,9 +56,7 @@ public class PickupManager implements Listener {
         if (!isVillager(item)) return;
 
         event.setCancelled(true);
-        if (Permission.PLACE.lacksAndNotify(player)) {
-            return;
-        }
+        if (Permission.PLACE.lacksAndNotify(player)) return;
         Block block = event.getBlockPlaced();
         Location location = block.getLocation().add(.5, 0, .5);
         float yaw = player.getLocation().getYaw();
