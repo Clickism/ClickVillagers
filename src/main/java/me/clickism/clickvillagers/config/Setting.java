@@ -12,17 +12,18 @@ public enum Setting {
 
     CHECK_UPDATE(true),
 
-    CLAIMED_VILLAGERS_TAKE_DAMAGE(false),
-    CLAIMED_VILLAGERS_IMMUNE_KILL_COMMAND(true),
+    CLAIMED_DAMAGE(false),
+    CLAIMED_IMMUNE_KILL_COMMAND(true),
 
-    TICK_VILLAGER_HOPPERS(true),
-    VILLAGER_HOPPER_TICK_RATE(20),
-    VILLAGER_HOPPER_LIMIT_PER_CHUNK(-1),
+    TICK_HOPPERS(true),
+    HOPPER_TICK_RATE(20),
+    HOPPER_LIMIT_PER_CHUNK(-1),
 
     IGNORE_BABY_VILLAGERS(true),
     IGNORE_CLAIMED_VILLAGERS(true),
-    VILLAGER_HOPPER_RECIPE(true),
-    VILLAGER_HOPPER_BLOCK_DISPLAY(true),
+    HOPPER_RECIPE(true),
+    HOPPER_BLOCK_DISPLAY(true),
+    HOPPER_BLOCK_DISPLAY_VIEW_RANGE(1.0f),
 
     PARTNER_LIMIT_PER_PLAYER(10),
 
@@ -61,6 +62,14 @@ public enum Setting {
 
     public int getInt() {
         return get(Integer.class);
+    }
+    
+    public float getFloat() {
+        return (float) getDouble();
+    }
+    
+    public double getDouble() {
+        return get(Double.class);
     }
 
     public String getString() {

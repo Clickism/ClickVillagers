@@ -14,25 +14,25 @@ check-update: true
 
 # Whether claimed villagers should take damage.
 # Default: false
-claimed-villagers-take-damage: false
+claimed-damage: false
 # Whether claimed villagers should be immune to the /kill command.
 # Won't do anything if "claimed-villagers-take-damage" is enabled.
 # Default: true
-claimed-villagers-immune-kill-command: true
+claimed-immune-kill-command: true
 
 # Whether villager hoppers should tick and pick up villagers.
 # Turning this off will effectively disable villager hoppers.
 # Default: true
-tick-villager-hoppers: true
+tick-hoppers: true
 # The rate at which villager hoppers should tick. (in ticks)
 # You can increase this value to reduce lag, but it will also reduce the speed at which villagers are picked up.
 # Default: 20
-villager-hopper-tick-rate: 20
+hopper-tick-rate: 20
 # The maximum amount of villager hoppers a chunk can hold.
 # You can use this to prevent lag/spam.
 # -1 will disable the limit.
 # Default: -1
-villager-hopper-limit-per-chunk: -1
+hopper-limit-per-chunk: -1
 
 # Whether baby villagers should be ignored by villager hoppers.
 # Default: true
@@ -43,11 +43,15 @@ ignore-claimed-villagers: true
 # Whether to register the villager hopper recipe.
 # If this is disabled, players won't be able to craft villager hoppers regularly.
 # Default: true
-villager-hopper-recipe: true
+hopper-recipe: true
 # Weather to display the emerald frame on villager hoppers.
 # WARNING: It might be hard to distinguish villager hoppers from regular hoppers when this setting is disabled.
 # Default: true
-villager-hopper-block-display: true
+hopper-block-display: true
+# The range at which the emerald frame should be displayed.
+# Default: 1.0
+hopper-block-display-view-range: 1.0
+
 # How many trading partners a player can have.
 # Default: 10
 partner-limit-per-player: 10

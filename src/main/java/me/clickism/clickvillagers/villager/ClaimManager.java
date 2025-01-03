@@ -26,7 +26,7 @@ public class ClaimManager implements Listener {
 
     @AutoRegistered
     public ClaimManager(JavaPlugin plugin) {
-        if (Setting.CLAIMED_VILLAGERS_TAKE_DAMAGE.isDisabled()) {
+        if (Setting.CLAIMED_DAMAGE.isDisabled()) {
             plugin.getServer().getPluginManager().registerEvents(this, plugin);
         }
     }
@@ -38,7 +38,7 @@ public class ClaimManager implements Listener {
         if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) return;
         LivingEntity villager = (LivingEntity) entity;
         if (!hasOwner(villager)) return;
-        if (Setting.CLAIMED_VILLAGERS_IMMUNE_KILL_COMMAND.isDisabled()
+        if (Setting.CLAIMED_IMMUNE_KILL_COMMAND.isDisabled()
             && event.getCause() == EntityDamageEvent.DamageCause.KILL) return;
         event.setCancelled(true);
     }
