@@ -1,6 +1,7 @@
-package me.clickism.clickvillagers.hopper;
+package me.clickism.clickvillagers.legacy;
 
 import me.clickism.clickvillagers.ClickVillagers;
+import me.clickism.clickvillagers.hopper.HopperManager;
 import me.clickism.clickvillagers.serialization.YAMLDataManager;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -31,7 +32,9 @@ public class LegacyHopperCompatibility {
         }
         convertHoppers(plugin, loadMap(dataManager));
         try {
-            legacyDataFile.delete();
+            if (!legacyDataFile.delete()) {
+                throw new Exception("Couldn't delete file.");
+            }
             ClickVillagers.LOGGER.log(Level.INFO, LOG_PREFIX + "Deleted legacy data file.");
         } catch (Exception exception) {
             ClickVillagers.LOGGER.log(Level.WARNING, LOG_PREFIX + "Failed to delete legacy data file.", exception);

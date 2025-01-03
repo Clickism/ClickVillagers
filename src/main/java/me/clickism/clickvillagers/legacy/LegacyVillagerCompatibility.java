@@ -1,6 +1,7 @@
-package me.clickism.clickvillagers.villager;
+package me.clickism.clickvillagers.legacy;
 
 import me.clickism.clickvillagers.ClickVillagers;
+import me.clickism.clickvillagers.villager.ClaimManager;
 import org.bukkit.*;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;

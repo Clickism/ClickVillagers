@@ -3,6 +3,7 @@ package me.clickism.clickvillagers.villager;
 import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickvillagers.ClickVillagers;
 import me.clickism.clickvillagers.config.Permission;
+import me.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import me.clickism.clickvillagers.listener.AutoRegistered;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.nbt.NBTHelper;

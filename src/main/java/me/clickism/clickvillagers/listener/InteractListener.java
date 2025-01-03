@@ -6,6 +6,7 @@ import me.clickism.clickvillagers.config.Permission;
 import me.clickism.clickvillagers.gui.ChatInputListener;
 import me.clickism.clickvillagers.gui.VillagerClaimMenu;
 import me.clickism.clickvillagers.gui.VillagerEditMenu;
+import me.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.util.Utils;
 import me.clickism.clickvillagers.villager.*;
