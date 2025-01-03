@@ -45,7 +45,7 @@ public class JSONDataManager extends DataManager {
         try {
             Files.copy(file.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            plugin.getLogger().severe("Failed to create backup file: " + backupFile.getPath());
+            plugin.getLogger().warning("Failed to create backup file: " + backupFile.getPath());
         }
         try (FileWriter writer = new FileWriter(file)) {
             GSON.toJson(json, writer);
@@ -62,7 +62,7 @@ public class JSONDataManager extends DataManager {
                 this.root = root;
             }
         } catch (FileNotFoundException e) {
-            plugin.getLogger().severe("File not found: " + file.getPath());
+            plugin.getLogger().warning("File not found: " + file.getPath());
         }
     }
 
