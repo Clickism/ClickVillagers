@@ -4,7 +4,8 @@ plugins {
 }
 
 group = 'me.clickism'
-version = plugin_version
+version = plugin_version + "+spigot"
+def plugin_version = plugin_version
 
 repositories {
     mavenCentral()
@@ -67,7 +68,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 processResources {
-    def props = [version: version]
+    def props = [version: plugin_version]
     inputs.properties props
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
