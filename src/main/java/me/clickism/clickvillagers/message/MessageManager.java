@@ -3,6 +3,7 @@ package me.clickism.clickvillagers.message;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.serialization.JSONDataManager;
 import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,15 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageManager {
-
     private static final boolean DEBUG_OVERRIDE_MESSAGES = true;
 
     private static final int VERSION = 1;
 
     private static final String DIRECTORY_NAME = "lang";
-    private static final String[] SUPPORTED_LANGUAGES = {
+    private static final List<String> SUPPORTED_LANGUAGES = List.of(
             "en_US", "de_DE"
-    };
+    );
 
     private final JavaPlugin plugin;
     private final JSONDataManager dataManager;
@@ -31,7 +31,15 @@ public class MessageManager {
         // Save default languages
         this.plugin = plugin;
         File directory = new File(plugin.getDataFolder(), DIRECTORY_NAME);
-        dataManager = new JSONDataManager(plugin, directory, languageCode + ".json");
+        String fileName = languageCode + ".json";
+        if (!new File(directory, fileName).exists() && !SUPPORTED_LANGUAGES.contains(languageCode)) {
+            String defaultLanguage = SUPPORTED_LANGUAGES.get(0);
+            plugin.getLogger().warning("Language \"" + languageCode + "\" not found. Reverting to \"" + defaultLanguage + "\".");
+            Setting.LANGUAGE.set(defaultLanguage);
+            Setting.saveSettings();
+            fileName = defaultLanguage + ".json";
+        }
+        dataManager = new JSONDataManager(plugin, directory, fileName);
         checkAndUpdateLanguageFiles();
     }
 
