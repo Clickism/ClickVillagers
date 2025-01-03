@@ -52,7 +52,7 @@ public class HopperManager implements Listener {
     public HopperManager(JavaPlugin plugin, PickupManager pickupManager, ClaimManager claimManager) {
         this.pickupManager = pickupManager;
         this.claimManager = claimManager;
-        this.villagerHopper = createHopperItem(VILLAGER_HOPPER_KEY);
+        this.villagerHopper = createHopperItem();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         if (Setting.VILLAGER_HOPPER_RECIPE.isEnabled()) {
             registerHopperRecipe(plugin);
@@ -238,13 +238,13 @@ public class HopperManager implements Listener {
         return false;
     }
 
-    private static ItemStack createHopperItem(NamespacedKey villagerHopperKey) {
+    private static ItemStack createHopperItem() {
         return Icon.of(Material.HOPPER)
                 .setName(ChatColor.GREEN + Message.VILLAGER_HOPPER.toString())
                 .setLore(Message.VILLAGER_HOPPER.getLore())
                 .addEnchantmentGlint()
                 .applyToMeta(meta ->
-                        meta.getPersistentDataContainer().set(villagerHopperKey, PersistentDataType.BOOLEAN, true)
+                        meta.getPersistentDataContainer().set(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN, true)
                 ).get();
     }
 
