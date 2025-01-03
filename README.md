@@ -33,6 +33,7 @@ Trailer: https://youtu.be/19qup8i3IyU
   - Craft a villager hopper by combining **1 Hopper and 1 Emerald**
 - See picked up villagers' properties in their description.
 - Clean messages, sound effects and particle effects.
+- Highly configurable.
 - **Language support:** German & English (Paper/Spigot only)
 
 ## Villagers in a Chest
