@@ -51,7 +51,7 @@ public class InteractListener implements Listener {
         Entity entity = event.getRightClicked();
         if (!(entity instanceof Villager) && !(entity instanceof ZombieVillager)) return;
         LivingEntity villager = (LivingEntity) entity;
-        LegacyCompatibility.convertDataIfLegacy(villager);
+        LegacyVillagerCompatibility.convertDataIfLegacy(villager);
         Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.SPECTATOR) return;
         if (!player.isSneaking()) {

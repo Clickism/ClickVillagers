@@ -109,8 +109,8 @@ public class PickupManager implements Listener {
 
     @NotNull
     public LivingEntity spawnFromItemStack(ItemStack item, Location location) throws IllegalArgumentException {
-        if (LegacyCompatibility.isLegacyVillager(item)) {
-            return LegacyCompatibility.spawnFromItemStack(item, location);
+        if (LegacyVillagerCompatibility.isLegacyVillager(item)) {
+            return LegacyVillagerCompatibility.spawnFromItemStack(item, location);
         }
         ItemMeta meta = item.getItemMeta();
         if (meta == null) throw new IllegalArgumentException("ItemMeta is null");
@@ -138,7 +138,7 @@ public class PickupManager implements Listener {
         if (meta == null) return false;
         PersistentDataContainer data = meta.getPersistentDataContainer();
         return data.has(VILLAGER_KEY, PersistentDataType.BOOLEAN)
-               || LegacyCompatibility.isLegacyVillager(item);
+               || LegacyVillagerCompatibility.isLegacyVillager(item);
     }
 
     private ItemStack createItem(LivingEntity entity) {

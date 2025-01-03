@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class LegacyCompatibility {
+public class LegacyVillagerCompatibility {
 
     private static final NamespacedKey LEGACY_VILLAGER_UUID_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "villager_uuid");
     private static final NamespacedKey LEGACY_OWNER_NAME_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "villager_owner");
