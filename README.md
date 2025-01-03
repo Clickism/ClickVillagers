@@ -27,7 +27,7 @@ Trailer: https://youtu.be/19qup8i3IyU
   - Claimed villagers won't take any damage by default.
   - Change a claimed villager's biomes.
   - Open/close a claimed villager's trading.
-- Only let your trading partners trade with your villagers.
+- Add **trading partners** and oly let your trading partners trade with your villagers.
 - Use **Villager Hoppers** to pick up villagers automatically.
   - Baby villagers and claimed villagers won't be picked up by default.
   - Craft a villager hopper by combining **1 Hopper and 1 Emerald**
