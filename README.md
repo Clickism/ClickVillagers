@@ -13,7 +13,7 @@
 
 
 ## ClickVillagers
-**ClickVillagers is a simple quality of life plugin/mod that makes working with villagers much easier by allowing you to pick villagers up into your inventory, claim and protect them, customize their properties, and much more.**
+**ClickVillagers is a simple quality of life plugin/mod that makes working with villagers much easier by allowing you to pick villagers up into your inventory, claim and protect them, customize their properties, and much more!**
 
 Trailer: https://youtu.be/19qup8i3IyU
 
@@ -31,8 +31,9 @@ Trailer: https://youtu.be/19qup8i3IyU
 - Use **Villager Hoppers** to pick up villagers automatically.
   - Baby villagers and claimed villagers won't be picked up by default.
   - Craft a villager hopper by combining **1 Hopper and 1 Emerald**
-- Clean messages, sound effects and particle effects.
 - See picked up villagers' properties in their description.
+- Clean messages, sound effects and particle effects.
+- **Language support:** German & English (Paper/Spigot only)
 
 ## Villagers in a Chest
 ![](https://i.imgur.com/ZzGJEZ4.png)
