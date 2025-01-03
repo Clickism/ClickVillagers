@@ -25,6 +25,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Transformation;
+import org.jetbrains.annotations.Nullable;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
@@ -33,7 +34,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class HopperManager implements Listener {
-
     private static final Transformation FRAME_TRANSFORMATION = new Transformation(
             new Vector3f(-.525f, -.235f, -.525f),
             new AxisAngle4f(),
@@ -41,19 +41,18 @@ public class HopperManager implements Listener {
             new AxisAngle4f()
     );
 
+    public static final NamespacedKey VILLAGER_HOPPER_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "villager_hopper");
+    public static final NamespacedKey DISPLAY_UUID_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "display_uuid");
+
     private final PickupManager pickupManager;
     private final ClaimManager claimManager;
-
-    private final NamespacedKey villagerHopperKey;
-    private final NamespacedKey displayUUIDKey;
+    
     private final ItemStack villagerHopper;
 
     public HopperManager(JavaPlugin plugin, PickupManager pickupManager, ClaimManager claimManager) {
         this.pickupManager = pickupManager;
         this.claimManager = claimManager;
-        this.villagerHopperKey = new NamespacedKey(plugin, "villager_hopper");
-        this.displayUUIDKey = new NamespacedKey(plugin, "display_uuid");
-        this.villagerHopper = createHopperItem(villagerHopperKey);
+        this.villagerHopper = createHopperItem(VILLAGER_HOPPER_KEY);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         if (Setting.VILLAGER_HOPPER_RECIPE.isEnabled()) {
             registerHopperRecipe(plugin);
@@ -77,7 +76,7 @@ public class HopperManager implements Listener {
         if (item.getType() != Material.HOPPER) return;
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
-        if (!meta.getPersistentDataContainer().has(villagerHopperKey, PersistentDataType.BOOLEAN)) return;
+        if (!meta.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
         // Villager hopper placed
         Block block = event.getBlockPlaced();
         if (!(block.getState() instanceof Hopper hopper)) return;
@@ -96,21 +95,30 @@ public class HopperManager implements Listener {
             return;
         }
         // Mark hopper as villager hopper
-        markHopper(hopper);
-        // Set name
-        hopper.setCustomName(ChatColor.DARK_GRAY + "📥 " + ChatColor.BOLD + Message.VILLAGER_HOPPER);
-        hopper.update();
+        markHopper(hopper, createBlockDisplay(block).getUniqueId());
         sendHopperPlaceMessage(player, block);
     }
-
-    private void markHopper(Hopper hopper) {
-        Block block = hopper.getBlock();
-        PersistentDataContainer data = hopper.getPersistentDataContainer();
-        data.set(villagerHopperKey, PersistentDataType.BOOLEAN, true);
+    
+    public static void markHopper(Hopper hopper) {
         if (Setting.VILLAGER_HOPPER_BLOCK_DISPLAY.isEnabled()) {
+            Block block = hopper.getBlock();
             BlockDisplay display = createBlockDisplay(block);
-            data.set(displayUUIDKey, PersistentDataType.STRING, display.getUniqueId().toString());
+            markHopper(hopper, display.getUniqueId());
+            return;
         }
+        markHopper(hopper, null);
+    }
+
+    public static void markHopper(Hopper hopper, @Nullable UUID displayUUID) {
+        PersistentDataContainer data = hopper.getPersistentDataContainer();
+        data.set(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN, true);
+        if (displayUUID != null) {
+            data.set(DISPLAY_UUID_KEY, PersistentDataType.STRING, displayUUID.toString());
+        } else {
+            data.remove(DISPLAY_UUID_KEY);
+        }
+        hopper.setCustomName(ChatColor.DARK_GRAY + "📥 " + ChatColor.BOLD + Message.VILLAGER_HOPPER);
+        hopper.update();
     }
 
     private boolean isHopperLimitReached(Chunk chunk, int limit) {
@@ -119,7 +127,7 @@ public class HopperManager implements Listener {
         for (BlockState tileEntity : chunk.getTileEntities()) {
             if (tileEntity.getType() != Material.HOPPER) continue;
             Hopper hopper = (Hopper) tileEntity;
-            if (hopper.getPersistentDataContainer().has(villagerHopperKey, PersistentDataType.BOOLEAN)) {
+            if (hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) {
                 count++;
             }
         }
@@ -131,7 +139,7 @@ public class HopperManager implements Listener {
         Block block = event.getBlock();
         if (!(block.getState() instanceof Hopper hopper)) return;
         PersistentDataContainer data = hopper.getPersistentDataContainer();
-        if (!data.has(villagerHopperKey, PersistentDataType.BOOLEAN)) return;
+        if (!data.has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
         removeBlockDisplayIfExists(data);
         // Hopper broken
         event.setDropItems(false);
@@ -144,7 +152,7 @@ public class HopperManager implements Listener {
     }
 
     private void removeBlockDisplayIfExists(PersistentDataContainer data) {
-        String uuidString = data.get(displayUUIDKey, PersistentDataType.STRING);
+        String uuidString = data.get(DISPLAY_UUID_KEY, PersistentDataType.STRING);
         if (uuidString == null) return;
         UUID uuid = UUID.fromString(uuidString);
         Entity entity = Bukkit.getEntity(uuid);
@@ -173,7 +181,7 @@ public class HopperManager implements Listener {
     private void tickTileEntity(BlockState tileEntity, List<Entity> villagers) {
         if (tileEntity.getType() != Material.HOPPER) return;
         Hopper hopper = (Hopper) tileEntity;
-        if (!hopper.getPersistentDataContainer().has(villagerHopperKey, PersistentDataType.BOOLEAN)) return;
+        if (!hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
         Block block = hopper.getBlock();
         Block blockAbove = block.getRelative(BlockFace.UP);
         Material material = blockAbove.getType();

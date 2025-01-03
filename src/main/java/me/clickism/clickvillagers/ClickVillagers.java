@@ -4,6 +4,7 @@ import me.clickism.clickgui.menu.MenuManager;
 import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.gui.ChatInputListener;
 import me.clickism.clickvillagers.hopper.HopperManager;
+import me.clickism.clickvillagers.hopper.LegacyHopperCompatibility;
 import me.clickism.clickvillagers.listener.DispenserListener;
 import me.clickism.clickvillagers.listener.InteractListener;
 import me.clickism.clickvillagers.message.Message;
@@ -77,6 +78,8 @@ public final class ClickVillagers extends JavaPlugin {
         new DispenserListener(this, pickupManager);
         // Check updates
         checkUpdates();
+        // Convert legacy hoppers
+        LegacyHopperCompatibility.startConversionIfLegacy(this);
     }
 
     private void checkUpdates() {
