@@ -1,10 +1,13 @@
 package me.clickism.clickvillagers.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import me.clickism.clickvillagers.util.VersionHelper;
 import me.clickism.clickvillagers.villager.VillagerHandler;
 import me.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -22,9 +25,12 @@ public class VillagerClaimGui extends VillagerGui {
                 /*.hideFlags()*/
                 .addLoreLine(Text.literal("Click to claim this villager.").formatted(Formatting.YELLOW))
                 .setCallback((index, type, action, gui) -> {
-                    MessageType.CONFIRM.send(player, Text.literal("You claimed this villager."));
+                    MessageType.CONFIRM.sendSilently(player, Text.literal("You claimed this villager. ").formatted(Formatting.GREEN)
+                            .append(Text.literal("Shift + Right Click").formatted(Formatting.WHITE, Formatting.UNDERLINE))
+                            .append(Text.literal(" on the villager to edit it.").formatted(Formatting.GREEN)));
+                    VersionHelper.playSound(player, SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.MASTER, 1, 1);
                     villagerHandler.setOwner(player.getUuid());
-                    gui.close();
+                    new VillagerEditGui(player, villagerHandler).open();
                 })
                 .build());
     }

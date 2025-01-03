@@ -10,6 +10,10 @@ import me.clickism.clickvillagers.villager.PartnerState;
 import me.clickism.clickvillagers.villager.PickupHandler;
 import me.clickism.clickvillagers.villager.VillagerHandler;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.minecraft.block.Block;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,22 +21,28 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.UUID;
 
 public class VillagerUseEntityCallback implements UseEntityCallback {
-    
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
         if (world.isClient()) return ActionResult.PASS;
@@ -63,13 +73,14 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         handlePickup(player, villagerHandler);
         return ActionResult.CONSUME;
     }
-    
+
     private void handleClaim(PlayerEntity player, VillagerHandler<?> villagerHandler) {
         UUID owner = villagerHandler.getOwner();
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
         if (owner == null) {
             // Allow claim
             new VillagerClaimGui(serverPlayer, villagerHandler).open();
+            playOpenSound(player);
             return;
         }
         if (villagerHandler.isOwner(player.getUuid())) {
@@ -79,7 +90,7 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         }
         MessageType.FAIL.send(player, Text.literal("This villager is already claimed."));
     }
-    
+
     private ActionResult handleTrade(PlayerEntity player, VillagerHandler<?> villagerHandler, HitResult hitResult) {
         if (villagerHandler.isTradingOpen()) return ActionResult.PASS;
         if (!villagerHandler.hasOwner()) return ActionResult.PASS;
@@ -94,17 +105,18 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         MessageType.FAIL.send(player, Text.literal("This villager is closed for trading."));
         return ActionResult.CONSUME;
     }
-    
+
     private void handleEdit(PlayerEntity player, VillagerHandler<?> villagerHandler) {
         new VillagerEditGui((ServerPlayerEntity) player, villagerHandler).open();
+        playOpenSound(player);
     }
-    
+
     private void handlePickup(PlayerEntity player, VillagerHandler<?> villagerHandler) {
         if (villagerHandler.hasOwner() && !villagerHandler.isOwner(player.getUuid())) {
             MessageType.FAIL.send(player, Text.literal("You can't pick up this villager."));
             return;
         }
-        PickupHandler.notifyPickup(player);
+        PickupHandler.notifyPickup(player, villagerHandler.getEntity());
         ItemStack itemStack = PickupHandler.toItemStack(villagerHandler.getEntity());
         Utils.offerToHand(player, itemStack);
     }
@@ -115,13 +127,35 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
             return;
         }
         LivingEntity entity = villagerHandler.getEntity();
+        ServerWorld world = (ServerWorld) player.getWorld();
         if (AnchorHandler.isAnchored(entity)) {
             AnchorHandler.removeAnchorEffect(entity);
-            MessageType.WARN.send(player, Text.literal("Villager anchor removed."));
+            MessageType.ANCHOR_REMOVE.sendActionbarSilently(player, Text.literal("You removed this villager's anchor."));
+            VersionHelper.playSound(player, SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.MASTER, 1, 1);
+            world.spawnParticles(
+                    ParticleTypes.WAX_OFF,
+                    entity.getX(), entity.getY(), entity.getZ(),
+                    10, .2, 0, .2, 2
+            );
         } else {
             AnchorHandler.addAnchorEffect(entity);
-            MessageType.CONFIRM.sendSilently(player, Text.literal("Villager anchored."));
-            VersionHelper.playSound(player, SoundEvents.BLOCK_BEEHIVE_SHEAR, SoundCategory.MASTER, 1, 1);
+            MessageType.ANCHOR_ADD.sendActionbarSilently(player, Text.literal("You anchored this villager."));
+            VersionHelper.playSound(player, SoundEvents.BLOCK_BEEHIVE_SHEAR, SoundCategory.NEUTRAL, 1, 1);
+            BlockPos posBelow = entity.getBlockPos().down();
+            world.spawnParticles(
+                    ParticleTypes.WAX_ON,
+                    entity.getX(), entity.getY(), entity.getZ(),
+                    10, .2, 0, .2, 2
+            );
+            world.spawnParticles(
+                    new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(posBelow)),
+                    entity.getX(), entity.getY(), entity.getZ(),
+                    30, 0, 0, 0, 1
+            );
         }
+    }
+
+    private void playOpenSound(PlayerEntity player) {
+        VersionHelper.playSound(player, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.NEUTRAL, 1, .8f);
     }
 }

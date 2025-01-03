@@ -3,6 +3,7 @@ package me.clickism.clickvillagers.villager;
 import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
 //? if >=1.21.1 {
+import me.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.NbtComponent;
@@ -20,6 +21,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -31,19 +37,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class PickupHandler {
-
-    public static final MessageType PICKUP_MESSAGE = new MessageType(
-            Text.literal("[↑] ").formatted(Formatting.GREEN),
-            Text.literal("< ").formatted(Formatting.DARK_GRAY)
-                    .append(Text.literal("↑ ").formatted(Formatting.DARK_GREEN)),
-            Text.literal(" >").formatted(Formatting.DARK_GRAY),
-            Style.EMPTY.withColor(Formatting.GREEN)
-    ) {
-        @Override
-        public void playSound(PlayerEntity player) {
-            MessageType.CONFIRM.playSound(player);
-        }
-    };
     
     private static final String TYPE_KEY = "EntityType";
     //? if <1.21.1
@@ -149,6 +142,12 @@ public class PickupHandler {
     }
     
     public static void notifyPickup(PlayerEntity player, Entity entity) {
-        PICKUP_MESSAGE.sendActionbar(player, Text.literal("You picked up a villager"));
+        MessageType.PICKUP_MESSAGE.sendActionbarSilently(player, Text.literal("You picked up a villager"));
+        ServerWorld world = (ServerWorld) player.getWorld();
+        double x = entity.getX();
+        double y = entity.getY() + .25f;
+        double z = entity.getZ();
+        world.spawnParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 1, 0, 0, 0, 1);
+        VersionHelper.playSound(player, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.NEUTRAL, 1, .5f);
     }
 }

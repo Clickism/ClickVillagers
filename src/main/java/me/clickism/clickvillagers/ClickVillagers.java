@@ -1,6 +1,7 @@
 package me.clickism.clickvillagers;
 
-import me.clickism.clickvillagers.callback.VillagerPlaceCallback;
+import me.clickism.clickvillagers.callback.VehicleUseEntityCallback;
+import me.clickism.clickvillagers.callback.VillagerUseBlockCallback;
 import me.clickism.clickvillagers.callback.VillagerUseEntityCallback;
 import net.fabricmc.api.ModInitializer;
 
@@ -16,7 +17,8 @@ public class ClickVillagers implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		UseEntityCallback.EVENT.register(new VillagerUseEntityCallback());
-		UseBlockCallback.EVENT.register(new VillagerPlaceCallback());
+		UseEntityCallback.EVENT.register(new VehicleUseEntityCallback());
+		UseBlockCallback.EVENT.register(new VillagerUseBlockCallback());
 	}
 	
 }

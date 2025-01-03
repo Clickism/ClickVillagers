@@ -8,6 +8,9 @@ import net.minecraft.block.HopperBlock;
 import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.ZombieVillagerEntity;
+import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.VillagerDataContainer;
@@ -31,6 +34,10 @@ public abstract class HopperBlockMixin extends BlockWithEntity {
         }
         if (new VillagerHandler<>((LivingEntity & VillagerDataContainer) entity).hasOwner()) {
             // Claimed villagers can't be picked up by hoppers.
+            return;
+        }
+        if (entity instanceof PassiveEntity passiveEntity && passiveEntity.isBaby()) {
+            // Baby villagers can't be picked up by hoppers.
             return;
         }
         Integer slot = null;

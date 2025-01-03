@@ -37,7 +37,7 @@ public class VillagerEditGui extends VillagerGui {
                 .addLoreLine(Text.literal("Click to pick up the villager.").formatted(Formatting.YELLOW))
                 .setSkullOwner(VillagerTextures.DEFAULT_TEXTURE)
                 .setCallback((index, type, action, gui) -> {
-                    PickupHandler.notifyPickup(player);
+                    PickupHandler.notifyPickup(player, villagerHandler.getEntity());
                     Utils.offerToHand(player, PickupHandler.toItemStack(villagerHandler.getEntity()));
                     gui.close();
                 })

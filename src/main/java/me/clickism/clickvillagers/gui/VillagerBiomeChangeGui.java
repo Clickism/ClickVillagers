@@ -3,11 +3,14 @@ package me.clickism.clickvillagers.gui;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.GuiInterface;
+import me.clickism.clickvillagers.util.VersionHelper;
 import me.clickism.clickvillagers.villager.VillagerHandler;
 import me.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.village.VillagerType;
@@ -55,7 +58,9 @@ public class VillagerBiomeChangeGui extends VillagerGui {
                 .setCallback((index, t, action, gui) -> {
                     if (villager.isRemoved()) return;
                     villager.setVillagerData(villager.getVillagerData().withType(type));
-                    MessageType.CONFIRM.send(player, Text.literal("You changed the villager's biome to " + type + "."));
+                    VersionHelper.playSound(player, SoundEvents.BLOCK_COMPOSTER_FILL_SUCCESS, SoundCategory.MASTER, 1, .5f);
+                    VersionHelper.playSound(player, SoundEvents.BLOCK_AZALEA_LEAVES_PLACE, SoundCategory.MASTER, 1, 1);
+                    VersionHelper.playSound(player, SoundEvents.BLOCK_AZALEA_PLACE, SoundCategory.MASTER, 1, 2);
                     placeBiomeButtons();
                 });
         if (villager.getVillagerData().getType().equals(type)) {

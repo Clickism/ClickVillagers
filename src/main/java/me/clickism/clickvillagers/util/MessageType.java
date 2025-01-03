@@ -1,5 +1,6 @@
 package me.clickism.clickvillagers.util;
 
+import com.mojang.brigadier.Message;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -40,6 +41,30 @@ public abstract class MessageType {
             VersionHelper.playSound(player, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.MASTER, 1, 1f);
         }
     };
+
+    public static final MessageType PICKUP_MESSAGE = silent(
+            Text.literal("[↑] ").formatted(Formatting.GREEN),
+            Text.literal("< ").formatted(Formatting.DARK_GRAY)
+                    .append(Text.literal("↑ ").formatted(Formatting.DARK_GREEN)),
+            Text.literal(" >").formatted(Formatting.DARK_GRAY),
+            Style.EMPTY.withColor(Formatting.GREEN)
+    );
+
+    public static final MessageType ANCHOR_ADD = silent(
+            Text.literal("[⚓] ").formatted(Formatting.DARK_GREEN),
+            Text.literal("< ").formatted(Formatting.DARK_GRAY)
+                    .append(Text.literal("⚓ ").formatted(Formatting.DARK_GREEN)),
+            Text.literal(" >").formatted(Formatting.DARK_GRAY),
+            Style.EMPTY.withColor(Formatting.GREEN)
+    );
+
+    public static final MessageType ANCHOR_REMOVE = silent(
+            Text.literal("[⚓] ").formatted(Formatting.GOLD),
+            Text.literal("< ").formatted(Formatting.DARK_GRAY)
+                    .append(Text.literal("⚓ ").formatted(Formatting.GOLD)),
+            Text.literal(" >").formatted(Formatting.DARK_GRAY),
+            Style.EMPTY.withColor(Formatting.YELLOW)
+    );
 
     private final Text prefix;
 
@@ -87,5 +112,12 @@ public abstract class MessageType {
         player.sendMessage(text, actionbar);
         if (silent) return;
         playSound(player);
+    }
+    
+    public static MessageType silent(Text prefix, Text actionbarPrefix, Text actionbarSuffix, Style actionbarStyle) {
+        return new MessageType(prefix, actionbarPrefix, actionbarSuffix, actionbarStyle) {
+            @Override 
+            public void playSound(PlayerEntity player) {}
+        };
     }
 }
