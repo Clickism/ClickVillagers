@@ -22,6 +22,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PickupManager implements Listener {
     private enum VillagerType {
@@ -141,10 +142,11 @@ public class PickupManager implements Listener {
     }
 
     private ItemStack createItem(LivingEntity entity) {
+        String customName = entity.getCustomName();
         Villager.Profession profession = Utils.getVillagerProfession(entity);
         boolean adult = ((Ageable) entity).isAdult();
         Icon icon = Message.VILLAGER.toIcon(Material.PLAYER_HEAD)
-                .setName(ChatColor.YELLOW + getName(profession, adult))
+                .setName(ChatColor.YELLOW + getName(customName, profession, adult))
                 .runIf(claimManager.hasOwner(entity),
                         i -> i.addLoreLine("&6🔑 " + Message.INFO_OWNER + ": &f" + claimManager.getOwnerName(entity)))
                 .runIf(anchorManager.isAnchored(entity),
@@ -155,7 +157,10 @@ public class PickupManager implements Listener {
         return icon.get();
     }
 
-    private static String getName(Villager.Profession profession, boolean adult) {
+    private static String getName(@Nullable String customName, Villager.Profession profession, boolean adult) {
+        if (customName != null) {
+            return "\"" + customName + "\"";
+        }
         if (!adult) {
             return Message.BABY_VILLAGER.toString();
         }
