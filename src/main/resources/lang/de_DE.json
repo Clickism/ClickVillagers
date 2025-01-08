@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "credit": ["Clickism"],
   "update": "ClickVillagers: &a&lNeue Version verfügbar: &f{version}",
   "no_permission": "Du bist nicht berechtigt, das zu tun.",
   "anchor_add": "Du hast diesen Dorfbewohner verankert",
