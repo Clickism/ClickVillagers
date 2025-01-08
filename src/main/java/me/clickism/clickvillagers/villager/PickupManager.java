@@ -167,7 +167,7 @@ public class PickupManager implements Listener {
         if (profession == Villager.Profession.NONE) {
             return Message.VILLAGER.toString();
         }
-        String professionName = Utils.capitalizeWord(profession.toString().toLowerCase());
+        String professionName = Message.get("profession." + profession.toString().toLowerCase());
         return professionName + " " + Message.VILLAGER;
     }
 }

@@ -8,7 +8,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.ZombieVillager;
-
 import java.util.List;
 
 public class VillagerBiomeChangeMenu extends Menu {
@@ -44,7 +43,7 @@ public class VillagerBiomeChangeMenu extends Menu {
 
     private Button getBiomeButton(LivingEntity entity, Villager.Type type, Material material) {
         return Button.withIcon(() -> Message.BUTTON_CHANGE_BIOME.toIcon(material)
-                        .setName("&2🌲 &l" + type.toString())
+                        .setName("&2🌲 &l" + Message.get("biome." + type.name().toLowerCase()))
                         .runIf(type == getType(entity), Icon::addEnchantmentGlint))
                 .setOnClick((player, view, slot) -> {
                     if (entity instanceof Villager villager) {

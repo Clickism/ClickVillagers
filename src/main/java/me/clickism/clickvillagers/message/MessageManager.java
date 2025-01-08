@@ -7,6 +7,7 @@ import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.serialization.JSONDataManager;
 import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -15,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageManager {
-    
-    private static final int VERSION = 1;
+
+    private static final int VERSION = 2;
     private static final boolean DEBUG_OVERRIDE_MESSAGES = false;
 
     private static final String DIRECTORY_NAME = "lang";
@@ -63,13 +64,25 @@ public class MessageManager {
      * @return colorized string
      */
     @Nullable
-    public String get(String path) {
+    public String get(@NotNull String path) {
         JsonObject root = dataManager.getRoot();
         if (!root.has(path)) {
             return null;
         }
         String message = dataManager.getRoot().get(path).getAsString();
         return Utils.colorize(message);
+    }
+
+    /**
+     * Get message or path if message is not found
+     *
+     * @param path key of message
+     * @return colorized string
+     */
+    @NotNull
+    public String getOrPath(@NotNull String path) {
+        String message = get(path);
+        return message != null ? message : path;
     }
 
     public List<String> getLore(String pathToButton) {

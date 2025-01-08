@@ -76,5 +76,26 @@
   "button_back": "&f◀ &lBACK",
   "button_back.lore": [
     "&7Go back to the previous menu."
-  ]
+  ],
+  "biome.desert": "DESERT",
+  "biome.jungle": "JUNGLE",
+  "biome.plains": "PLAINS",
+  "biome.savanna": "SAVANNA",
+  "biome.snow": "SNOW",
+  "biome.swamp": "SWAMP",
+  "biome.taiga": "TAIGA",
+  "profession.armorer": "Armorer",
+  "profession.butcher": "Butcher",
+  "profession.cartographer": "Cartographer",
+  "profession.cleric": "Cleric",
+  "profession.farmer": "Farmer",
+  "profession.fisherman": "Fisherman",
+  "profession.fletcher": "Fletcher",
+  "profession.leatherworker": "Leatherworker",
+  "profession.librarian": "Librarian",
+  "profession.mason": "Mason",
+  "profession.nitwit": "Nitwit",
+  "profession.shepherd": "Shepherd",
+  "profession.toolsmith": "Toolsmith",
+  "profession.weaponsmith": "Weaponsmith"
 }

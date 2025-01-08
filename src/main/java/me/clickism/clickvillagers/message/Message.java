@@ -8,6 +8,7 @@ import me.clickism.clickvillagers.util.Parameterizer;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -107,9 +108,7 @@ public enum Message {
 
     @Override
     public String toString() {
-        if (messageManager == null) return path;
-        String string = messageManager.get(path);
-        return string != null ? string : path;
+        return get(path);
     }
 
     public Icon toIcon(Material material) {
@@ -159,5 +158,11 @@ public enum Message {
         if (messageManager != null) return;
         Setting.initialize(plugin);
         messageManager = new MessageManager(plugin, Setting.LANGUAGE.getString());
+    }
+    
+    @NotNull
+    public static String get(String key) {
+        if (messageManager == null) return key;
+        return messageManager.getOrPath(key);
     }
 }
