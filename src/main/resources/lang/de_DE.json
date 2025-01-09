@@ -79,5 +79,26 @@
   "button_back": "&f◀ &lZURÜCK",
   "button_back.lore": [
     "&7Kehre zurück zum vorherigen Menü."
-  ]
+  ],
+  "biome.desert": "WÜSTE",
+  "biome.jungle": "DSCHUNGEL",
+  "biome.plains": "EBENE",
+  "biome.savanna": "SAVANNE",
+  "biome.snow": "SCHNEE",
+  "biome.swamp": "SUMPF",
+  "biome.taiga": "TAIGA",
+  "profession.armorer": "Rüstungsschmied",
+  "profession.butcher": "Metzger",
+  "profession.cartographer": "Kartograf",
+  "profession.cleric": "Geistlicher",
+  "profession.farmer": "Bauer",
+  "profession.fisherman": "Fischer",
+  "profession.fletcher": "Pfeilmacher",
+  "profession.leatherworker": "Gerber",
+  "profession.librarian": "Bibliothekar",
+  "profession.mason": "Maurer",
+  "profession.nitwit": "Nichtsnutz",
+  "profession.shepherd": "Shepherd",
+  "profession.toolsmith": "Werkzeugschmied",
+  "profession.weaponsmith": "Waffenschmied"
 }
