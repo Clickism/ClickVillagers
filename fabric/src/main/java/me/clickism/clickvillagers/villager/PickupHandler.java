@@ -114,9 +114,9 @@ public class PickupHandler {
             EntityType<?> type = EntityType.get(id).orElse(null);
             if (type == null) return null;
             //? if >=1.21.4 {
-            /*Entity entity = type.create(world, SpawnReason.SPAWN_ITEM_USE);
-             *///?} else
-            Entity entity = type.create(world);
+            Entity entity = type.create(world, SpawnReason.SPAWN_ITEM_USE);
+             //?} else
+            /*Entity entity = type.create(world);*/
             if (entity == null) return null;
             entity.readNbt(nbt);
             return entity;

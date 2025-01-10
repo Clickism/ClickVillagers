@@ -24,9 +24,9 @@ public class VehicleUseEntityCallback implements UseEntityCallback {
         if (player.isSpectator()) return ActionResult.PASS;
         if (!player.isSneaking()) return ActionResult.PASS;
         //? if >=1.21.4 {
-        /*if (!(vehicle instanceof VehicleEntity)) return ActionResult.PASS;
-        *///?} else
-        if (!(vehicle instanceof MinecartEntity) && !(vehicle instanceof BoatEntity)) return ActionResult.PASS;
+        if (!(vehicle instanceof VehicleEntity)) return ActionResult.PASS;
+        //?} else
+        /*if (!(vehicle instanceof MinecartEntity) && !(vehicle instanceof BoatEntity)) return ActionResult.PASS;*/
         if (!hasSpace(vehicle)) return ActionResult.PASS;
         ItemStack itemStack = player.getMainHandStack();
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
@@ -37,9 +37,9 @@ public class VehicleUseEntityCallback implements UseEntityCallback {
         itemStack.decrement(1);
         entity.startRiding(vehicle);
         //? if >=1.21.4 {
-        /*if (vehicle instanceof AbstractBoatEntity) {
-        *///?} else
-        if (vehicle instanceof BoatEntity) {
+        if (vehicle instanceof AbstractBoatEntity) {
+        //?} else
+        /*if (vehicle instanceof BoatEntity) {*/
             VersionHelper.playSound(player, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.MASTER, 1, .5f);
         } else {
             VersionHelper.playSound(player, SoundEvents.BLOCK_METAL_BREAK, SoundCategory.MASTER, 1, .5f);
