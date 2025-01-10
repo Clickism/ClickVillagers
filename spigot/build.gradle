@@ -1,0 +1,82 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.5'
+}
+
+def plugin_version = project.plugin_version
+
+group = 'me.clickism'
+version = name + "-" + plugin_version
+
+base {
+    archivesName = archives_base_name
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+    maven {
+        name = 'minecraft-repo'
+        url = 'https://libraries.minecraft.net/'
+    }
+    maven {
+        name = 'codemc-snapshots'
+        url = 'https://repo.codemc.io/repository/maven-snapshots/'
+    }
+}
+
+dependencies {
+    compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("org.jetbrains:annotations:22.0.0")
+    implementation("me.clickism:ClickGUI:1.0")
+}
+
+jar {
+    enabled = false
+}
+
+build {
+    dependsOn(shadowJar)
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    enableRelocation = true
+    relocationPrefix = 'me.clickism.shadow'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [version: plugin_version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}

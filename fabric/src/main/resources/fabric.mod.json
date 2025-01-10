@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "clickvillagers",
+	"version": "${version}",
+	"name": "ClickVillagers",
+	"description": "Pick villagers up, change their biomes, claim them and much more!",
+	"authors": [
+		"Clickism"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/plugin/clickvillagers",
+		"sources": "https://github.com/Clickism/ClickVillagers"
+	},
+	"license": "ARR",
+	"icon": "assets/clickvillagers/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"me.clickism.clickvillagers.ClickVillagers"
+		]
+	},
+	"mixins": [
+		"clickvillagers.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=${fabricVersion}",
+		"minecraft": "${targetVersion}",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
