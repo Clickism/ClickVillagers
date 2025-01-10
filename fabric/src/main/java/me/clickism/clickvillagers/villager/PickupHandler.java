@@ -126,6 +126,9 @@ public class PickupHandler {
     }
 
     private static MutableText getDisplayName(Entity entity) {
+        if (entity.hasCustomName()) {
+            return Text.literal("\"").append(entity.getCustomName()).append("\"");
+        }
         if (entity instanceof VillagerEntity villager) {
             return getVillagerDisplayName(villager);
         }
@@ -143,7 +146,7 @@ public class PickupHandler {
         if (profession.equals(VillagerProfession.NONE)) {
             return Text.literal("Villager");
         }
-        return Text.literal(Utils.titleCase(profession.toString()));
+        return Text.literal(Utils.titleCase(profession.toString()) + " Villager");
     }
 
     public static void notifyPickup(PlayerEntity player, Entity entity) {
