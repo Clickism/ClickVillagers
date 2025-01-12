@@ -3,6 +3,7 @@ package me.clickism.clickvillagers.gui;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
+import me.clickism.clickvillagers.config.Settings;
 import me.clickism.clickvillagers.villager.PartnerState;
 import me.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Items;
@@ -15,7 +16,7 @@ import java.util.UUID;
 public class VillagerPartnerGui extends AnvilInputGui {
     private final MinecraftServer server;
     private final VillagerGui previous;
-    
+
     public VillagerPartnerGui(ServerPlayerEntity player, VillagerGui previous) {
         super(player, false);
         this.server = player.getServer();
@@ -49,6 +50,12 @@ public class VillagerPartnerGui extends AnvilInputGui {
                         partnerState.removePartner(uuid, input);
                         MessageType.WARN.send(player, Text.literal("Removed " + input + " from your trading partners."));
                     } else {
+                        int limit = Settings.PARTNER_LIMIT_PER_PLAYER.getInt();
+                        if (partnerState.getPartners(uuid).size() >= limit) {
+                            MessageType.FAIL.send(player, Text.literal("You have reached the partner limit: ")
+                                    .append(Text.literal(String.valueOf(limit)).formatted(Formatting.BOLD)));
+                            return;
+                        }
                         partnerState.addPartner(uuid, input);
                         MessageType.CONFIRM.send(player, Text.literal("Added " + input + " to your trading partners."));
                     }
@@ -73,7 +80,7 @@ public class VillagerPartnerGui extends AnvilInputGui {
         PartnerState partnerState = PartnerState.getServerState(server);
         return partnerState.getPartners(player.getUuid()).contains(input);
     }
-    
+
     private boolean isValid(String input) {
         return input.length() > 2 && !input.contains(" ");
     }
