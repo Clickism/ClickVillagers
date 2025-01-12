@@ -2,9 +2,10 @@
   "required": true,
   "package": "me.clickism.clickvillagers.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
+  "server": [
     "DispenserBlockMixin",
     "HopperBlockMixin",
+    "LivingEntityMixin",
     "VillagerDataMixin"
   ],
   "injectors": {
