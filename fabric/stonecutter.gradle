@@ -5,3 +5,8 @@ stonecutter.registerChiseled tasks.register("chiseledBuild", stonecutter.chisele
     setGroup "project"
     ofTask "build"
 }
+
+stonecutter.registerChiseled tasks.register("publishAllVersions", stonecutter.chiseled) {
+    setGroup "project"
+    ofTask "publishMods"
+}

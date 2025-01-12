@@ -1,6 +1,6 @@
 plugins {
 	id 'fabric-loom' version '1.9-SNAPSHOT'
-	id 'maven-publish'
+	id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
 
 version = parent.name + "-" + property('mod.version') + "+" + stonecutter.current.project
@@ -59,21 +59,27 @@ jar {
 	}
 }
 
-// configure the maven publication
-publishing {
-	publications {
-		create("mavenJava", MavenPublication) {
-			artifactId = project.archives_base_name
-			from components.java
-		}
+publishMods {
+	displayName = "ClickVillagers ${property('mod.version')} for Fabric"
+	file = tasks.remapJar.archiveFile
+	version = project.version
+	changelog = rootProject.file("CHANGELOG.md").text
+	type = STABLE
+	modLoaders.add("fabric")
+	def mcVersions = property('mod.target_mc_versions').toString().split(',')
+	modrinth {
+		accessToken = System.getenv("MODRINTH_TOKEN")
+		projectId = "BITzwT7B"
+		requires("fabric-api")
+		minecraftVersions.addAll(mcVersions)
 	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
+	curseforge {
+		accessToken = System.getenv("CURSEFORGE_TOKEN")
+		projectId = "1162587"
+		clientRequired = false
+		serverRequired = true
+		requires("fabric-api")
+		minecraftVersions.addAll(mcVersions)
 	}
 }
 
