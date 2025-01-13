@@ -38,16 +38,12 @@ tasks.processResources {
 	inputs.properties(properties)
 }
 
-tasks.withType<JavaCompile>().configureEach {
-	options.release = 21
-}
-
 java {
-	val javaVersion = if (stonecutter.eval(stonecutter.current.version, ">=1.20.5")) {
-		JavaVersion.VERSION_21
-	} else {
-		JavaVersion.VERSION_17
+	val j21 = stonecutter.eval(stonecutter.current.version, ">=1.20.5")
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(if (j21) 21 else 17))
 	}
+	val javaVersion = if (j21) JavaVersion.VERSION_17 else JavaVersion.VERSION_17
 	sourceCompatibility = javaVersion
 	targetCompatibility = javaVersion
 }

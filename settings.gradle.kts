@@ -18,6 +18,7 @@ rootProject.name = "ClickVillagers"
 include("fabric", "spigot")
 
 stonecutter {
+	kotlinController = true
 	centralScript = "build.gradle.kts"
 	create("fabric") {
 		versions("1.21.4", "1.21.1", "1.20.1")
