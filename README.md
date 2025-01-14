@@ -19,7 +19,7 @@ Trailer: https://youtu.be/19qup8i3IyU
 - Pick villagers up into your inventory by **shift + right clicking** them.
 - Place them back by placing the villager head.
   - Place the villagers directly into boats, minecarts, etc.
-  - Use dispensers to spawn the villagers back automatically. (1.21+)
+  - Use dispensers to spawn the villagers back automatically. (On Paper/Spigot 1.21+)
 - Anchor villagers by **shift + right clicking** with **SHEARS**. Anchored villagers cannot move on their own.
 - Claim villagers by **shift + right clicking** with **ANY SHOVEL**.
   - Claimed villagers won't take any damage by default.
