@@ -22,6 +22,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -53,6 +54,7 @@ public class InteractListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     private void onVillagerInteract(PlayerInteractEntityEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
         Entity entity = event.getRightClicked();
         if (!(entity instanceof Villager) && !(entity instanceof ZombieVillager)) return;
         LivingEntity villager = (LivingEntity) entity;
@@ -87,6 +89,7 @@ public class InteractListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     private void onVehicleInteract(PlayerInteractEntityEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
         Entity entity = event.getRightClicked();
         if (!(entity instanceof Minecart) && !(entity instanceof Boat)) return;
         Player player = event.getPlayer();
