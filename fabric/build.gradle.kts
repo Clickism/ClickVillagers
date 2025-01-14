@@ -21,7 +21,7 @@ dependencies {
 	mappings("net.fabricmc:yarn:${property("deps.yarn_mappings")}:v2")
 	modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
-	modImplementation("eu.pb4:sgui:${property("deps.sgui")}")
+	modImplementation(include("eu.pb4:sgui:${property("deps.sgui")}")!!)
 }
 
 tasks.processResources {
