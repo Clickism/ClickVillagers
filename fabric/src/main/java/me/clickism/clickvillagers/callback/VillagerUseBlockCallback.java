@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -37,6 +38,9 @@ public class VillagerUseBlockCallback implements UseBlockCallback {
         entity.refreshPositionAndAngles(pos, 0, 0);
         world.spawnEntity(entity);
         itemStack.decrement(1);
+        if (itemStack.getCount() <= 0) {
+            player.getInventory().setStack(player.getInventory().selectedSlot, Items.AIR.getDefaultStack());
+        }
         BlockPos posBelow = pos.down();
         VersionHelper.playSound(player, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, SoundCategory.NEUTRAL, 1, .5f);
         ((ServerWorld) world).spawnParticles(
