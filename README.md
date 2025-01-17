@@ -34,6 +34,10 @@ Trailer: https://youtu.be/19qup8i3IyU
 - Highly configurable.
 - **Language support:** German & English (Paper/Spigot only)
 
+## Licensing
+- This project is licensed under the GPT v3 license.
+- Refer to LICENSE.md for more information.
+
 ## Villagers in a Chest
 ![](https://i.imgur.com/ZzGJEZ4.png)
 ## Villager Properties
