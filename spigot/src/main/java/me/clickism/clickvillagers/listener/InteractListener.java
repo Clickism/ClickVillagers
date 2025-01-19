@@ -137,9 +137,8 @@ public class InteractListener implements Listener {
         if (!claimManager.hasOwner(villager)) return;
         if (claimManager.isTradeOpen(villager)) return;
         if (Permission.BYPASS_CLAIMS.has(player)) return;
-        boolean isPartner = partnerManager.isPartner(claimManager.getOwnerUUID(villager), player.getName());
-        boolean isOwner = claimManager.isOwner(villager, player);
-        if (isPartner || isOwner) return;
+        if (claimManager.isOwner(villager, player)) return;
+        if (partnerManager.isPartner(claimManager.getOwnerUUID(villager), player.getName())) return;
         event.setCancelled(true);
         Message.BELONGS_TO.parameterizer()
                 .put("owner", claimManager.getOwnerName(villager))
