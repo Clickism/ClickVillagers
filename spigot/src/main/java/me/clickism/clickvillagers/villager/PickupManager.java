@@ -9,6 +9,7 @@ package me.clickism.clickvillagers.villager;
 import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickvillagers.ClickVillagers;
 import me.clickism.clickvillagers.config.Permission;
+import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import me.clickism.clickvillagers.listener.AutoRegistered;
 import me.clickism.clickvillagers.message.Message;
@@ -151,8 +152,11 @@ public class PickupManager implements Listener {
         String customName = entity.getCustomName();
         Villager.Profession profession = Utils.getVillagerProfession(entity);
         boolean adult = ((Ageable) entity).isAdult();
+        int modelData = Setting.getCustomModelData(profession, !adult, entity instanceof ZombieVillager);
         Icon icon = Message.VILLAGER.toIcon(Material.PLAYER_HEAD)
                 .setName(ChatColor.YELLOW + getName(customName, profession, adult))
+                .runIf(modelData != 0,
+                        i -> i.applyToMeta(meta -> meta.setCustomModelData(modelData)))
                 .runIf(claimManager.hasOwner(entity),
                         i -> i.addLoreLine("&6🔑 " + Message.INFO_OWNER + ": &f" + claimManager.getOwnerName(entity)))
                 .runIf(anchorManager.isAnchored(entity),
