@@ -77,7 +77,13 @@ public enum Message {
     BUTTON_TRADE_CLOSED,
     BUTTON_REDIRECT_CHANGE_BIOME_MENU,
     BUTTON_CHANGE_BIOME,
-    BUTTON_BACK;
+    BUTTON_BACK,
+
+    // COMMANDS
+    @WithParameters("usage")
+    USAGE(MessageType.FAIL),
+    RELOAD_SUCCESS(MessageType.CONFIRM),
+    RELOAD_FAIL(MessageType.FAIL);
 
     private static final MessageType MISSING = MessageType.silent("&2[?] &c", "&8< &2? &c%s &8>");
 
