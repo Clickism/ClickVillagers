@@ -29,3 +29,6 @@ permissions:
   clickvillagers.bypass-limits:
     description: Allows players to bypass limits defined in the config.
     default: op
+  clickvillagers.reload:
+    description: Allows players to reload the plugin.
+    default: op
