@@ -104,6 +104,12 @@ public enum Setting {
         settingManager.getDataManager().saveConfig();
     }
 
+    public static void reloadSettings() throws IOException {
+        JavaPlugin plugin = settingManager.getPlugin();
+        settingManager = null;
+        initialize(plugin);
+    }
+
     public static int getCustomModelData(Villager.Profession profession, boolean baby, boolean zombie) {
         String key = getCustomModelDataKey(profession, baby, zombie);
         Object value = settingManager.get("custom-model-datas." + key);
