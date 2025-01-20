@@ -62,4 +62,8 @@ public class SettingManager {
         dataManager.getConfig().set("config-version", VERSION);
         dataManager.saveConfig();
     }
+
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
 }
