@@ -98,5 +98,8 @@
   "profession.nitwit": "Nitwit",
   "profession.shepherd": "Shepherd",
   "profession.toolsmith": "Toolsmith",
-  "profession.weaponsmith": "Weaponsmith"
+  "profession.weaponsmith": "Weaponsmith",
+  "usage": "&cUsage: {usage}",
+  "reload_success": "Reloaded &lClickVillagers &aconfig.",
+  "reload_fail": "Failed to reload &lClickVillagers &cconfig."
 }

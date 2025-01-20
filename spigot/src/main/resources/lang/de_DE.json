@@ -100,5 +100,8 @@
   "profession.nitwit": "Nichtsnutz",
   "profession.shepherd": "Shepherd",
   "profession.toolsmith": "Werkzeugschmied",
-  "profession.weaponsmith": "Waffenschmied"
+  "profession.weaponsmith": "Waffenschmied",
+  "usage": "&cAnwendung: {usage}",
+  "reload_success": "&lClickVillagers-&aKonfiguration wurde neu geladen.",
+  "reload_fail": "Neuladen der &lClickVillagers&c-Konfiguration fehlgeschlagen."
 }
