@@ -7,6 +7,9 @@
 package me.clickism.clickvillagers.config;
 
 import me.clickism.clickvillagers.ClickVillagers;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -101,5 +104,24 @@ public enum Setting {
             return;
         }
         settingManager.getDataManager().saveConfig();
+    }
+
+    public static int getCustomModelData(VillagerProfession profession, boolean baby, boolean zombie) {
+        String key = getCustomModelDataKey(profession, baby, zombie);
+        Object value = settingManager.get("custom-model-datas." + key);
+        if (value instanceof Integer data) {
+            return data;
+        }
+        return 0;
+    }
+
+    private static String getCustomModelDataKey(VillagerProfession profession, boolean baby, boolean zombie) {
+        if (baby) {
+            return "baby";
+        }
+        if (zombie) {
+            return "zombie";
+        }
+        return profession.toString().toLowerCase();
     }
 }

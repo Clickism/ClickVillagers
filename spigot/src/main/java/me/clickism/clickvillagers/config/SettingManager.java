@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class SettingManager {
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     private static final boolean DEBUG_OVERRIDE_SETTINGS = false;
 
     private static final String FILE_NAME = "config.yml";
