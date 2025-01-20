@@ -7,6 +7,7 @@
 package me.clickism.clickvillagers;
 
 import me.clickism.clickgui.menu.MenuManager;
+import me.clickism.clickvillagers.config.ReloadCommand;
 import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.gui.ChatInputListener;
 import me.clickism.clickvillagers.hopper.HopperManager;
@@ -24,6 +25,7 @@ import me.clickism.clickvillagers.villager.ClaimManager;
 import me.clickism.clickvillagers.villager.PartnerManager;
 import me.clickism.clickvillagers.villager.PickupManager;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -83,6 +85,11 @@ public final class ClickVillagers extends JavaPlugin {
         new InteractListener(this, claimManager, pickupManager,
                 anchorHandler, partnerManager, chatInputListener, menuManager);
         new DispenserListener(this, pickupManager);
+        // Register commands
+        PluginCommand command = Bukkit.getPluginCommand("clickvillagers");
+        if (command != null) {
+            command.setExecutor(new ReloadCommand());
+        }
         // Check updates
         checkUpdates();
         // Legacy conversions
