@@ -2,7 +2,7 @@
 # ClickVillagers Settings
 # NOTE: RELOAD/RESTART SERVER FOR CHANGES TO TAKE EFFECT
 #########################################################
-config-version: 1
+config-version: 2
 #########################################################
 
 # Language of the plugin.
@@ -61,3 +61,11 @@ partner-limit-per-player: 10
 # If this is disabled, players can add any name as a trading partner, even if that player doesn't exist.
 # Default: true
 validate-partner-names: true
+
+# Set a custom model data for the picked up villagers based on professions.
+# This is useful for resource packs that want to change the model/texture of picked up villagers.
+# Value 0 will not change the model.
+custom-model-datas:
+  baby: 0
+  zombie: 0
+  librarian: 0
