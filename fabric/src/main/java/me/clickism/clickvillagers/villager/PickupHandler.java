@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-//? if >=1.21.1 {
+//? if >=1.20.5 {
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.NbtComponent;
@@ -70,7 +70,7 @@ public class PickupHandler {
         return itemStack;
     }
 
-    //? if >=1.21.1 {
+    //? if >=1.20.5 {
     private static void writeCustomData(ItemStack itemStack, NbtCompound nbt) {
         itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
     }
@@ -119,7 +119,7 @@ public class PickupHandler {
             if (id == null) return null;
             EntityType<?> type = EntityType.get(id).orElse(null);
             if (type == null) return null;
-            //? if >=1.21.4 {
+            //? if >=1.21.3 {
             Entity entity = type.create(world, SpawnReason.SPAWN_ITEM_USE);
              //?} else
             /*Entity entity = type.create(world);*/

@@ -21,7 +21,7 @@ import net.minecraft.util.Formatting;
 public abstract class DecoratedGui extends SimpleGui {
     private static final GuiElementInterface BLACK = new GuiElementBuilder(Items.BLACK_STAINED_GLASS_PANE)
             .setName(Text.literal("x").formatted(Formatting.DARK_GRAY))
-            //? if >=1.21.1 {
+            //? if >=1.20.5 {
             .hideDefaultTooltip()
             //?} else
             /*.hideFlags()*/
@@ -31,7 +31,7 @@ public abstract class DecoratedGui extends SimpleGui {
             .build();
     private static final GuiElementInterface GRAY = new GuiElementBuilder(Items.GRAY_STAINED_GLASS_PANE)
             .setName(Text.literal("x").formatted(Formatting.DARK_GRAY))
-            //? if >=1.21.1 {
+            //? if >=1.20.5 {
             .hideDefaultTooltip()
             //?} else
             /*.hideFlags()*/

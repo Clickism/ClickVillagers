@@ -35,7 +35,7 @@ public class VillagerUseBlockCallback implements UseBlockCallback {
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
         if (entity == null) return ActionResult.PASS;
         BlockPos clickedPos = hitResult.getBlockPos();
-        //? if >=1.21.1 {
+        //? if >=1.20.5 {
         ActionResult actionResult = world.getBlockState(clickedPos).onUse(world, player, hitResult);
         //?} else
         /*ActionResult actionResult = world.getBlockState(clickedPos).onUse(world, player, hand, hitResult);*/

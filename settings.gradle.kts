@@ -21,7 +21,7 @@ stonecutter {
 	kotlinController = true
 	centralScript = "build.gradle.kts"
 	create("fabric") {
-		versions("1.21.4", "1.21.1", "1.20.1")
+		versions("1.21.4", "1.21.3", "1.21.1", "1.20.6", "1.20.1")
 		vcsVersion = "1.21.4"
 	}
 }

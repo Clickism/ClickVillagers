@@ -25,7 +25,7 @@ public class VillagerClaimGui extends VillagerGui {
         setSlot(13, new GuiElementBuilder(Items.GOLDEN_SHOVEL)
                 .setName(Text.literal("🔒 ").formatted(Formatting.GOLD)
                         .append(Text.literal("CLAIM VILLAGER").formatted(Formatting.GOLD, Formatting.BOLD)))
-                //? if >=1.21.1 {
+                //? if >=1.20.5 {
                 .hideDefaultTooltip()
                 //?} else
                 /*.hideFlags()*/

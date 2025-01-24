@@ -57,12 +57,8 @@ public class PickupManager implements Listener {
     private void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         PlayerInventory inventory = player.getInventory();
-        ItemStack item = inventory.getItemInMainHand();
-        if (item.getType() != Material.PLAYER_HEAD) return;
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) return;
-        if (!isVillager(item)) return;
-
+        ItemStack item = getHeldVillagerItem(inventory);
+        if (item == null) return;
         event.setCancelled(true);
         if (Permission.PLACE.lacksAndNotify(player)) return;
         Block block = event.getBlockPlaced();
@@ -92,6 +88,18 @@ public class PickupManager implements Listener {
         writeData(entity, item);
         entity.remove();
         return item;
+    }
+
+    private ItemStack getHeldVillagerItem(PlayerInventory inventory) {
+        ItemStack item = inventory.getItemInMainHand();
+        if (isVillager(item)) {
+            return item;
+        }
+        item = inventory.getItemInOffHand();
+        if (isVillager(item)) {
+            return item;
+        }
+        return null;
     }
 
     private void writeData(LivingEntity entity, ItemStack item) {
@@ -141,6 +149,7 @@ public class PickupManager implements Listener {
     }
 
     public boolean isVillager(ItemStack item) {
+        if (item.getType() != Material.PLAYER_HEAD) return false;
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
         PersistentDataContainer data = meta.getPersistentDataContainer();

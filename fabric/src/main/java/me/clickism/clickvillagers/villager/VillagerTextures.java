@@ -9,7 +9,7 @@ package me.clickism.clickvillagers.villager;
 
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-//? if >=1.21.1 {
+//? if >=1.20.5 {
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ProfileComponent;
 //?} else {
@@ -54,7 +54,7 @@ public class VillagerTextures {
         setTexture(itemStack, getTexture(entity));
     }
 
-    //? if >=1.21.1 {
+    //? if >=1.20.5 {
     private static void setTexture(ItemStack itemStack, String texture) {
         PropertyMap propertyMap = new PropertyMap();
         propertyMap.put("textures", new Property("textures", texture));

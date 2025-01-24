@@ -21,7 +21,7 @@ import java.util.*;
 
 public class PartnerState extends PersistentState {
     
-    //? if >=1.21.1 {
+    //? if >=1.20.5 {
     private static final Type<PartnerState> type = new Type<>(
             PartnerState::new,
             PartnerState::createFromNbt,
@@ -33,7 +33,7 @@ public class PartnerState extends PersistentState {
     
     @Override
     public NbtCompound writeNbt(NbtCompound nbt
-            //? if >=1.21.1
+            //? if >=1.20.5
             , RegistryWrapper.WrapperLookup registries
     ) {
         NbtCompound compound = new NbtCompound();
@@ -66,7 +66,7 @@ public class PartnerState extends PersistentState {
     }
     
     public static PartnerState createFromNbt(NbtCompound nbt
-            //? if >=1.21.1
+            //? if >=1.20.5
             , RegistryWrapper.WrapperLookup registryLookup
     ) {
         PartnerState state = new PartnerState();
@@ -83,7 +83,7 @@ public class PartnerState extends PersistentState {
         ServerWorld world = server.getWorld(World.OVERWORLD);
         if (world == null) throw new IllegalStateException("Overworld is null");
         PersistentStateManager persistentStateManager = world.getPersistentStateManager();
-        //? if >=1.21.1 {
+        //? if >=1.20.5 {
         PartnerState state = persistentStateManager.getOrCreate(type, ClickVillagers.MOD_ID);
         //?} else {
         /*PartnerState state = persistentStateManager.getOrCreate(

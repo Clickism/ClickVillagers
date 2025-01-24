@@ -33,7 +33,7 @@ public abstract class DispenserBlockMixin extends BlockWithEntity {
         super(settings);
     }
 
-    //? if >=1.21.1 {
+    //? if >=1.20.5 {
     @Inject(
             method = "getBehaviorForItem(Lnet/minecraft/world/World;Lnet/minecraft/item/ItemStack;)Lnet/minecraft/block/dispenser/DispenserBehavior;", 
             at = @At("HEAD"),
@@ -47,14 +47,14 @@ public abstract class DispenserBlockMixin extends BlockWithEntity {
     )
     *///?}
     protected void getBehaviorForItem(
-            //? if >=1.21.1
+            //? if >=1.20.5
             World world,
             ItemStack itemStack, 
             CallbackInfoReturnable<DispenserBehavior> cir
     ) {
         if (!PickupHandler.isVillager(itemStack)) return;
         cir.setReturnValue((pointer, stack) -> {
-            //? if <1.21.1
+            //? if <1.20.5
             /*World world = world(pointer);*/
             Direction direction = state(pointer).get(DispenserBlock.FACING);
             BlockPos blockPos = pos(pointer).offset(direction);
@@ -68,21 +68,21 @@ public abstract class DispenserBlockMixin extends BlockWithEntity {
     }
     
     private static ServerWorld world(BlockPointer pointer) {
-        //? if >=1.21.1 {
+        //? if >=1.20.5 {
         return pointer.world();
         //?} else
         /*return pointer.getWorld();*/
     }
     
     private static BlockPos pos(BlockPointer pointer) {
-        //? if >=1.21.1 {
+        //? if >=1.20.5 {
         return pointer.pos();
         //?} else
         /*return pointer.getPos();*/
     }
     
     private static BlockState state(BlockPointer pointer) {
-        //? if >=1.21.1 {
+        //? if >=1.20.5 {
         return pointer.state();
         //?} else
         /*return pointer.getBlockState();*/
