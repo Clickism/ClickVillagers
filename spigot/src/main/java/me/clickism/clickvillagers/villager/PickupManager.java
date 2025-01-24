@@ -22,6 +22,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -57,8 +58,8 @@ public class PickupManager implements Listener {
     private void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         PlayerInventory inventory = player.getInventory();
-        ItemStack item = getHeldVillagerItem(inventory);
-        if (item == null) return;
+        ItemResult itemResult = getHeldVillagerItem(inventory);
+        if (itemResult == null) return;
         event.setCancelled(true);
         if (Permission.PLACE.lacksAndNotify(player)) return;
         Block block = event.getBlockPlaced();
@@ -66,9 +67,9 @@ public class PickupManager implements Listener {
         float yaw = player.getLocation().getYaw();
         location.setYaw((yaw + 360) % 360 - 180); // Face the villager towards the player
         try {
+            ItemStack item = itemResult.item();
             spawnFromItemStack(item, location);
-            item.setAmount(item.getAmount() - 1);
-            inventory.setItemInMainHand(item);
+            itemResult.decrementAmount(inventory);
             World world = player.getWorld();
             world.playSound(location, Sound.ENTITY_PLAYER_ATTACK_WEAK, 1, .5f);
             Block blockBelow = block.getRelative(BlockFace.DOWN);
@@ -90,14 +91,14 @@ public class PickupManager implements Listener {
         return item;
     }
 
-    private ItemStack getHeldVillagerItem(PlayerInventory inventory) {
+    private ItemResult getHeldVillagerItem(PlayerInventory inventory) {
         ItemStack item = inventory.getItemInMainHand();
         if (isVillager(item)) {
-            return item;
+            return new ItemResult(item, EquipmentSlot.HAND);
         }
         item = inventory.getItemInOffHand();
         if (isVillager(item)) {
-            return item;
+            return new ItemResult(item, EquipmentSlot.OFF_HAND);
         }
         return null;
     }
@@ -188,5 +189,13 @@ public class PickupManager implements Listener {
         }
         String professionName = Message.get("profession." + profession.toString().toLowerCase());
         return professionName + " " + Message.VILLAGER;
+    }
+
+    private record ItemResult(ItemStack item, EquipmentSlot slot) {
+        void decrementAmount(PlayerInventory inventory) {
+            ItemStack item = this.item;
+            item.setAmount(item.getAmount() - 1);
+            inventory.setItem(slot, item);
+        }
     }
 }
