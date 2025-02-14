@@ -21,7 +21,7 @@ public class Config {
 
     public static Config INSTANCE;
 
-    public static int CONFIG_VERSION = 1;
+    public static int CONFIG_VERSION = 2;
 
     private static final File CONFIG_DIRECTORY = new File("config");
     private static final Gson GSON = new GsonBuilder()
