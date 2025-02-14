@@ -1,0 +1,2 @@
+- Added update checker.
+- Added new config option: "check-update".
