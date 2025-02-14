@@ -17,6 +17,7 @@ import org.bukkit.block.Dispenser;
 import org.bukkit.block.data.Directional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,6 +43,10 @@ public class DispenserListener implements Listener {
         BlockState state = block.getState();
         if (!(state instanceof Dispenser) /*&& !(state instanceof Dropper)*/) return;
         event.setCancelled(true);
+        if (event instanceof BlockDispenseArmorEvent) {
+            // Skip armor dispense events
+            return;
+        }
         Directional directional = (Directional) state.getBlockData();
         Location location = block.getRelative(directional.getFacing()).getLocation().add(.5, 0, .5);
         try {
