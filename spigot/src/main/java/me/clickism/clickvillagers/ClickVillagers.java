@@ -15,6 +15,7 @@ import me.clickism.clickvillagers.legacy.LegacyHopperCompatibility;
 import me.clickism.clickvillagers.legacy.LegacyMessagesCompatibility;
 import me.clickism.clickvillagers.listener.DispenserListener;
 import me.clickism.clickvillagers.listener.InteractListener;
+import me.clickism.clickvillagers.listener.JoinListener;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.nbt.NBTHelper;
 import me.clickism.clickvillagers.nbt.NBTHelperFactory;
@@ -28,16 +29,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class ClickVillagers extends JavaPlugin {
 
-    public static final String RESOURCE_ID = "111424";
+    public static final String PROJECT_ID = "clickvillagers";
 
     public static ClickVillagers INSTANCE;
     public static Logger LOGGER;
+
+    private @Nullable String newerVersion;
 
     @Override
     public void onLoad() {
@@ -91,17 +95,20 @@ public final class ClickVillagers extends JavaPlugin {
             command.setExecutor(new ReloadCommand());
         }
         // Check updates
-        checkUpdates();
+        if (Setting.CHECK_UPDATE.isEnabled()) {
+            checkUpdates();
+            new JoinListener(this, () -> newerVersion);
+        }
         // Legacy conversions
         LegacyHopperCompatibility.startConversionIfLegacy(this);
         LegacyMessagesCompatibility.removeLegacyMessageFile(this);
     }
 
     private void checkUpdates() {
-        if (Setting.CHECK_UPDATE.isDisabled()) return;
         LOGGER.info("Checking for updates...");
-        new UpdateChecker(this, RESOURCE_ID).checkVersion(version -> {
+        new UpdateChecker(PROJECT_ID, "spigot", null).checkVersion(version -> {
             if (getDescription().getVersion().equals(version)) return;
+            newerVersion = version;
             LOGGER.info("New version available: " + version);
             MessageParameterizer parameterizer = Message.UPDATE.parameterizer()
                     .put("version", version);
