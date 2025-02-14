@@ -22,7 +22,9 @@ public enum Settings {
     IGNORE_BABY_VILLAGERS(true),
     IGNORE_CLAIMED_VILLAGERS(true),
 
-    PARTNER_LIMIT_PER_PLAYER(10);
+    PARTNER_LIMIT_PER_PLAYER(10),
+
+    CHECK_UPDATE(true);
 
     private final Object defaultValue;
     private final String path;
