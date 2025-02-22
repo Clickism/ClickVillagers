@@ -10,7 +10,9 @@ import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TradeInfoProviders {
@@ -19,13 +21,17 @@ public class TradeInfoProviders {
 
     public static final TradeInfoProvider LIBRARIAN = TradeInfoProvider.builder()
             .filterResults(result -> result.getType() == Material.ENCHANTED_BOOK)
+            .ingredientFormatter(item -> {
+                if (item.getType() != Material.EMERALD) return null;
+                return item.getAmount() + " Emeralds";
+            })
             .resultFormatter(item -> {
                 if (!(item.getItemMeta() instanceof EnchantmentStorageMeta meta)) return "?";
-                return meta.getStoredEnchants().entrySet().stream()
+                return "&d📖 " + meta.getStoredEnchants().entrySet().stream()
                         .map(entry -> {
                             String enchantment = entry.getKey().getKey().getKey().replace("_", " ");
                             String level = toRomanNumeral(entry.getValue());
-                            return "📖 " + Utils.titleCase(enchantment) + " " + level;
+                            return Utils.titleCase(enchantment) + " " + level;
                         })
                         .collect(Collectors.joining(" + "));
             })
@@ -33,13 +39,62 @@ public class TradeInfoProviders {
 
     public static final TradeInfoProvider FARMER = TradeInfoProvider.builder()
             .acceptIngredients(Material.WHEAT, Material.BEETROOT, Material.CARROT, Material.POTATO, Material.PUMPKIN, Material.MELON)
-            .acceptResults(Material.GOLDEN_CARROT)
+            .acceptResults(Material.GOLDEN_CARROT, Material.APPLE, Material.BREAD)
+            .resultFormatter(item -> {
+                int amount = item.getAmount();
+                return switch (item.getType()) {
+                    case GOLDEN_CARROT -> "&e🥕 " + amount + " Golden Carrot";
+                    case APPLE -> "&c🍎 " + amount + " Apple";
+                    default -> TradeInfoProvider.DEFAULT_FORMATTER.apply(item);
+                };
+            })
+            .ingredientFormatter(item -> {
+                int amount = item.getAmount();
+                return switch (item.getType()) {
+                    case WHEAT -> "&e🌾 " + amount + " Wheat";
+                    case CARROT -> "&6🥕 " + amount + " Carrot";
+                    case POTATO -> "&6🥔 " + amount + " Potato";
+                    case PUMPKIN -> "&6🎃 " + amount + " Pumpkin";
+                    case MELON -> "&a🍉 " + amount + " Melon";
+                    default -> TradeInfoProvider.DEFAULT_FORMATTER.apply(item);
+                };
+            })
+            .build();
+
+    private static final Set<Material> DIAMOND_TOOLS = Set.of(Material.DIAMOND_AXE, Material.DIAMOND_PICKAXE,
+            Material.DIAMOND_SHOVEL, Material.DIAMOND_HOE, Material.DIAMOND_SWORD);
+
+    public static final TradeInfoProvider SMITH = TradeInfoProvider.builder()
+            .acceptIngredients(Material.COAL)
+            .acceptResults(DIAMOND_TOOLS.toArray(new Material[0]))
+            .ingredientFormatter(item -> {
+                if (item.getType() != Material.COAL) return TradeInfoProvider.DEFAULT_FORMATTER.apply(item);
+                return "&8🪨 " + item.getAmount() + " Coal";
+            })
+            .resultFormatter(item -> {
+                if (!DIAMOND_TOOLS.contains(item.getType())) return TradeInfoProvider.DEFAULT_FORMATTER.apply(item);
+                ItemMeta meta = item.getItemMeta();
+                if (meta == null) return TradeInfoProvider.DEFAULT_FORMATTER.apply(item);
+                String enchantments = meta.getEnchants().entrySet().stream()
+                        .map(entry -> {
+                            String enchantment = entry.getKey().getKey().getKey().replace("_", " ");
+                            String level = toRomanNumeral(entry.getValue());
+                            return Utils.titleCase(enchantment) + " " + level;
+                        })
+                        .collect(Collectors.joining(" + "));
+                String name = "&b⛏ " + Utils.formatMaterial(item.getType());
+                if (enchantments.isEmpty()) {
+                    return name;
+                }
+                return name + " &8+ &d📖 " + enchantments;
+            })
             .build();
 
     public static TradeInfoProvider getProvider(Villager.Profession profession) {
         return switch (profession) {
             case LIBRARIAN -> LIBRARIAN;
             case FARMER -> FARMER;
+            case TOOLSMITH, WEAPONSMITH -> SMITH;
             default -> ALL_TRADES;
         };
     }
