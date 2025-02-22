@@ -8,10 +8,12 @@ package me.clickism.clickvillagers.villager;
 
 import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 public class TradeInfoProvider {
 
     private static final String LINE_FORMAT = "   &8→ &7%s &8→ &7%s";
+
+    public static final Function<ItemStack, String> DEFAULT_FORMATTER = Utils::formatItem;
 
     private final Predicate<ItemStack> ingredientsFilter;
     private final Predicate<ItemStack> resultsFilter;
@@ -37,8 +41,8 @@ public class TradeInfoProvider {
 
     public List<String> getTradeInfoLines(List<MerchantRecipe> recipes) {
         return recipes.stream()
-                .filter(recipe -> recipe.getIngredients().stream().anyMatch(ingredientsFilter))
-                .filter(recipe -> resultsFilter.test(recipe.getResult()))
+                .filter(recipe -> recipe.getIngredients().stream().anyMatch(ingredientsFilter)
+                        || resultsFilter.test(recipe.getResult()))
                 .map(this::formatRecipe)
                 .toList();
     }
@@ -46,13 +50,10 @@ public class TradeInfoProvider {
     private String formatRecipe(MerchantRecipe recipe) {
         String ingredients = recipe.getIngredients().stream()
                 .map(ingredientFormatter)
+                .filter(Objects::nonNull)
                 .collect(Collectors.joining(" + "));
         String result = resultFormatter.apply(recipe.getResult());
         return formatLine(ingredients, result);
-    }
-
-    private static String formatItem(ItemStack result) {
-        return result.getAmount() + " " + Utils.formatMaterial(result.getType());
     }
 
     private static String formatLine(String ingredients, String result) {
@@ -68,8 +69,8 @@ public class TradeInfoProvider {
         private Predicate<ItemStack> ingredientsFilter = item -> true;
         private Predicate<ItemStack> resultsFilter = item -> true;
 
-        private Function<ItemStack, String> ingredientFormatter = TradeInfoProvider::formatItem;
-        private Function<ItemStack, String> resultFormatter = TradeInfoProvider::formatItem;
+        private Function<ItemStack, String> ingredientFormatter = Utils::formatItem;
+        private Function<ItemStack, String> resultFormatter = Utils::formatItem;
 
         private Builder() {
         }
