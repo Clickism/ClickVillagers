@@ -55,6 +55,7 @@ public enum Message {
     INFO_OWNER,
     INFO_ANCHORED,
     INFO_TRADE_CLOSED,
+    INFO_TRADES,
 
     // ITEMS
     VILLAGER,
