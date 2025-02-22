@@ -32,6 +32,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class PickupManager implements Listener {
     private enum VillagerType {
         VILLAGER,
@@ -155,7 +157,7 @@ public class PickupManager implements Listener {
         if (meta == null) return false;
         PersistentDataContainer data = meta.getPersistentDataContainer();
         return data.has(VILLAGER_KEY, PersistentDataType.BOOLEAN)
-               || LegacyVillagerCompatibility.isLegacyVillager(item);
+                || LegacyVillagerCompatibility.isLegacyVillager(item);
     }
 
     private ItemStack createItem(LivingEntity entity) {
@@ -172,7 +174,17 @@ public class PickupManager implements Listener {
                 .runIf(anchorManager.isAnchored(entity),
                         i -> i.addLoreLine("&3⚓ " + Message.INFO_ANCHORED))
                 .runIf(claimManager.hasOwner(entity) && !claimManager.isTradeOpen(entity),
-                        i -> i.addLoreLine("&c👥 " + Message.INFO_TRADE_CLOSED));
+                        i -> i.addLoreLine("&c👥 " + Message.INFO_TRADE_CLOSED))
+                .runIf(entity instanceof Villager villager && !villager.getRecipes().isEmpty(),
+                        i -> {
+                            Villager villager = (Villager) entity;
+                            List<String> infoLines = TradeInfoProviders.getProvider(villager.getProfession())
+                                    .getTradeInfoLines(villager.getRecipes());
+                            if (infoLines.isEmpty()) return;
+                            i.addLoreLine(" ");
+                            i.addLoreLine("&7🛍 " + Message.INFO_TRADES + ":");
+                            infoLines.forEach(i::addLoreLine);
+                        });
         VillagerTextures.setEntityTexture(icon.get(), entity);
         return icon.get();
     }
