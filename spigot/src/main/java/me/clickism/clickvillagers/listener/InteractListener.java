@@ -148,7 +148,7 @@ public class InteractListener implements Listener {
     private void handleAnchor(Player player, LivingEntity villager) {
         if (Permission.ANCHOR.lacksAndNotify(player)) return;
         if (claimManager.hasOwner(villager) && !claimManager.isOwner(villager, player)
-            && Permission.BYPASS_CLAIMS.lacks(player)) {
+                && Permission.BYPASS_CLAIMS.lacks(player)) {
             Message.BELONGS_TO.parameterizer()
                     .put("owner", claimManager.getOwnerName(villager))
                     .send(player);
