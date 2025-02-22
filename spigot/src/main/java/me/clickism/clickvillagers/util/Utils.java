@@ -27,8 +27,24 @@ public class Utils {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
+    /**
+     * Formats a material into a human-readable string. (i.E.: "DIAMOND" -> "Diamond")
+     *
+     * @param material the material to format
+     * @return the formatted material string
+     */
     public static String formatMaterial(Material material) {
         return titleCase(material.toString().replace("_", " "));
+    }
+
+    /**
+     * Formats an item stack with its amount into a string. (i.E.: "64 Diamond")
+     *
+     * @param item the item stack to format
+     * @return the formatted item string
+     */
+    public static String formatItem(ItemStack item) {
+        return item.getAmount() + " " + formatMaterial(item.getType());
     }
 
     /**
