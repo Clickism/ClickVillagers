@@ -29,6 +29,7 @@ public class CooldownManager {
     }
 
     public long getRemainingCooldownMillis(Player player) {
+        if (cooldownMillis <= 0) return 0;
         long time = System.currentTimeMillis();
         Long lastUse = lastUseMap.get(player.getUniqueId());
         if (lastUse == null) return 0;
