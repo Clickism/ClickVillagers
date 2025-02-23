@@ -105,5 +105,5 @@
   "usage": "&cAnwendung: {usage}",
   "reload_success": "&lClickVillagers-&aKonfiguration wurde neu geladen.",
   "reload_fail": "Neuladen der &lClickVillagers&c-Konfiguration fehlgeschlagen.",
-  "cooldown": "Warte bitte &l{seconds} Sekunden &c, um diesen Dorfbewohner aufzuheben."
+  "cooldown": "Warte bitte &l{seconds} Sekunden &c, um diesen Dorfbewohner aufzuheben"
 }
