@@ -23,7 +23,7 @@ import java.util.List;
 
 public class MessageManager {
 
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
     private static final boolean DEBUG_OVERRIDE_MESSAGES = false;
 
     private static final String DIRECTORY_NAME = "lang";
