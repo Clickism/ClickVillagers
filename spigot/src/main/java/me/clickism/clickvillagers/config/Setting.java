@@ -34,7 +34,9 @@ public enum Setting {
 
     PARTNER_LIMIT_PER_PLAYER(10),
 
-    VALIDATE_PARTNER_NAMES(true);
+    VALIDATE_PARTNER_NAMES(true),
+
+    PICK_UP_COOLDOWN(0);
 
     private static SettingManager settingManager;
 

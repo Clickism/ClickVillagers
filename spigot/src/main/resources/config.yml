@@ -62,6 +62,11 @@ partner-limit-per-player: 10
 # Default: true
 validate-partner-names: true
 
+# Cooldown for picking up villagers in seconds.
+# This is useful to prevent players from collecting villagers very quickly.
+# Default: 0
+pick-up-cooldown: 0
+
 # Set a custom model data for the picked up villagers based on professions.
 # This is useful for resource packs that want to change the model/texture of picked up villagers.
 # Value 0 will not change the model.
