@@ -9,6 +9,7 @@ package me.clickism.clickvillagers.gui;
 import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickgui.menu.Menu;
 import me.clickism.clickgui.menu.MenuType;
+import me.clickism.clickvillagers.listener.CooldownManager;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.villager.ClaimManager;
 import me.clickism.clickvillagers.villager.PartnerManager;
@@ -19,8 +20,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class VillagerClaimMenu extends Menu {
-    public VillagerClaimMenu(Player viewer, LivingEntity villager, ClaimManager claimManager, PickupManager pickupManager,
-                             PartnerManager partnerManager, ChatInputListener chatInputListener) {
+    public VillagerClaimMenu(Player viewer, LivingEntity villager, ClaimManager claimManager,
+                             PickupManager pickupManager, PartnerManager partnerManager,
+                             ChatInputListener chatInputListener, CooldownManager cooldownManager) {
         super(viewer, MenuType.MENU_9X3);
         setTitle("&8&l🔒 " + Message.TITLE_CLAIM_VILLAGER);
         setBackground(new VillagerBackground());
@@ -32,7 +34,7 @@ public class VillagerClaimMenu extends Menu {
                     player.playSound(player, Sound.BLOCK_ANVIL_DESTROY, 1, 1);
                     Message.CLAIM_VILLAGER.sendSilently(player);
                     view.open(new VillagerEditMenu(player, villager, claimManager, pickupManager,
-                            partnerManager, chatInputListener));
+                            partnerManager, chatInputListener, cooldownManager));
                 }));
     }
 }
