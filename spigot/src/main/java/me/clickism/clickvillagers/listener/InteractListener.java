@@ -44,17 +44,20 @@ public class InteractListener implements Listener {
 
     private final ChatInputListener chatInputListener;
     private final MenuManager menuManager;
+    private final CooldownManager cooldownManager;
 
     @AutoRegistered
     public InteractListener(JavaPlugin plugin, ClaimManager claimManager, PickupManager pickupManager,
                             AnchorManager anchorManager, PartnerManager partnerManager,
-                            ChatInputListener chatInputListener, MenuManager menuManager) {
+                            ChatInputListener chatInputListener, MenuManager menuManager,
+                            CooldownManager cooldownManager) {
         this.claimManager = claimManager;
         this.pickupManager = pickupManager;
         this.anchorManager = anchorManager;
         this.partnerManager = partnerManager;
         this.chatInputListener = chatInputListener;
         this.menuManager = menuManager;
+        this.cooldownManager = cooldownManager;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -196,6 +199,12 @@ public class InteractListener implements Listener {
 
     private void handlePickup(Player player, LivingEntity villager) {
         if (Permission.PICKUP.lacksAndNotify(player)) return;
+        if (cooldownManager.hasCooldown(player)) {
+            Message.COOLDOWN.parameterizer()
+                    .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
+                    .send(player);
+            return;
+        }
         ItemStack item;
         try {
             item = pickupManager.toItemStack(villager);
@@ -207,6 +216,7 @@ public class InteractListener implements Listener {
         Utils.setHandOrGive(player, item);
         Message.PICK_UP_VILLAGER.sendActionbarSilently(player);
         pickupManager.sendPickupEffect(villager);
+        cooldownManager.giveCooldown(player);
     }
 
     public static void playOpenSound(Player player, LivingEntity villager) {
