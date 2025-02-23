@@ -202,7 +202,7 @@ public class InteractListener implements Listener {
         if (cooldownManager.hasCooldown(player)) {
             Message.COOLDOWN.parameterizer()
                     .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
-                    .send(player);
+                    .sendActionbar(player);
             return;
         }
         ItemStack item;

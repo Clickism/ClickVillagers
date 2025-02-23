@@ -46,7 +46,7 @@ public class VillagerEditMenu extends Menu {
                     if (cooldownManager.hasCooldown(player)) {
                         Message.COOLDOWN.parameterizer()
                                 .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
-                                .send(player);
+                                .sendActionbar(player);
                         return;
                     }
                     cooldownManager.giveCooldown(player);
