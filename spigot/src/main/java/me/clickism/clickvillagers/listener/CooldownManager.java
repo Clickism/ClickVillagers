@@ -25,7 +25,7 @@ public class CooldownManager {
     }
 
     public long getRemainingCooldownSeconds(Player player) {
-        return getRemainingCooldownMillis(player) / 1000;
+        return (long) Math.ceil((double) getRemainingCooldownMillis(player) / 1000);
     }
 
     public long getRemainingCooldownMillis(Player player) {
