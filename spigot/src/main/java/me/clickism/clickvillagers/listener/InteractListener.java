@@ -180,15 +180,21 @@ public class InteractListener implements Listener {
             return;
         }
         if (Permission.CLAIM.lacksAndNotify(player)) return;
-        new VillagerClaimMenu(player, villager, claimManager, pickupManager, partnerManager, chatInputListener,
-                cooldownManager).open(menuManager);
+        if (cooldownManager.hasCooldown(player)) {
+            Message.CLAIM_COOLDOWN.parameterizer()
+                    .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
+                    .sendActionbar(player);
+            return;
+        }
+        new VillagerClaimMenu(player, villager, claimManager, pickupManager, partnerManager, chatInputListener
+        ).open(menuManager);
         playOpenSound(player, villager);
     }
 
     private void handleEdit(Player player, LivingEntity villager) {
         if (claimManager.isOwner(villager, player) || Permission.BYPASS_CLAIMS.has(player)) {
-            new VillagerEditMenu(player, villager, claimManager, pickupManager, partnerManager, chatInputListener,
-                    cooldownManager).open(menuManager);
+            new VillagerEditMenu(player, villager, claimManager, pickupManager, partnerManager, chatInputListener
+            ).open(menuManager);
             playOpenSound(player, villager);
             return;
         }
@@ -200,7 +206,7 @@ public class InteractListener implements Listener {
     private void handlePickup(Player player, LivingEntity villager) {
         if (Permission.PICKUP.lacksAndNotify(player)) return;
         if (cooldownManager.hasCooldown(player)) {
-            Message.COOLDOWN.parameterizer()
+            Message.PICK_UP_COOLDOWN.parameterizer()
                     .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
                     .sendActionbar(player);
             return;
