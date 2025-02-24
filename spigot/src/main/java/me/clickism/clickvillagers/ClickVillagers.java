@@ -87,7 +87,7 @@ public final class ClickVillagers extends JavaPlugin {
         HopperManager hopperManager = new HopperManager(this, pickupManager, claimManager);
         ChatInputListener chatInputListener = new ChatInputListener(this);
 
-        int cooldownSeconds = Setting.PICK_UP_COOLDOWN.getInt();
+        int cooldownSeconds = Setting.COOLDOWN.getInt();
         CooldownManager cooldownManager = new CooldownManager(cooldownSeconds * 1000L);
 
         new InteractListener(this, claimManager, pickupManager,
