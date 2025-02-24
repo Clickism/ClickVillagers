@@ -17,10 +17,13 @@ import java.util.stream.Collectors;
 
 public class TradeInfoProviders {
 
-    public static final TradeInfoProvider ALL_TRADES = TradeInfoProvider.builder().build();
+    public static final TradeInfoProvider ALL_TRADES = TradeInfoProvider.builder()
+            .filterIngredients(item -> true)
+            .filterResults(item -> true)
+            .build();
 
     public static final TradeInfoProvider LIBRARIAN = TradeInfoProvider.builder()
-            .filterResults(result -> result.getType() == Material.ENCHANTED_BOOK)
+            .acceptResults(Material.ENCHANTED_BOOK)
             .ingredientFormatter(item -> {
                 if (item.getType() != Material.EMERALD) return null;
                 return item.getAmount() + " Emeralds";
@@ -72,21 +75,20 @@ public class TradeInfoProviders {
                 return "&8🪨 " + item.getAmount() + " Coal";
             })
             .resultFormatter(item -> {
-                if (!DIAMOND_TOOLS.contains(item.getType())) return TradeInfoProvider.DEFAULT_FORMATTER.apply(item);
+                Material material = item.getType();
+                if (!DIAMOND_TOOLS.contains(material)) return TradeInfoProvider.DEFAULT_FORMATTER.apply(item);
                 ItemMeta meta = item.getItemMeta();
                 if (meta == null) return TradeInfoProvider.DEFAULT_FORMATTER.apply(item);
                 String enchantments = meta.getEnchants().entrySet().stream()
                         .map(entry -> {
                             String enchantment = entry.getKey().getKey().getKey().replace("_", " ");
                             String level = toRomanNumeral(entry.getValue());
-                            return Utils.titleCase(enchantment) + " " + level;
+                            return "\n                        &d   &7" + Utils.titleCase(enchantment) + " " + level;
                         })
-                        .collect(Collectors.joining(" + "));
-                String name = "&b⛏ " + Utils.formatMaterial(item.getType());
-                if (enchantments.isEmpty()) {
-                    return name;
-                }
-                return name + " &8+ &d📖 " + enchantments;
+                        .collect(Collectors.joining());
+                String icon = (material == Material.DIAMOND_SWORD) ? "🗡" : "⛏";
+                String name = "&b" + icon + " " + Utils.formatMaterial(material);
+                return name + enchantments;
             })
             .build();
 
@@ -106,11 +108,6 @@ public class TradeInfoProviders {
             case 3 -> "III";
             case 4 -> "IV";
             case 5 -> "V";
-            case 6 -> "VI";
-            case 7 -> "VII";
-            case 8 -> "VIII";
-            case 9 -> "IX";
-            case 10 -> "X";
             default -> String.valueOf(number);
         };
     }
