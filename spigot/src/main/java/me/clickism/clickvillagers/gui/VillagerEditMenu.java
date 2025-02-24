@@ -12,7 +12,6 @@ import me.clickism.clickgui.menu.Menu;
 import me.clickism.clickgui.menu.MenuType;
 import me.clickism.clickvillagers.config.Permission;
 import me.clickism.clickvillagers.config.Setting;
-import me.clickism.clickvillagers.listener.CooldownManager;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.message.MessageType;
 import me.clickism.clickvillagers.util.Utils;
@@ -32,7 +31,7 @@ import java.util.function.Supplier;
 public class VillagerEditMenu extends Menu {
     public VillagerEditMenu(Player viewer, LivingEntity villager, ClaimManager claimManager,
                             PickupManager pickupManager, PartnerManager partnerManager,
-                            ChatInputListener chatInputListener, CooldownManager cooldownManager) {
+                            ChatInputListener chatInputListener) {
         super(viewer, MenuType.MENU_9X3);
         UUID owner = claimManager.getOwnerUUID(villager);
         String ownerName = (owner == null) ? null : Bukkit.getOfflinePlayer(owner).getName();
@@ -43,13 +42,6 @@ public class VillagerEditMenu extends Menu {
                 .setOnClick((player, view, slot) -> {
                     view.close();
                     if (!hasPermission(player, villager, claimManager)) return;
-                    if (cooldownManager.hasCooldown(player)) {
-                        Message.COOLDOWN.parameterizer()
-                                .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
-                                .sendActionbar(player);
-                        return;
-                    }
-                    cooldownManager.giveCooldown(player);
                     Utils.setHandOrGive(player, pickupManager.toItemStack(villager));
                     Message.PICK_UP_VILLAGER.sendActionbarSilently(player);
                     pickupManager.sendPickupEffect(villager);
