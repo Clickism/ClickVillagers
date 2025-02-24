@@ -87,7 +87,10 @@ public enum Message {
     RELOAD_FAIL(MessageType.FAIL),
 
     @WithParameters("seconds")
-    COOLDOWN(MessageType.FAIL);
+    PICK_UP_COOLDOWN(MessageType.FAIL),
+
+    @WithParameters("seconds")
+    CLAIM_COOLDOWN(MessageType.FAIL);
 
     private static final MessageType MISSING = MessageType.silent("&2[?] &c", "&8< &2? &c%s &8>");
 

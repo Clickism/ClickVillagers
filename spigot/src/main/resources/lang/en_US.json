@@ -103,5 +103,6 @@
   "usage": "&cUsage: {usage}",
   "reload_success": "Reloaded &lClickVillagers &aconfig.",
   "reload_fail": "Failed to reload &lClickVillagers &cconfig.",
-  "cooldown": "Please wait &l{seconds} seconds &cto pick up this villager"
+  "pick_up_cooldown": "Please wait &l{seconds} seconds &cto pick up this villager",
+  "claim_cooldown": "Please wait &l{seconds} seconds &cto claim this villager"
 }
