@@ -17,11 +17,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class TradeInfoProvider {
 
     private static final String LINE_FORMAT = "   &8→ &7%s &8→ &7%s";
+    private static final Pattern LINE_BREAK_PATTERN = Pattern.compile("\n");
 
     public static final Function<ItemStack, String> DEFAULT_FORMATTER = Utils::formatItem;
 
@@ -44,6 +46,7 @@ public class TradeInfoProvider {
                 .filter(recipe -> recipe.getIngredients().stream().anyMatch(ingredientsFilter)
                         || resultsFilter.test(recipe.getResult()))
                 .map(this::formatRecipe)
+                .flatMap(LINE_BREAK_PATTERN::splitAsStream)
                 .toList();
     }
 
@@ -66,8 +69,8 @@ public class TradeInfoProvider {
 
     public static class Builder {
 
-        private Predicate<ItemStack> ingredientsFilter = item -> true;
-        private Predicate<ItemStack> resultsFilter = item -> true;
+        private Predicate<ItemStack> ingredientsFilter = item -> false;
+        private Predicate<ItemStack> resultsFilter = item -> false;
 
         private Function<ItemStack, String> ingredientFormatter = Utils::formatItem;
         private Function<ItemStack, String> resultFormatter = Utils::formatItem;
