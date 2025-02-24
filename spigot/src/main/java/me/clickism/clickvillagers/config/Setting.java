@@ -36,7 +36,7 @@ public enum Setting {
 
     VALIDATE_PARTNER_NAMES(true),
 
-    PICK_UP_COOLDOWN(0);
+    COOLDOWN(0);
 
     private static SettingManager settingManager;
 
