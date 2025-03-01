@@ -110,6 +110,12 @@ public class TradeInfoProvider {
             return this;
         }
 
+        public Builder itemFormatter(Function<ItemStack, String> itemFormatter) {
+            this.ingredientFormatter = itemFormatter;
+            this.resultFormatter = itemFormatter;
+            return this;
+        }
+
         public TradeInfoProvider build() {
             return new TradeInfoProvider(ingredientsFilter, resultsFilter, ingredientFormatter, resultFormatter);
         }
