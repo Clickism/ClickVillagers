@@ -32,6 +32,7 @@ public class VillagerUseBlockCallback implements UseBlockCallback {
         if (world.isClient()) return ActionResult.PASS;
         if (player.isSpectator()) return ActionResult.PASS;
         ItemStack itemStack = player.getMainHandStack();
+        if (!itemStack.isOf(Items.PLAYER_HEAD)) return ActionResult.PASS;
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
         if (entity == null) return ActionResult.PASS;
         BlockPos clickedPos = hitResult.getBlockPos();
