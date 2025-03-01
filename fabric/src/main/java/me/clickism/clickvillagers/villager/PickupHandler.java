@@ -93,7 +93,9 @@ public class PickupHandler {
 
     @Nullable
     private static NbtCompound readCustomData(ItemStack itemStack) {
-        return itemStack.getOrCreateNbt().getCompound(DATA_KEY);
+        NbtCompound nbt = itemStack.getNbt();
+        if (nbt == null) return null;
+        return nbt.getCompound(DATA_KEY);
     }
 
     private static void formatItem(ItemStack itemStack, Text name, List<Text> lore) {
