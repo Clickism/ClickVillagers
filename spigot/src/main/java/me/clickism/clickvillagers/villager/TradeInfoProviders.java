@@ -8,7 +8,6 @@ package me.clickism.clickvillagers.villager;
 
 import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -17,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TradeInfoProviders {
 
