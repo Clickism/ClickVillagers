@@ -36,7 +36,8 @@ public enum Setting {
 
     VALIDATE_PARTNER_NAMES(true),
 
-    COOLDOWN(0);
+    COOLDOWN(0),
+    SHOW_TRADES(true);
 
     private static SettingManager settingManager;
 

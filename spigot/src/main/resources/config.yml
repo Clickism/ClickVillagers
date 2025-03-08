@@ -68,6 +68,11 @@ validate-partner-names: true
 # Default: 0
 cooldown: 0
 
+# Whether to show the trades of villagers when they are picked up.
+# Only relevant trades are shown.
+# Default: true
+show-trades: true
+
 # Set a custom model data for the picked up villagers based on professions.
 # This is useful for resource packs that want to change the model/texture of picked up villagers.
 # Value 0 will not change the model.
