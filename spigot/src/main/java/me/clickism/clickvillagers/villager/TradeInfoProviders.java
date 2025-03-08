@@ -8,13 +8,16 @@ package me.clickism.clickvillagers.villager;
 
 import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TradeInfoProviders {
 
@@ -73,6 +76,77 @@ public class TradeInfoProviders {
             .formatEnchantments()
             .build();
 
+    public static final TradeInfoProvider LEATHERWORKER = TradeInfoProvider.builder()
+            .acceptIngredients(Material.LEATHER, Material.FLINT, Material.RABBIT_HIDE, Material.SCUTE)
+            .acceptResults(Material.LEATHER_HORSE_ARMOR, Material.SADDLE)
+            .singleFormatter(ITEM_FORMATTER)
+            .build();
+
+    public static final TradeInfoProvider CLERIC = TradeInfoProvider.builder()
+            .acceptIngredients(Material.GOLD_INGOT)
+            .acceptResults(Material.REDSTONE, Material.LAPIS_LAZULI, Material.GLOWSTONE, Material.ENDER_PEARL,
+                    Material.EXPERIENCE_BOTTLE)
+            .singleFormatter(ITEM_FORMATTER)
+            .build();
+
+    public static final TradeInfoProvider CARTOGRAPHER = TradeInfoProvider.builder()
+            .acceptIngredients(Material.PAPER)
+            .acceptResults(Material.ITEM_FRAME, Material.MAP)
+            .singleFormatter(ITEM_FORMATTER)
+            .build();
+
+    public static final TradeInfoProvider FLETCHER = TradeInfoProvider.builder()
+            .acceptIngredients(Material.STICK, Material.FLINT, Material.STRING)
+            .filterResults(item -> {
+                Material material = item.getType();
+                if (material == Material.ARROW) return true;
+                if (material == Material.BOW) {
+                    ItemMeta meta = item.getItemMeta();
+                    return meta != null && !meta.getEnchants().isEmpty();
+                }
+                return false;
+            })
+            .singleFormatter(ITEM_FORMATTER)
+            .formatEnchantments()
+            .build();
+
+    public static final TradeInfoProvider MASON = TradeInfoProvider.builder()
+            .acceptIngredients(Material.CLAY_BALL, Material.QUARTZ)
+            .acceptResults(Material.BRICK, Material.QUARTZ_PILLAR, Material.QUARTZ_BLOCK,
+                    // Normal terracotta
+                    Material.TERRACOTTA, Material.WHITE_TERRACOTTA,
+                    Material.ORANGE_TERRACOTTA, Material.MAGENTA_TERRACOTTA, Material.LIGHT_BLUE_TERRACOTTA,
+                    Material.YELLOW_TERRACOTTA, Material.LIME_TERRACOTTA, Material.PINK_TERRACOTTA,
+                    Material.GRAY_TERRACOTTA, Material.LIGHT_GRAY_TERRACOTTA, Material.CYAN_TERRACOTTA,
+                    Material.PURPLE_TERRACOTTA, Material.BLUE_TERRACOTTA, Material.BROWN_TERRACOTTA,
+                    Material.GREEN_TERRACOTTA, Material.RED_TERRACOTTA, Material.BLACK_TERRACOTTA,
+                    // Glazed terracotta
+                    Material.WHITE_GLAZED_TERRACOTTA, Material.ORANGE_GLAZED_TERRACOTTA,
+                    Material.MAGENTA_GLAZED_TERRACOTTA, Material.LIGHT_BLUE_GLAZED_TERRACOTTA,
+                    Material.YELLOW_GLAZED_TERRACOTTA, Material.LIME_GLAZED_TERRACOTTA,
+                    Material.PINK_GLAZED_TERRACOTTA, Material.GRAY_GLAZED_TERRACOTTA,
+                    Material.LIGHT_GRAY_GLAZED_TERRACOTTA, Material.CYAN_GLAZED_TERRACOTTA,
+                    Material.PURPLE_GLAZED_TERRACOTTA, Material.BLUE_GLAZED_TERRACOTTA,
+                    Material.BROWN_GLAZED_TERRACOTTA, Material.GREEN_GLAZED_TERRACOTTA,
+                    Material.RED_GLAZED_TERRACOTTA, Material.BLACK_GLAZED_TERRACOTTA)
+            .ingredientFormatter(ITEM_FORMATTER)
+            .resultFormatter(item -> {
+                Material material = item.getType();
+                if (material == Material.BRICK || material == Material.QUARTZ_PILLAR
+                        || material == Material.QUARTZ_BLOCK || material == Material.EMERALD) {
+                    return ITEM_FORMATTER.apply(item);
+                }
+                return "&6🪨 " + Utils.formatItem(item);
+            })
+            .build();
+
+    public static final TradeInfoProvider SHEPHERD = TradeInfoProvider.builder()
+            .acceptIngredients()
+            .acceptIngredients(Material.WHITE_WOOL, Material.BROWN_WOOL, Material.BLACK_WOOL, Material.GRAY_WOOL)
+            .acceptResults(Material.SHEARS, Material.PAINTING)
+            .singleFormatter(ITEM_FORMATTER)
+            .build();
+
     public static TradeInfoProvider getProvider(Villager.Profession profession) {
         return switch (profession) {
             case LIBRARIAN -> LIBRARIAN;
@@ -82,6 +156,12 @@ public class TradeInfoProviders {
                  ARMORER -> SMITH;
             case BUTCHER -> BUTCHER;
             case FISHERMAN -> FISHERMAN;
+            case LEATHERWORKER -> LEATHERWORKER;
+            case CLERIC -> CLERIC;
+            case CARTOGRAPHER -> CARTOGRAPHER;
+            case FLETCHER -> FLETCHER;
+            case MASON -> MASON;
+            case SHEPHERD -> SHEPHERD;
             default -> ALL_TRADES;
         };
     }
@@ -100,7 +180,8 @@ public class TradeInfoProviders {
             case PUMPKIN -> "&6🎃";
             case MELON -> "&a🍉";
 
-            case COAL -> "&8🪨";
+            case COAL,
+                 FLINT -> "&8🪨";
 
             case DIAMOND_SWORD -> "&b🗡";
             case DIAMOND_AXE,
@@ -121,11 +202,44 @@ public class TradeInfoProviders {
             case COOKED_CHICKEN -> "&6🐓";
             case COOKED_PORKCHOP -> "&6🐷";
 
-            case STRING -> "&7🪡";
+            case STRING -> "&f🪡";
             case CAMPFIRE -> "&c🔥";
             case FISHING_ROD -> "&6🎣";
 
             case SHIELD -> "&6🛡️";
+
+            case LEATHER -> "&6🐄";
+            case RABBIT_HIDE -> "&e🐇";
+            case SCUTE -> "&a🐢";
+            case SADDLE -> "&6🐴";
+
+            case REDSTONE -> "&c💎";
+            case GOLD_INGOT -> "&6💎";
+            case LAPIS_LAZULI -> "&9💎";
+            case GLOWSTONE -> "&e🌟";
+            case ENDER_PEARL -> "&3◎";
+            case EXPERIENCE_BOTTLE -> "&d🧪";
+
+            case PAPER -> "&f📄";
+            case MAP -> "&e📄";
+            case ITEM_FRAME,
+                 PAINTING -> "&6🖼";
+
+            case STICK -> "&6🪃";
+            case ARROW -> "&f➵";
+            case BOW -> "&6🏹";
+
+            case CLAY_BALL -> "&3🪨";
+            case BRICK -> "&c🧱";
+            case QUARTZ,
+                 QUARTZ_BLOCK,
+                 QUARTZ_PILLAR -> "&f💎";
+
+            case WHITE_WOOL -> "&f🧶";
+            case BROWN_WOOL -> "&6🧶";
+            case BLACK_WOOL -> "&8🧶";
+            case GRAY_WOOL -> "&7🧶";
+            case SHEARS -> "&c✂";
 
             default -> null;
         };
