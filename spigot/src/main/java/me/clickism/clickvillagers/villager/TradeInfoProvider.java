@@ -8,7 +8,6 @@ package me.clickism.clickvillagers.villager;
 
 import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 
@@ -110,7 +109,7 @@ public class TradeInfoProvider {
             return this;
         }
 
-        public Builder itemFormatter(Function<ItemStack, String> itemFormatter) {
+        public Builder singleFormatter(Function<ItemStack, String> itemFormatter) {
             this.ingredientFormatter = itemFormatter;
             this.resultFormatter = itemFormatter;
             return this;
