@@ -10,6 +10,7 @@ import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,20 +25,24 @@ public class TradeInfoProvider {
     private static final String LINE_FORMAT = "   &8→ &7%s &8→ &7%s";
     private static final Pattern LINE_BREAK_PATTERN = Pattern.compile("\n");
 
-    public static final Function<ItemStack, String> DEFAULT_FORMATTER = Utils::formatItem;
-
     private final Predicate<ItemStack> ingredientsFilter;
     private final Predicate<ItemStack> resultsFilter;
 
     private final Function<ItemStack, String> ingredientFormatter;
     private final Function<ItemStack, String> resultFormatter;
 
-    public TradeInfoProvider(Predicate<ItemStack> ingredientsFilter, Predicate<ItemStack> resultsFilter,
-                             Function<ItemStack, String> ingredientFormatter, Function<ItemStack, String> resultFormatter) {
+    private final boolean formatEnchantments;
+
+    public TradeInfoProvider(Predicate<ItemStack> ingredientsFilter,
+                             Predicate<ItemStack> resultsFilter,
+                             Function<ItemStack, String> ingredientFormatter,
+                             Function<ItemStack, String> resultFormatter,
+                             boolean formatEnchantments) {
         this.ingredientsFilter = ingredientsFilter;
         this.resultsFilter = resultsFilter;
         this.ingredientFormatter = ingredientFormatter;
         this.resultFormatter = resultFormatter;
+        this.formatEnchantments = formatEnchantments;
     }
 
     public List<String> getTradeInfoLines(List<MerchantRecipe> recipes) {
@@ -55,11 +60,40 @@ public class TradeInfoProvider {
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" + "));
         String result = resultFormatter.apply(recipe.getResult());
-        return formatLine(ingredients, result);
+        String line = formatLine(ingredients, result);
+        if (formatEnchantments) {
+            line += formatEnchantments(recipe);
+        }
+        return line;
     }
 
     private static String formatLine(String ingredients, String result) {
         return String.format(LINE_FORMAT, ingredients, result);
+    }
+
+    private static final String SINGLE_SPACING = " ".repeat(26);
+    private static final String DOUBLE_SPACING = " ".repeat(27);
+
+    private static String formatEnchantments(MerchantRecipe recipe) {
+        String spacing = getSpacing(recipe);
+        ItemMeta meta = recipe.getResult().getItemMeta();
+        if (meta == null) return "";
+        return meta.getEnchants().entrySet().stream()
+                .map(entry -> {
+                    String name = Utils.titleCase(entry.getKey().getKey().getKey().replace("_", " "));
+                    String level = Utils.toRomanNumeral(entry.getValue());
+                    return "\n" + spacing + "&7" + name + " " + level;
+                })
+                .collect(Collectors.joining());
+    }
+
+    private static String getSpacing(MerchantRecipe recipe) {
+        int emeraldCount = recipe.getIngredients().stream()
+                .filter(item -> item.getType() == Material.EMERALD)
+                .mapToInt(ItemStack::getAmount)
+                .sum();
+        if (emeraldCount == 0) return "";
+        return emeraldCount < 10 ? SINGLE_SPACING : DOUBLE_SPACING;
     }
 
     public static Builder builder() {
@@ -73,6 +107,8 @@ public class TradeInfoProvider {
 
         private Function<ItemStack, String> ingredientFormatter = Utils::formatItem;
         private Function<ItemStack, String> resultFormatter = Utils::formatItem;
+
+        private boolean formatEnchantments = false;
 
         private Builder() {
         }
@@ -115,8 +151,14 @@ public class TradeInfoProvider {
             return this;
         }
 
+        public Builder formatEnchantments() {
+            this.formatEnchantments = true;
+            return this;
+        }
+
         public TradeInfoProvider build() {
-            return new TradeInfoProvider(ingredientsFilter, resultsFilter, ingredientFormatter, resultFormatter);
+            return new TradeInfoProvider(ingredientsFilter, resultsFilter, ingredientFormatter,
+                    resultFormatter, formatEnchantments);
         }
     }
 
