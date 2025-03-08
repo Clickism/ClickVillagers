@@ -165,6 +165,7 @@ public class PickupManager implements Listener {
         Villager.Profession profession = Utils.getVillagerProfession(entity);
         boolean adult = ((Ageable) entity).isAdult();
         int modelData = Setting.getCustomModelData(profession, !adult, entity instanceof ZombieVillager);
+        boolean hasTrades = entity instanceof Villager villager && !villager.getRecipes().isEmpty();
         Icon icon = Message.VILLAGER.toIcon(Material.PLAYER_HEAD)
                 .setName(ChatColor.YELLOW + getName(customName, profession, adult))
                 .runIf(modelData != 0,
@@ -175,7 +176,7 @@ public class PickupManager implements Listener {
                         i -> i.addLoreLine("&3⚓ " + Message.INFO_ANCHORED))
                 .runIf(claimManager.hasOwner(entity) && !claimManager.isTradeOpen(entity),
                         i -> i.addLoreLine("&c👥 " + Message.INFO_TRADE_CLOSED))
-                .runIf(entity instanceof Villager villager && !villager.getRecipes().isEmpty(),
+                .runIf(hasTrades && Setting.SHOW_TRADES.isEnabled(),
                         i -> {
                             Villager villager = (Villager) entity;
                             List<String> infoLines = TradeInfoProviders.getProvider(villager.getProfession())
