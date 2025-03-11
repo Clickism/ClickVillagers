@@ -39,7 +39,7 @@ public enum Setting {
     COOLDOWN(0),
 
     SHOW_TRADES(true),
-    ONLY_RELEVANT_TRADES(true);
+    FORMAT_TRADES(true);
 
     private static SettingManager settingManager;
 

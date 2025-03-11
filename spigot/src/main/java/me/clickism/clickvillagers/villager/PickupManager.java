@@ -179,7 +179,7 @@ public class PickupManager implements Listener {
                 .runIf(hasTrades && Setting.SHOW_TRADES.isEnabled(),
                         i -> {
                             if (!(entity instanceof Villager villager)) return;
-                            TradeInfoProvider provider = (Setting.ONLY_RELEVANT_TRADES.isEnabled())
+                            TradeInfoProvider provider = (Setting.FORMAT_TRADES.isEnabled())
                                     ? TradeInfoProviders.getProvider(villager.getProfession())
                                     : TradeInfoProviders.ALL_TRADES;
                             List<String> infoLines = provider.getTradeInfoLines(villager.getRecipes());
