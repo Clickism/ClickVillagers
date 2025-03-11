@@ -10,15 +10,11 @@ import me.clickism.clickvillagers.ClickVillagers;
 import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.ZombieVillager;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Map;
@@ -29,6 +25,7 @@ public class VillagerTextures {
     public static final String DEFAULT_TEXTURE = "http://textures.minecraft.net/texture/d14bff1a38c9154e5ec84ce5cf00c58768e068eb42b2d89a6bbd29787590106b";
     public static final String BABY_TEXTURE = "http://textures.minecraft.net/texture/3d7788826b9ac4deaf383b387947085211447ed50fdc21bf71c230048dd5986f";
     public static final String ZOMBIE_TEXTURE = "http://textures.minecraft.net/texture/e5e08a8776c1764c3fe6a6ddd412dfcb87f41331dad479ac96c21df4bf3ac89c";
+    public static final String WANDERING_TRADER_TEXTURE = "http://textures.minecraft.net/texture/ee011aac817259f2b48da3e5ef266094703866608b3d7d1754432bf249cd2234";
 
     public static final Map<Villager.Profession, String> TEXTURE_MAP = Map.ofEntries(
             Map.entry(Villager.Profession.FISHERMAN, "http://textures.minecraft.net/texture/61d644761f706d31c99a593c8d5f7cbbd4372d73fbee8464f482fa6c139d97d4"),
@@ -54,30 +51,38 @@ public class VillagerTextures {
     }
 
     public static void setEntityTexture(ItemStack item, LivingEntity entity) {
-        Villager.Profession profession = Utils.getVillagerProfession(entity);
-        boolean adult = ((Ageable) entity).isAdult();
-        boolean zombie = entity instanceof ZombieVillager;
-        setEntityTexture(item, profession, adult, zombie);
+        try {
+            URL texture = getTexture(entity);
+            setEntityTexture(item, texture);
+        } catch (Exception exception) {
+            ClickVillagers.LOGGER.warning("Failed to set villager texture: " + exception.getMessage());
+        }
     }
 
-    private static void setEntityTexture(ItemStack item, Villager.Profession profession, boolean adult, boolean zombie) {
+    private static void setEntityTexture(ItemStack item, URL texture) {
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         if (meta == null) return;
         PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
-        try {
-            profile.getTextures().setSkin(getTexture(profession, adult, zombie));
-        } catch (MalformedURLException exception) {
-            ClickVillagers.LOGGER.warning("Failed to set villager texture: " + exception.getMessage());
-        }
+        profile.getTextures().setSkin(texture);
         meta.setOwnerProfile(profile);
         item.setItemMeta(meta);
     }
 
-    private static URL getTexture(Villager.Profession profession, boolean adult, boolean zombie) throws MalformedURLException {
-        if (!adult) {
+    private static URL getTexture(Entity entity) throws Exception {
+        if (entity instanceof WanderingTrader) {
+            return URI.create(WANDERING_TRADER_TEXTURE).toURL();
+        }
+        boolean isZombie = entity instanceof ZombieVillager;
+        if (!(entity instanceof Villager) && !isZombie) {
+            throw new IllegalArgumentException("Unsupported entity type: " + entity.getClass().getName());
+        }
+        LivingEntity villager = (LivingEntity) entity;
+        Villager.Profession profession = Utils.getVillagerProfession(villager);
+        boolean isAdult = ((Ageable) villager).isAdult();
+        if (!isAdult) {
             return URI.create(BABY_TEXTURE).toURL();
         }
-        if (zombie) {
+        if (isZombie) {
             return URI.create(ZOMBIE_TEXTURE).toURL();
         }
         return URI.create(TEXTURE_MAP.getOrDefault(profession, DEFAULT_TEXTURE)).toURL();
