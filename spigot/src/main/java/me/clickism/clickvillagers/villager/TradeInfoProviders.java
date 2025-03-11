@@ -39,7 +39,7 @@ public class TradeInfoProviders {
             .acceptResults(Material.ENCHANTED_BOOK)
             .ingredientFormatter(item -> {
                 if (item.getType() != Material.EMERALD) return null;
-                return item.getAmount() + " Emeralds";
+                return item.getAmount() + " Emerald";
             })
             .resultFormatter(TradeInfoProviders::formatEnchantedBook)
             .build();
