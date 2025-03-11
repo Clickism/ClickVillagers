@@ -10,14 +10,15 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class CooldownManager {
 
-    private final long cooldownMillis;
+    private final Supplier<Long> cooldownMillisSupplier;
     private final HashMap<UUID, Long> lastUseMap = new HashMap<>();
 
-    public CooldownManager(long cooldownMillis) {
-        this.cooldownMillis = cooldownMillis;
+    public CooldownManager(Supplier<Long> cooldownMillisSupplier) {
+        this.cooldownMillisSupplier = cooldownMillisSupplier;
     }
 
     public boolean hasCooldown(Player player) {
@@ -29,6 +30,7 @@ public class CooldownManager {
     }
 
     public long getRemainingCooldownMillis(Player player) {
+        long cooldownMillis = cooldownMillisSupplier.get();
         if (cooldownMillis <= 0) return 0;
         long time = System.currentTimeMillis();
         Long lastUse = lastUseMap.get(player.getUniqueId());
