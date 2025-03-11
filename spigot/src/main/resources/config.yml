@@ -64,7 +64,7 @@ validate-partner-names: true
 
 # Cooldown for picking up and claiming villagers in seconds.
 # This is useful to prevent players from collecting villagers very quickly.
-# Claimed villagers will not be affected by the picking up cooldown.
+# Claimed villagers will not be affected by the cooldown.
 # Default: 0
 cooldown: 0
 
