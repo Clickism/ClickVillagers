@@ -7,7 +7,6 @@ description: A simple plugin that makes handling villagers a lot easier
 commands:
   clickvillagers:
     description: Main command for ClickVillagers.
-    usage: /clickvillagers <reload>
     permission: clickvillagers.reload
     aliases: [ cv ]
 permissions:
