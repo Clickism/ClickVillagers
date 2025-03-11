@@ -38,3 +38,6 @@ permissions:
   clickvillagers.reload:
     description: Allows players to reload the plugin.
     default: op
+  clickvillagers.bypass-cooldowns:
+    description: Allows players to bypass pick up and claim cooldowns.
+    default: false

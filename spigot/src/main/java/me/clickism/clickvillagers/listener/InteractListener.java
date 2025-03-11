@@ -180,7 +180,7 @@ public class InteractListener implements Listener {
             return;
         }
         if (Permission.CLAIM.lacksAndNotify(player)) return;
-        if (cooldownManager.hasCooldown(player)) {
+        if (cooldownManager.hasCooldown(player) && Permission.BYPASS_CLAIMS.lacks(player)) {
             Message.CLAIM_COOLDOWN.parameterizer()
                     .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
                     .sendActionbar(player);
@@ -205,7 +205,7 @@ public class InteractListener implements Listener {
 
     private void handlePickup(Player player, LivingEntity villager) {
         if (Permission.PICKUP.lacksAndNotify(player)) return;
-        if (cooldownManager.hasCooldown(player)) {
+        if (cooldownManager.hasCooldown(player) && Permission.BYPASS_CLAIMS.lacks(player)) {
             Message.PICK_UP_COOLDOWN.parameterizer()
                     .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
                     .sendActionbar(player);

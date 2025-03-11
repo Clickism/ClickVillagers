@@ -8,7 +8,6 @@ package me.clickism.clickvillagers.config;
 
 import me.clickism.clickvillagers.message.Message;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public enum Permission {
     PICKUP,
@@ -19,6 +18,7 @@ public enum Permission {
     PARTNER,
     BYPASS_CLAIMS,
     BYPASS_LIMITS,
+    BYPASS_COOLDOWNS,
     RELOAD;
 
     private static final String PLUGIN_PREFIX = "clickvillagers";
