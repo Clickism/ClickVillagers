@@ -13,7 +13,7 @@ to pick villagers up into your inventory, claim and protect them, change their b
 ![spigot](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/spigot_vector.svg)
 ![purpur](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/purpur_vector.svg)
 
-- Trailer: https://youtu.be/19qup8i3IyU
+- 🎥 **Trailer**: https://youtu.be/19qup8i3IyU
 
 ### Features & How to Use
 - Pick villagers up into your inventory by **shift + right clicking** them.
