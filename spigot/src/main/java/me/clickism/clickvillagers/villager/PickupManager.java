@@ -178,9 +178,11 @@ public class PickupManager implements Listener {
                         i -> i.addLoreLine("&c👥 " + Message.INFO_TRADE_CLOSED))
                 .runIf(hasTrades && Setting.SHOW_TRADES.isEnabled(),
                         i -> {
-                            Villager villager = (Villager) entity;
-                            List<String> infoLines = TradeInfoProviders.getProvider(villager.getProfession())
-                                    .getTradeInfoLines(villager.getRecipes());
+                            if (!(entity instanceof Villager villager)) return;
+                            TradeInfoProvider provider = (Setting.ONLY_RELEVANT_TRADES.isEnabled())
+                                    ? TradeInfoProviders.getProvider(villager.getProfession())
+                                    : TradeInfoProviders.ALL_TRADES;
+                            List<String> infoLines = provider.getTradeInfoLines(villager.getRecipes());
                             if (infoLines.isEmpty()) return;
                             i.addLoreLine(" ");
                             i.addLoreLine("&7🛍 " + Message.INFO_TRADES + ":");

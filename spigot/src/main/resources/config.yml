@@ -73,6 +73,12 @@ cooldown: 0
 # Default: true
 show-trades: true
 
+# Only show relevant trades on picked up villagers.
+# This will hide trades that are most likely not useful, and highlight important trades
+# with custom formatting and emojis.
+# Default: true
+only-relevant-trades: true
+
 # Set a custom model data for the picked up villagers based on professions.
 # This is useful for resource packs that want to change the model/texture of picked up villagers.
 # Value 0 will not change the model.
