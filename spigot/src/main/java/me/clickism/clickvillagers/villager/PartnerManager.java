@@ -21,6 +21,8 @@ import java.util.*;
 
 public class PartnerManager implements Listener {
 
+    private static final String FILE_NAME = "partners.json";
+
     private final JavaPlugin plugin;
     private final JSONDataManager dataManager;
 
@@ -29,7 +31,8 @@ public class PartnerManager implements Listener {
     @AutoRegistered
     public PartnerManager(JavaPlugin plugin) throws IOException {
         this.plugin = plugin;
-        this.dataManager = new JSONDataManager(plugin, new File(plugin.getDataFolder(), "data"), "partners.json");
+        File directory = new File(plugin.getDataFolder(), "data");
+        this.dataManager = new JSONDataManager(plugin, directory, FILE_NAME, true);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         load();
     }

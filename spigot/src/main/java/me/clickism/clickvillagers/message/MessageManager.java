@@ -46,7 +46,7 @@ public class MessageManager {
             Setting.saveSettings();
             fileName = defaultLanguage + ".json";
         }
-        dataManager = new JSONDataManager(plugin, directory, fileName);
+        dataManager = new JSONDataManager(plugin, directory, fileName, false);
         checkAndUpdateLanguageFiles();
     }
 

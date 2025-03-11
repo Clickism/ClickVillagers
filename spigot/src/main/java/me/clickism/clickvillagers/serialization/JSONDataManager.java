@@ -28,6 +28,7 @@ public class JSONDataManager extends DataManager {
             .create();
 
     private JsonObject root;
+    private final boolean backupOnSave;
 
     /**
      * Create a new JSONDataManager.
@@ -37,8 +38,9 @@ public class JSONDataManager extends DataManager {
      * @param fileName  fileName, i.E: "config.json"
      * @throws IOException if an I/O error occurs
      */
-    public JSONDataManager(JavaPlugin plugin, @NotNull File directory, String fileName) throws IOException {
+    public JSONDataManager(JavaPlugin plugin, @NotNull File directory, String fileName, boolean backupOnSave) throws IOException {
         super(plugin, directory, fileName);
+        this.backupOnSave = backupOnSave;
     }
 
     /**
@@ -47,16 +49,22 @@ public class JSONDataManager extends DataManager {
      * @param json the json object to save
      */
     public void save(JsonObject json) {
-        File backupFile = new File(file.getPath() + ".old");
-        try {
-            Files.copy(file.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            plugin.getLogger().warning("Failed to create backup file: " + backupFile.getPath());
+        if (backupOnSave) {
+            backup();
         }
         try (FileWriter writer = new FileWriter(file)) {
             GSON.toJson(json, writer);
         } catch (IOException e) {
-            plugin.getLogger().severe("Failed to save file: " + file.getPath());
+            plugin.getLogger().severe("Failed to save file " + file.getPath() + ": " + e.getMessage());
+        }
+    }
+
+    private void backup() {
+        File backupFile = new File(file.getPath() + ".old");
+        try {
+            Files.copy(file.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            plugin.getLogger().warning("Failed to create backup file " + backupFile.getPath() + ": " + e.getMessage());
         }
     }
 
