@@ -11,16 +11,19 @@ import me.clickism.clickvillagers.message.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.logging.Level;
 
-public class ReloadCommand implements CommandExecutor {
+public class ReloadCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!command.getLabel().equalsIgnoreCase("clickvillagers")) return false;
-        if (args.length == 0) {
+        if (args.length != 1) {
             sendUsage(sender);
             return false;
         }
@@ -37,6 +40,15 @@ public class ReloadCommand implements CommandExecutor {
             Message.RELOAD_FAIL.send(sender);
         }
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!command.getLabel().equalsIgnoreCase("clickvillagers")) return null;
+        if (args.length != 1) {
+            return List.of();
+        }
+        return List.of("reload");
     }
 
     private void sendUsage(CommandSender sender) {
