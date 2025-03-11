@@ -25,7 +25,6 @@ public class VillagerTextures {
     public static final String DEFAULT_TEXTURE = "http://textures.minecraft.net/texture/d14bff1a38c9154e5ec84ce5cf00c58768e068eb42b2d89a6bbd29787590106b";
     public static final String BABY_TEXTURE = "http://textures.minecraft.net/texture/3d7788826b9ac4deaf383b387947085211447ed50fdc21bf71c230048dd5986f";
     public static final String ZOMBIE_TEXTURE = "http://textures.minecraft.net/texture/e5e08a8776c1764c3fe6a6ddd412dfcb87f41331dad479ac96c21df4bf3ac89c";
-    public static final String WANDERING_TRADER_TEXTURE = "http://textures.minecraft.net/texture/ee011aac817259f2b48da3e5ef266094703866608b3d7d1754432bf249cd2234";
 
     public static final Map<Villager.Profession, String> TEXTURE_MAP = Map.ofEntries(
             Map.entry(Villager.Profession.FISHERMAN, "http://textures.minecraft.net/texture/61d644761f706d31c99a593c8d5f7cbbd4372d73fbee8464f482fa6c139d97d4"),
@@ -69,9 +68,6 @@ public class VillagerTextures {
     }
 
     private static URL getTexture(Entity entity) throws Exception {
-        if (entity instanceof WanderingTrader) {
-            return URI.create(WANDERING_TRADER_TEXTURE).toURL();
-        }
         boolean isZombie = entity instanceof ZombieVillager;
         if (!(entity instanceof Villager) && !isZombie) {
             throw new IllegalArgumentException("Unsupported entity type: " + entity.getClass().getName());
