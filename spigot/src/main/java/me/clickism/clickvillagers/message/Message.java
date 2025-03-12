@@ -60,6 +60,8 @@ public enum Message {
     // ITEMS
     VILLAGER,
     BABY_VILLAGER,
+    @WithParameters("profession")
+    VILLAGER_WITH_PROFESSION,
 
     VILLAGER_HOPPER,
 

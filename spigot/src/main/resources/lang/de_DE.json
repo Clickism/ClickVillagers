@@ -27,6 +27,7 @@
   "info_trades": "Angebote",
   "villager": "Dorfbewohner",
   "baby_villager": "Baby-Dorfbewohner",
+  "villager_with_profession": "{profession} Dorfbewohner",
   "villager.lore": [
     "&8Rechtsklick, um den Dorfbewohner",
     "&8zurück zu platzieren."

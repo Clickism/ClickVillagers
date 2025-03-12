@@ -27,6 +27,7 @@
   "info_trades": "Trades",
   "villager": "Villager",
   "baby_villager": "Baby Villager",
+  "villager_with_profession": "{profession} Villager",
   "villager.lore": [
     "&8Right click to place the villager back."
   ],

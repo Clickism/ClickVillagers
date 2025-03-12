@@ -203,7 +203,9 @@ public class PickupManager implements Listener {
             return Message.VILLAGER.toString();
         }
         String professionName = Message.get("profession." + profession.toString().toLowerCase());
-        return professionName + " " + Message.VILLAGER;
+        return Message.VILLAGER_WITH_PROFESSION.parameterizer()
+                .put("profession", professionName)
+                .toString();
     }
 
     private record ItemResult(ItemStack item, EquipmentSlot slot) {
