@@ -8,7 +8,10 @@ package me.clickism.clickvillagers.util;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.Identifier;
 
 public class Utils {
     /**
@@ -49,5 +52,34 @@ public class Utils {
             return;
         }
         inventory.offerOrDrop(itemStack);
+    }
+
+    /**
+     * Formats an item stack with its amount into a string. (i.E.: "64 Diamond")
+     *
+     * @param item the item stack to format
+     * @return the formatted item string
+     */
+    public static String formatItem(ItemStack item) {
+        return item.getCount() + " " + formatItem(item.getItem());
+    }
+
+    public static String formatItem(Item item) {
+        return titleCase(item.getDefaultStack().getRegistryEntry().getKey()
+                .map(RegistryKey::getValue)
+                .map(Identifier::getPath)
+                .map(s -> s.replace("_", " "))
+                .orElse("?"));
+    }
+
+    public static String toRomanNumeral(int number) {
+        return switch (number) {
+            case 1 -> "I";
+            case 2 -> "II";
+            case 3 -> "III";
+            case 4 -> "IV";
+            case 5 -> "V";
+            default -> String.valueOf(number);
+        };
     }
 }
