@@ -63,6 +63,10 @@ public enum Settings {
         return get(JsonElement::getAsInt);
     }
 
+    public long getLong() {
+        return get(JsonElement::getAsLong);
+    }
+
     public float getFloat() {
         return get(JsonElement::getAsFloat);
     }
