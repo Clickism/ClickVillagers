@@ -6,12 +6,18 @@
 
 package me.clickism.clickvillagers.villager;
 
+import com.mojang.authlib.GameProfile;
+import me.clickism.clickvillagers.anchor.AnchorHandler;
 import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
 import me.clickism.clickvillagers.util.VersionHelper;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +26,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -27,12 +34,17 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.UserCache;
+import net.minecraft.village.Merchant;
 import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 //? if >=1.20.5 {
 import net.minecraft.component.DataComponentTypes;
@@ -41,7 +53,7 @@ import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.SpawnReason;
 //?} else {
 /*import net.minecraft.nbt.NbtList;
-*///?}
+ *///?}
 
 public class PickupHandler {
 
@@ -54,34 +66,80 @@ public class PickupHandler {
         entity.writeNbt(nbt);
         String id = EntityType.getId(entity.getType()).toString();
         nbt.putString("EntityType", id);
-        ItemStack itemStack = getItemStack(getDisplayName(entity), nbt);
+        List<Text> lore = getLore(new VillagerHandler<>(entity));
+        ItemStack itemStack = getItemStack(getDisplayName(entity), lore, nbt);
         VillagerTextures.setEntityTexture(itemStack, entity);
         entity.remove(Entity.RemovalReason.DISCARDED);
         return itemStack;
     }
 
-    private static ItemStack getItemStack(Text name, NbtCompound nbt) {
+    private static ItemStack getItemStack(Text name, List<Text> lore, NbtCompound nbt) {
         ItemStack itemStack = Items.PLAYER_HEAD.getDefaultStack();
         writeCustomData(itemStack, nbt);
-        formatItem(itemStack, name.copy().fillStyle(Style.EMPTY.withItalic(false).withColor(Formatting.YELLOW)),
-                List.of(Text.literal("Right click to place the villager back.")
-                        .fillStyle(Style.EMPTY.withItalic(false).withColor(Formatting.DARK_GRAY)))
-        );
+        formatItem(itemStack, name.copy().fillStyle(Style.EMPTY.withItalic(false).withColor(Formatting.YELLOW)), lore);
         return itemStack;
+    }
+
+    private static List<Text> getLore(VillagerHandler<?> villager) {
+        List<Text> lore = new ArrayList<>();
+        lore.add(Text.literal("Right click to place the villager back.")
+                .fillStyle(Style.EMPTY.withItalic(false))
+                .formatted(Formatting.DARK_GRAY));
+        LivingEntity entity = villager.getEntity();
+        if (villager.hasOwner()) {
+            UUID ownerUuid = villager.getOwner();
+            MinecraftServer server = entity.getServer();
+            String ownerName = (server != null)
+                    ? getPlayerName(ownerUuid, server).orElse("?")
+                    : "?";
+            lore.add(Text.literal("🔑 Owner: ")
+                    .fillStyle(Style.EMPTY.withItalic(false))
+                    .formatted(Formatting.GOLD)
+                    .append(Text.literal(ownerName).formatted(Formatting.RESET).formatted(Formatting.WHITE)));
+        }
+        if (AnchorHandler.isAnchored(entity)) {
+            lore.add(Text.literal("⚓ Anchored")
+                    .fillStyle(Style.EMPTY.withItalic(false))
+                    .formatted(Formatting.DARK_AQUA));
+        }
+        if (!villager.isTradingOpen()) {
+            lore.add(Text.literal("👥 Trading Closed")
+                    .fillStyle(Style.EMPTY.withItalic(false))
+                    .formatted(Formatting.RED));
+        }
+        if (entity instanceof Merchant merchant && entity instanceof VillagerDataContainer container
+                && !merchant.getOffers().isEmpty()) {
+            lore.add(Text.literal(" "));
+            lore.add(Text.literal("🛍 Trades:")
+                    .fillStyle(Style.EMPTY.withItalic(false))
+                    .formatted(Formatting.GRAY));
+            VillagerProfession profession = container.getVillagerData().getProfession();
+            TradeInfoProvider provider = TradeInfoProviders.getProvider(profession);
+            provider.getTradeInfoLines(merchant.getOffers()).forEach(line -> {
+                lore.add(Text.literal(line));
+            });
+        }
+        return lore;
+    }
+
+    private static Optional<String> getPlayerName(UUID uuid, MinecraftServer server) {
+        UserCache userCache = server.getUserCache();
+        if (userCache == null) return Optional.empty();
+        return userCache.getByUuid(uuid).map(GameProfile::getName);
     }
 
     //? if >=1.20.5 {
     private static void writeCustomData(ItemStack itemStack, NbtCompound nbt) {
         itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
     }
-    
+
     @Nullable
     private static NbtCompound readCustomData(ItemStack itemStack) {
         NbtComponent nbt = itemStack.get(DataComponentTypes.CUSTOM_DATA);
         if (nbt == null) return null;
         return nbt.copyNbt();
     }
-    
+
     private static void formatItem(ItemStack itemStack, Text name, List<Text> lore) {
         itemStack.set(DataComponentTypes.ITEM_NAME, name);
         itemStack.set(DataComponentTypes.LORE, new LoreComponent(lore));
@@ -123,7 +181,7 @@ public class PickupHandler {
             if (type == null) return null;
             //? if >=1.21.3 {
             Entity entity = type.create(world, SpawnReason.SPAWN_ITEM_USE);
-             //?} else
+            //?} else
             /*Entity entity = type.create(world);*/
             if (entity == null) return null;
             entity.readNbt(nbt);
