@@ -7,6 +7,7 @@
 package me.clickism.clickvillagers.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import me.clickism.clickvillagers.callback.CooldownManager;
 import me.clickism.clickvillagers.util.VersionHelper;
 import me.clickism.clickvillagers.villager.VillagerHandler;
 import me.clickism.clickvillagers.util.MessageType;
@@ -19,7 +20,8 @@ import net.minecraft.util.Formatting;
 
 public class VillagerClaimGui extends VillagerGui {
 
-    public VillagerClaimGui(ServerPlayerEntity player, VillagerHandler<?> villagerHandler) {
+    public VillagerClaimGui(ServerPlayerEntity player, VillagerHandler<?> villagerHandler,
+                            CooldownManager cooldownManager) {
         super(player, villagerHandler);
         setTitle(Text.literal("🔒 Claim Villager").formatted(Formatting.DARK_GRAY, Formatting.BOLD));
         setSlot(13, new GuiElementBuilder(Items.GOLDEN_SHOVEL)
@@ -36,6 +38,7 @@ public class VillagerClaimGui extends VillagerGui {
                             .append(Text.literal(" on the villager to edit it.").formatted(Formatting.GREEN)));
                     VersionHelper.playSound(player, SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.MASTER, 1, 1);
                     villagerHandler.setOwner(player.getUuid());
+                    cooldownManager.giveCooldown(player);
                     new VillagerEditGui(player, villagerHandler).open();
                 })
                 .build());

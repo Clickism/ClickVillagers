@@ -49,6 +49,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class VillagerUseEntityCallback implements UseEntityCallback {
+    private final CooldownManager cooldownManager;
+
+    public VillagerUseEntityCallback(CooldownManager cooldownManager) {
+        this.cooldownManager = cooldownManager;
+    }
+
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, Entity entity, @Nullable EntityHitResult hitResult) {
         if (world.isClient()) return ActionResult.PASS;
@@ -85,7 +91,14 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
         if (owner == null) {
             // Allow claim
-            new VillagerClaimGui(serverPlayer, villagerHandler).open();
+            if (cooldownManager.hasCooldown(player)) {
+                long seconds = cooldownManager.getRemainingCooldownSeconds(player);
+                MessageType.FAIL.send(player, Text.literal("Please wait §l" + seconds
+                        + " seconds §cto claim this villager."));
+                return;
+            }
+            new VillagerClaimGui(serverPlayer, villagerHandler, cooldownManager)
+                    .open();
             playOpenSound(player);
             return;
         }
@@ -122,9 +135,16 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
             MessageType.FAIL.send(player, Text.literal("You can't pick up this villager."));
             return;
         }
+        if (cooldownManager.hasCooldown(player)) {
+            long seconds = cooldownManager.getRemainingCooldownSeconds(player);
+            MessageType.FAIL.send(player, Text.literal("Please wait §l" + seconds
+                    + " seconds §cto pick up this villager."));
+            return;
+        }
         PickupHandler.notifyPickup(player, villagerHandler.getEntity());
         ItemStack itemStack = PickupHandler.toItemStack(villagerHandler.getEntity());
         Utils.offerToHand(player, itemStack);
+        cooldownManager.giveCooldown(player);
     }
 
     private void handleAnchor(PlayerEntity player, VillagerHandler<?> villagerHandler) {
