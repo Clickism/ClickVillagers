@@ -6,10 +6,7 @@
 
 package me.clickism.clickvillagers;
 
-import me.clickism.clickvillagers.callback.UpdateNotifier;
-import me.clickism.clickvillagers.callback.VehicleUseEntityCallback;
-import me.clickism.clickvillagers.callback.VillagerUseBlockCallback;
-import me.clickism.clickvillagers.callback.VillagerUseEntityCallback;
+import me.clickism.clickvillagers.callback.*;
 import me.clickism.clickvillagers.config.Config;
 import me.clickism.clickvillagers.config.Settings;
 import me.clickism.clickvillagers.util.UpdateChecker;
@@ -32,14 +29,15 @@ public class ClickVillagers implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        UseEntityCallback.EVENT.register(new VillagerUseEntityCallback());
-        UseEntityCallback.EVENT.register(new VehicleUseEntityCallback());
-        UseBlockCallback.EVENT.register(new VillagerUseBlockCallback());
         try {
             new Config("ClickVillagers.json");
         } catch (IOException e) {
             LOGGER.error("Failed to load config file", e);
         }
+        CooldownManager cooldownManager = new CooldownManager(Settings.COOLDOWN::getLong);
+        UseEntityCallback.EVENT.register(new VillagerUseEntityCallback(cooldownManager));
+        UseEntityCallback.EVENT.register(new VehicleUseEntityCallback());
+        UseBlockCallback.EVENT.register(new VillagerUseBlockCallback());
         if (Settings.CHECK_UPDATE.isEnabled()) {
             checkUpdates();
             ServerPlayConnectionEvents.JOIN.register(new UpdateNotifier(() -> newerVersion));
