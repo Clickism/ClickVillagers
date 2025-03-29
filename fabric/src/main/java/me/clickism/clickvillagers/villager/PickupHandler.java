@@ -8,6 +8,7 @@ package me.clickism.clickvillagers.villager;
 
 import com.mojang.authlib.GameProfile;
 import me.clickism.clickvillagers.anchor.AnchorHandler;
+import me.clickism.clickvillagers.config.Settings;
 import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
 import me.clickism.clickvillagers.util.VersionHelper;
@@ -24,7 +25,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -45,12 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-//? if >=1.20.5 {
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.SpawnReason;
 //?} else {
 /*import net.minecraft.nbt.NbtList;
  *///?}
@@ -108,13 +102,15 @@ public class PickupHandler {
                     .formatted(Formatting.RED));
         }
         if (entity instanceof Merchant merchant && entity instanceof VillagerDataContainer container
-                && !merchant.getOffers().isEmpty()) {
+                && !merchant.getOffers().isEmpty() && Settings.SHOW_TRADES.isEnabled()) {
             lore.add(Text.literal(" "));
             lore.add(Text.literal("🛍 Trades:")
                     .fillStyle(Style.EMPTY.withItalic(false))
                     .formatted(Formatting.GRAY));
             VillagerProfession profession = container.getVillagerData().getProfession();
-            TradeInfoProvider provider = TradeInfoProviders.getProvider(profession);
+            TradeInfoProvider provider = (Settings.FORMAT_TRADES.isEnabled())
+                    ? TradeInfoProviders.getProvider(profession)
+                    : TradeInfoProviders.ALL_TRADES;
             provider.getTradeInfoLines(merchant.getOffers()).forEach(line -> {
                 lore.add(Text.literal(line));
             });
