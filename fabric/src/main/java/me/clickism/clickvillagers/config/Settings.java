@@ -24,7 +24,12 @@ public enum Settings {
 
     PARTNER_LIMIT_PER_PLAYER(10),
 
-    CHECK_UPDATE(true);
+    CHECK_UPDATE(true),
+
+    COOLDOWN(0),
+
+    SHOW_TRADES(true),
+    FORMAT_TRADES(true);;
 
     private final Object defaultValue;
     private final String path;
