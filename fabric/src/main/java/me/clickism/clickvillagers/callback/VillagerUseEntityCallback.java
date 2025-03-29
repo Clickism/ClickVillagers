@@ -57,10 +57,10 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return ActionResult.PASS;
         var villager = (LivingEntity & VillagerDataContainer) entity;
         VillagerHandler<?> villagerHandler = new VillagerHandler<>(villager);
+        if (hitResult == null) return ActionResult.CONSUME;
         if (!player.isSneaking()) {
             return handleTrade(player, villagerHandler, hitResult);
         }
-        if (hitResult == null) return ActionResult.CONSUME;
         PlayerInventory inventory = player.getInventory();
         ItemStack itemStack = inventory.getMainHandStack();
         Item item = itemStack.getItem();
