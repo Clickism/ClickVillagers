@@ -56,7 +56,9 @@ public class TradeInfoProvider {
 
     private String formatRecipe(MerchantRecipe recipe) {
         String ingredients = recipe.getIngredients().stream()
-                .map(ingredientFormatter)
+                .map(item -> (item.getType() == Material.AIR)
+                        ? null
+                        : ingredientFormatter.apply(item))
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" + "));
         String result = resultFormatter.apply(recipe.getResult());
