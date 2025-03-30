@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("com.gradleup.shadow") version "8.3.5"
+    id("io.github.patrick.remapper") version "1.4.2"
 }
 
 val pluginVersion = property("plugin_version").toString()
@@ -35,9 +36,13 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
-    compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT:remapped-mojang")
     compileOnly("org.jetbrains:annotations:22.0.0")
     implementation("me.clickism:ClickGUI:1.0")
+}
+
+tasks.remap {
+    version.set("1.20.1")
 }
 
 tasks.jar {
@@ -45,6 +50,7 @@ tasks.jar {
 }
 
 tasks.build {
+    dependsOn(tasks.remap)
     dependsOn(tasks.shadowJar)
 }
 
