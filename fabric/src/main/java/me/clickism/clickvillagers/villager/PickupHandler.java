@@ -110,6 +110,9 @@ public class PickupHandler {
             lore.add(Text.literal("🛍 Trades:")
                     .fillStyle(Style.EMPTY.withItalic(false))
                     .formatted(Formatting.GRAY));
+            //? if >=1.21.5 {
+            /*VillagerProfession profession = container.getVillagerData().profession().value();
+            *///?} else
             VillagerProfession profession = container.getVillagerData().getProfession();
             TradeInfoProvider provider = (Settings.FORMAT_TRADES.isEnabled())
                     ? TradeInfoProviders.getProvider(profession)
@@ -174,6 +177,9 @@ public class PickupHandler {
             NbtCompound nbt = readCustomData(itemStack);
             if (nbt == null) return null;
             // PickupVillagerType type = PickupVillagerType.valueOf(nbt.getString(TYPE_KEY));
+            //? if >=1.21.5 {
+            /*String id = nbt.getString(TYPE_KEY).orElseThrow();
+            *///?} else
             String id = nbt.getString(TYPE_KEY);
             if (id == null) return null;
             EntityType<?> type = EntityType.get(id).orElse(null);

@@ -10,6 +10,7 @@ import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.GuiInterface;
 import me.clickism.clickvillagers.util.VersionHelper;
+import me.clickism.clickvillagers.util.VillagerDataHelper;
 import me.clickism.clickvillagers.villager.VillagerHandler;
 import me.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Item;
@@ -69,7 +70,7 @@ public class VillagerBiomeChangeGui extends VillagerGui {
                     VersionHelper.playSound(player, SoundEvents.BLOCK_AZALEA_PLACE, SoundCategory.MASTER, 1, 2);
                     placeBiomeButtons();
                 });
-        if (villager.getVillagerData().getType().equals(type)) {
+        if (VillagerDataHelper.of(villagerHandler).getType().equals(type)) {
             builder.glow();
         }
         return builder.build();

@@ -6,23 +6,53 @@
 
 package me.clickism.clickvillagers.villager;
 
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.clickism.clickvillagers.ClickVillagers;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
+import net.fabricmc.fabric.impl.attachment.AttachmentPersistentState;
+import net.minecraft.nbt.*;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
+import net.minecraft.world.PersistentStateType;
 import net.minecraft.world.World;
 import java.util.*;
 
 public class PartnerState extends PersistentState {
-    
-    //? if >=1.20.5 {
-    private static final Type<PartnerState> type = new Type<>(
+
+    //? if >=1.21.5 {
+    /*public static final String ID = "clickvillagers_PartnerState";
+
+    public static Codec<PartnerState> codec(ServerWorld world) {
+        return Codec.of(
+            new Encoder<>() {
+                @Override
+                @SuppressWarnings("unchecked")
+                public <T> DataResult<T> encode(PartnerState partnerState, DynamicOps<T> dynamicOps, T t) {
+                    NbtCompound compound = new NbtCompound();
+                    partnerState.writeNbt(compound, world.getRegistryManager());
+                    return DataResult.success((T) compound);
+                }
+            },
+            new Decoder<>() {
+                @Override
+                public <T> DataResult<Pair<PartnerState, T>> decode(DynamicOps<T> dynamicOps, T t) {
+                    NbtCompound compound = (NbtCompound) dynamicOps.convertTo(NbtOps.INSTANCE, t);
+                    PartnerState partnerState = createFromNbt(compound, world.getRegistryManager());
+                    return DataResult.success(Pair.of(partnerState, dynamicOps.empty()));
+                }
+            }
+        );
+    }
+
+    public static PersistentStateType<PartnerState> createType(ServerWorld world) {
+        return new PersistentStateType<>(ID, PartnerState::new, codec(world), null);
+    }
+    *///?} elif >=1.20.5 {
+    private static final Type<PartnerState> TYPE = new Type<>(
             PartnerState::new,
             PartnerState::createFromNbt,
             null
@@ -30,11 +60,12 @@ public class PartnerState extends PersistentState {
     //?}
     
     private final Map<UUID, Set<String>> partners = new HashMap<>();
-    
+
+    //? if <1.21.5
     @Override
     public NbtCompound writeNbt(NbtCompound nbt
             //? if >=1.20.5
-            , RegistryWrapper.WrapperLookup registries
+            , RegistryWrapper.WrapperLookup registryLookup
     ) {
         NbtCompound compound = new NbtCompound();
         partners.forEach((uuid, set) -> {
@@ -70,12 +101,22 @@ public class PartnerState extends PersistentState {
             , RegistryWrapper.WrapperLookup registryLookup
     ) {
         PartnerState state = new PartnerState();
+        //? if >=1.21.5 {
+        /*NbtCompound compound = nbt.getCompound("TradePartnerMap").orElse(null);
+        if (compound == null) return state;
+        compound.getKeys().forEach(uuid -> {
+            NbtList list = compound.getListOrEmpty(uuid);
+            Set<String> set = state.partners.computeIfAbsent(UUID.fromString(uuid), k -> new HashSet<>(list.size()));
+            list.forEach(nbtElement -> nbtElement.asString().ifPresent(set::add));
+        });
+        *///?} else {
         NbtCompound compound = nbt.getCompound("TradePartnerMap");
         compound.getKeys().forEach(uuid -> {
             NbtList list = compound.getList(uuid, NbtElement.STRING_TYPE);
             Set<String> set = state.partners.computeIfAbsent(UUID.fromString(uuid), k -> new HashSet<>(list.size()));
             list.forEach(nbtElement -> set.add(nbtElement.asString()));
         });
+        //?}
         return state;
     }
     
@@ -83,8 +124,10 @@ public class PartnerState extends PersistentState {
         ServerWorld world = server.getWorld(World.OVERWORLD);
         if (world == null) throw new IllegalStateException("Overworld is null");
         PersistentStateManager persistentStateManager = world.getPersistentStateManager();
-        //? if >=1.20.5 {
-        PartnerState state = persistentStateManager.getOrCreate(type, ClickVillagers.MOD_ID);
+        //? if >=1.21.5 {
+        /*PartnerState state = persistentStateManager.getOrCreate(createType(world));
+        *///?} elif >=1.20.5 {
+        PartnerState state = persistentStateManager.getOrCreate(TYPE, ClickVillagers.MOD_ID);
         //?} else {
         /*PartnerState state = persistentStateManager.getOrCreate(
                 PartnerState::createFromNbt,
