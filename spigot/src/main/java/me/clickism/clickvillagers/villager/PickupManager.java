@@ -10,10 +10,10 @@ import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickvillagers.ClickVillagers;
 import me.clickism.clickvillagers.config.Permission;
 import me.clickism.clickvillagers.config.Setting;
+import me.clickism.clickvillagers.entity.EntitySaver;
 import me.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import me.clickism.clickvillagers.listener.AutoRegistered;
 import me.clickism.clickvillagers.message.Message;
-import me.clickism.clickvillagers.nbt.NBTHelper;
 import me.clickism.clickvillagers.util.Utils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -37,20 +37,27 @@ import java.util.List;
 public class PickupManager implements Listener {
     private enum VillagerType {
         VILLAGER,
-        ZOMBIE
+        ZOMBIE;
+
+        EntityType toEntityType() {
+            return switch (this) {
+                case VILLAGER -> EntityType.VILLAGER;
+                case ZOMBIE -> EntityType.ZOMBIE_VILLAGER;
+            };
+        }
     }
 
     public static final NamespacedKey VILLAGER_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "villager");
     public static final NamespacedKey TYPE_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "type");
     public static final NamespacedKey NBT_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "nbt");
 
-    private final NBTHelper nbtHelper;
+    private final EntitySaver entitySaver;
     private final ClaimManager claimManager;
     private final AnchorManager anchorManager;
 
     @AutoRegistered
-    public PickupManager(JavaPlugin plugin, NBTHelper nbtHelper, ClaimManager claimManager, AnchorManager anchorManager) {
-        this.nbtHelper = nbtHelper;
+    public PickupManager(JavaPlugin plugin, EntitySaver entitySaver, ClaimManager claimManager, AnchorManager anchorManager) {
+        this.entitySaver = entitySaver;
         this.claimManager = claimManager;
         this.anchorManager = anchorManager;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -113,7 +120,7 @@ public class PickupManager implements Listener {
         data.set(TYPE_KEY, PersistentDataType.STRING, (entity instanceof ZombieVillager)
                 ? VillagerType.ZOMBIE.toString()
                 : VillagerType.VILLAGER.toString());
-        String nbt = nbtHelper.write(entity);
+        String nbt = entitySaver.writeToString(entity);
         data.set(NBT_KEY, PersistentDataType.STRING, nbt);
         item.setItemMeta(meta);
     }
@@ -140,15 +147,9 @@ public class PickupManager implements Listener {
         VillagerType villagerType = VillagerType.valueOf(data.get(TYPE_KEY, PersistentDataType.STRING));
         World world = location.getWorld();
         if (world == null) throw new IllegalArgumentException("World is null");
-        EntityType type = switch (villagerType) {
-            case VILLAGER -> EntityType.VILLAGER;
-            case ZOMBIE -> EntityType.ZOMBIE_VILLAGER;
-        };
-        LivingEntity entity = (LivingEntity) world.spawnEntity(location, type);
+        EntityType type = villagerType.toEntityType();
         String nbt = data.get(NBT_KEY, PersistentDataType.STRING);
-        nbtHelper.read(entity, nbt);
-        entity.teleport(location);
-        return entity;
+        return (LivingEntity) entitySaver.readAndSpawnAt(nbt, type, location);
     }
 
     public boolean isVillager(ItemStack item) {

@@ -9,6 +9,8 @@ package me.clickism.clickvillagers;
 import me.clickism.clickgui.menu.MenuManager;
 import me.clickism.clickvillagers.config.ReloadCommand;
 import me.clickism.clickvillagers.config.Setting;
+import me.clickism.clickvillagers.entity.EntitySaver;
+import me.clickism.clickvillagers.entity.EntitySaverFactory;
 import me.clickism.clickvillagers.gui.ChatInputListener;
 import me.clickism.clickvillagers.hopper.HopperManager;
 import me.clickism.clickvillagers.legacy.LegacyHopperCompatibility;
@@ -18,8 +20,6 @@ import me.clickism.clickvillagers.listener.DispenserListener;
 import me.clickism.clickvillagers.listener.InteractListener;
 import me.clickism.clickvillagers.listener.JoinListener;
 import me.clickism.clickvillagers.message.Message;
-import me.clickism.clickvillagers.nbt.NBTHelper;
-import me.clickism.clickvillagers.nbt.NBTHelperFactory;
 import me.clickism.clickvillagers.util.MessageParameterizer;
 import me.clickism.clickvillagers.util.UpdateChecker;
 import me.clickism.clickvillagers.villager.AnchorManager;
@@ -70,20 +70,12 @@ public final class ClickVillagers extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        // Initialize NBT helper
-        NBTHelper nbtHelper;
-        try {
-            nbtHelper = NBTHelperFactory.create();
-        } catch (UnsupportedOperationException exception) {
-            LOGGER.severe("This server version is not supported.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
         // Instantiate managers/listeners
         MenuManager menuManager = new MenuManager(this);
         ClaimManager claimManager = new ClaimManager(this);
         AnchorManager anchorHandler = new AnchorManager(this);
-        PickupManager pickupManager = new PickupManager(this, nbtHelper, claimManager, anchorHandler);
+        EntitySaver entitySaver = EntitySaverFactory.create();
+        PickupManager pickupManager = new PickupManager(this, entitySaver, claimManager, anchorHandler);
         HopperManager hopperManager = new HopperManager(this, pickupManager, claimManager);
         ChatInputListener chatInputListener = new ChatInputListener(this);
 
