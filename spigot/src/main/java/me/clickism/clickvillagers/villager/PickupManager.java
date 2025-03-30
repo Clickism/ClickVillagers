@@ -15,6 +15,7 @@ import me.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import me.clickism.clickvillagers.listener.AutoRegistered;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.util.Utils;
+import net.minecraft.SharedConstants;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -50,6 +51,9 @@ public class PickupManager implements Listener {
     public static final NamespacedKey VILLAGER_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "villager");
     public static final NamespacedKey TYPE_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "type");
     public static final NamespacedKey NBT_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "nbt");
+    public static final NamespacedKey DATA_VERSION_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "data_version");
+
+    private static final int DATA_VERSION = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
 
     private final EntitySaver entitySaver;
     private final ClaimManager claimManager;
@@ -122,6 +126,7 @@ public class PickupManager implements Listener {
                 : VillagerType.VILLAGER.toString());
         String nbt = entitySaver.writeToString(entity);
         data.set(NBT_KEY, PersistentDataType.STRING, nbt);
+        data.set(DATA_VERSION_KEY, PersistentDataType.INTEGER, DATA_VERSION);
         item.setItemMeta(meta);
     }
 
