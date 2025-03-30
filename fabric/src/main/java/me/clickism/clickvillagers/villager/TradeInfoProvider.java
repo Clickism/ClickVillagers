@@ -7,6 +7,7 @@
 package me.clickism.clickvillagers.villager;
 
 import me.clickism.clickvillagers.util.Utils;
+import me.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -51,8 +52,8 @@ public class TradeInfoProvider {
 
     public List<String> getTradeInfoLines(TradeOfferList offers) {
         return offers.stream()
-                .filter(offer -> ingredientsFilter.test(offer.getDisplayedFirstBuyItem())
-                        || resultsFilter.test(offer.getDisplayedSecondBuyItem())
+                .filter(offer -> ingredientsFilter.test(VersionHelper.getFirstBuyItem(offer))
+                        || resultsFilter.test(VersionHelper.getSecondBuyItem(offer))
                         || resultsFilter.test(offer.getSellItem()))
                 .map(this::formatRecipe)
                 .flatMap(LINE_BREAK_PATTERN::splitAsStream)
@@ -60,7 +61,7 @@ public class TradeInfoProvider {
     }
 
     private String formatRecipe(TradeOffer offer) {
-        String ingredients = Stream.of(offer.getDisplayedFirstBuyItem(), offer.getDisplayedSecondBuyItem())
+        String ingredients = Stream.of(VersionHelper.getFirstBuyItem(offer), VersionHelper.getSecondBuyItem(offer))
                 .filter(item -> !item.isOf(Items.AIR))
                 .map(ingredientFormatter)
                 .filter(Objects::nonNull)
@@ -80,6 +81,7 @@ public class TradeInfoProvider {
     private static final String SINGLE_SPACING = " ".repeat(26);
     private static final String DOUBLE_SPACING = " ".repeat(27);
 
+    //? if >=1.20.5 {
     private static String formatEnchantments(TradeOffer offer) {
         String spacing = getSpacing(offer);
         ItemStack item = offer.getSellItem();
@@ -95,9 +97,18 @@ public class TradeInfoProvider {
                 })
                 .collect(Collectors.joining());
     }
+    //?} else {
+    /*private static String formatEnchantments(TradeOffer offer) {
+        String spacing = getSpacing(offer);
+        ItemStack item = offer.getSellItem();
+        return Utils.streamEnchantments(item.getEnchantments())
+                .map(s -> "\n" + spacing + "§7" + s)
+                .collect(Collectors.joining());
+    }
+    *///?}
 
-    private static String getSpacing(TradeOffer recipe) {
-        int emeraldCount = Stream.of(recipe.getDisplayedFirstBuyItem(), recipe.getDisplayedSecondBuyItem())
+    private static String getSpacing(TradeOffer offer) {
+        int emeraldCount = Stream.of(VersionHelper.getFirstBuyItem(offer), VersionHelper.getSecondBuyItem(offer))
                 .filter(item -> item.isOf(Items.EMERALD))
                 .mapToInt(ItemStack::getCount)
                 .sum();

@@ -63,7 +63,10 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return ActionResult.PASS;
         var villager = (LivingEntity & VillagerDataContainer) entity;
         VillagerHandler<?> villagerHandler = new VillagerHandler<>(villager);
-        if (hitResult == null) return ActionResult.CONSUME;
+        //? if <1.21.5 {
+        if (hitResult != null) return ActionResult.CONSUME;
+        //?} else
+        /*if (hitResult == null) return ActionResult.CONSUME;*/
         if (!player.isSneaking()) {
             return handleTrade(player, villagerHandler, hitResult);
         }
@@ -78,7 +81,7 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
             handleClaim(player, villagerHandler);
             return ActionResult.CONSUME;
         }
-        if (villagerHandler.isOwner(player.getUuid()) || player.getPermissionLevel() == 4) {
+        if (villagerHandler.isOwner(player.getUuid()) || (villagerHandler.hasOwner() && player.hasPermissionLevel(4))) {
             handleEdit(player, villagerHandler);
             return ActionResult.CONSUME;
         }

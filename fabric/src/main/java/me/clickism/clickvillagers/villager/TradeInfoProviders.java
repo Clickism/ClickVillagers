@@ -7,15 +7,23 @@
 package me.clickism.clickvillagers.villager;
 
 import me.clickism.clickvillagers.util.Utils;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ItemEnchantmentsComponent;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.RegistryKey;
+
 import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerProfession;
 import org.jetbrains.annotations.Nullable;
 
+//? if >1.20.6 {
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.registry.RegistryKey;
+//?} else {
+/*import net.minecraft.item.EnchantedBookItem;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+*///?}
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -76,7 +84,12 @@ public class TradeInfoProviders {
             .build();
 
     public static final TradeInfoProvider LEATHERWORKER = TradeInfoProvider.builder()
-            .acceptIngredients(LEATHER, FLINT, RABBIT_HIDE, TURTLE_SCUTE)
+            .acceptIngredients(LEATHER, FLINT, RABBIT_HIDE,
+                    //? if >=1.20.5 {
+                    TURTLE_SCUTE
+                    //?} else
+                    /*SCUTE*/
+                    )
             .acceptResults(LEATHER_HORSE_ARMOR, SADDLE)
             .singleFormatter(ITEM_FORMATTER)
             .build();
@@ -203,11 +216,15 @@ public class TradeInfoProviders {
             Map.entry(CAMPFIRE, "§c🔥"),
             Map.entry(FISHING_ROD, "§6🎣"),
 
-            Map.entry(SHIELD, "§6🛡️"),
+            Map.entry(SHIELD, "§6🛡"),
 
             Map.entry(LEATHER, "§6🐄"),
             Map.entry(RABBIT_HIDE, "§e🐇"),
+
+            //? if >=1.20.5 {
             Map.entry(TURTLE_SCUTE, "§a🐢"),
+             //?} else
+            /*Map.entry(SCUTE, "§a🐢"),*/
             Map.entry(SADDLE, "§6🐴"),
 
             Map.entry(REDSTONE, "§c💎"),
@@ -244,6 +261,7 @@ public class TradeInfoProviders {
         return PREFIX_MAP.get(item);
     }
 
+    //? if >1.20.6 {
     private static String formatEnchantedBook(ItemStack item) {
         ItemEnchantmentsComponent enchants = item.get(DataComponentTypes.STORED_ENCHANTMENTS);
         if (enchants == null) return "";
@@ -260,4 +278,13 @@ public class TradeInfoProviders {
                 .collect(Collectors.joining(" + "));
         return "§d📖 " + enchantments;
     }
+    //?} else {
+    /*private static String formatEnchantedBook(ItemStack item) {
+        NbtList enchants = EnchantedBookItem.getEnchantmentNbt(item);
+        if (enchants == null || enchants.isEmpty()) return "";
+        String string = Utils.streamEnchantments(enchants)
+                .collect(Collectors.joining(" + "));
+        return "§d📖 " + string;
+    }
+    *///?}
 }

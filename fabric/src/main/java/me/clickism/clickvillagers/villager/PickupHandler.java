@@ -12,13 +12,9 @@ import me.clickism.clickvillagers.config.Settings;
 import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
 import me.clickism.clickvillagers.util.VersionHelper;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,8 +41,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+//? if >=1.20.5 {
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.entity.SpawnReason;
 //?} else {
 /*import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
  *///?}
 
 public class PickupHandler {

@@ -6,6 +6,7 @@
 
 package me.clickism.clickvillagers.callback;
 
+import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.VersionHelper;
 import me.clickism.clickvillagers.villager.PickupHandler;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
@@ -15,6 +16,7 @@ import net.minecraft.entity.vehicle.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
@@ -36,7 +38,10 @@ public class VehicleUseEntityCallback implements UseEntityCallback {
         if (!hasSpace(vehicle)) return ActionResult.PASS;
         ItemStack itemStack = player.getMainHandStack();
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
-        if (entity == null) return ActionResult.PASS;
+        if (entity == null) {
+            MessageType.FAIL.send(player, Text.literal("Couldn't read villager data."));
+            return ActionResult.CONSUME;
+        }
         world.spawnEntity(entity);
         BlockPos pos = vehicle.getBlockPos();
         entity.refreshPositionAndAngles(pos, 0, 0);

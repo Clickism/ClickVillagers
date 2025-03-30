@@ -6,6 +6,7 @@
 
 package me.clickism.clickvillagers.callback;
 
+import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.VersionHelper;
 import me.clickism.clickvillagers.villager.PickupHandler;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -18,6 +19,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -34,7 +36,10 @@ public class VillagerUseBlockCallback implements UseBlockCallback {
         ItemStack itemStack = player.getMainHandStack();
         if (!itemStack.isOf(Items.PLAYER_HEAD)) return ActionResult.PASS;
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
-        if (entity == null) return ActionResult.PASS;
+        if (entity == null) {
+            MessageType.FAIL.send(player, Text.literal("Couldn't read villager data."));
+            return ActionResult.CONSUME;
+        }
         BlockPos clickedPos = hitResult.getBlockPos();
         //? if >=1.20.5 {
         ActionResult actionResult = world.getBlockState(clickedPos).onUse(world, player, hitResult);

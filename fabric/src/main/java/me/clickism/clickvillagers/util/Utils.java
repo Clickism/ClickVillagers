@@ -10,8 +10,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
+
+import java.util.stream.Stream;
 
 public class Utils {
     /**
@@ -43,7 +47,7 @@ public class Utils {
     private static String capitalizeWord(String string) {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
-    
+
     public static void offerToHand(PlayerEntity player, ItemStack itemStack) {
         PlayerInventory inventory = player.getInventory();
         int selectedSlot = inventory.selectedSlot;
@@ -82,4 +86,20 @@ public class Utils {
             default -> String.valueOf(number);
         };
     }
+
+    //? if <1.20.5 {
+    /*public static Stream<String> streamEnchantments(NbtList enchantments) {
+        if (enchantments == null || enchantments.isEmpty()) return Stream.empty();
+        return enchantments.stream()
+                .map(element -> {
+                    if (!(element instanceof NbtCompound compound)) return "?";
+                    int level = compound.getShort("lvl");
+                    Identifier id = Identifier.tryParse(compound.getString("id"));
+                    if (id == null) return "?";
+                    String enchantment = id.getPath().replace("_", " ");
+                    String levelString = Utils.toRomanNumeral(level);
+                    return Utils.titleCase(enchantment) + " " + levelString;
+                });
+    }
+    *///?}
 }
