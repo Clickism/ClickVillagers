@@ -63,15 +63,12 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return ActionResult.PASS;
         var villager = (LivingEntity & VillagerDataContainer) entity;
         VillagerHandler<?> villagerHandler = new VillagerHandler<>(villager);
-        //? if <1.21.5 {
         if (hitResult != null) return ActionResult.CONSUME;
-        //?} else
-        /*if (hitResult == null) return ActionResult.CONSUME;*/
         if (!player.isSneaking()) {
-            return handleTrade(player, villagerHandler, hitResult);
+            return handleTrade(player, villagerHandler);
         }
         PlayerInventory inventory = player.getInventory();
-        ItemStack itemStack = inventory.getMainHandStack();
+        ItemStack itemStack = VersionHelper.getSelectedStack(inventory);
         Item item = itemStack.getItem();
         if (item.equals(Items.SHEARS)) {
             handleAnchor(player, villagerHandler);
@@ -113,7 +110,7 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         MessageType.FAIL.send(player, Text.literal("This villager is already claimed."));
     }
 
-    private ActionResult handleTrade(PlayerEntity player, VillagerHandler<?> villagerHandler, HitResult hitResult) {
+    private ActionResult handleTrade(PlayerEntity player, VillagerHandler<?> villagerHandler) {
         if (villagerHandler.isTradingOpen()) return ActionResult.PASS;
         if (!villagerHandler.hasOwner()) return ActionResult.PASS;
         if (villagerHandler.isOwner(player.getUuid())) return ActionResult.PASS;
@@ -123,7 +120,6 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
             // Player is a partner
             return ActionResult.PASS;
         }
-        if (hitResult == null) return ActionResult.PASS;
         MessageType.FAIL.send(player, Text.literal("This villager is closed for trading."));
         return ActionResult.CONSUME;
     }
