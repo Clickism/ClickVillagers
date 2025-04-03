@@ -10,15 +10,16 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import me.clickism.clickvillagers.villager.ClaimedVillagerData;
 import me.clickism.clickvillagers.util.CodecUtils;
 import me.clickism.clickvillagers.util.LazyCodec;
+import me.clickism.clickvillagers.villager.ClaimedVillagerData;
 import net.minecraft.util.Uuids;
 import net.minecraft.village.VillagerData;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -44,11 +45,11 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
                         instance -> instance.group(
                                 CodecUtils.assumeMapUnsafe(original).forGetter(Function.identity()),
                                 Uuids.CODEC.optionalFieldOf("owner").orElse(null).forGetter(villagerData ->
-                                        Optional.ofNullable(((ClaimedVillagerData) villagerData).clickVillagers_Fabric$getOwner())),
+                                        Optional.ofNullable((ClaimedVillagerData.of(villagerData)).clickVillagers_Fabric$getOwner())),
                                 Codec.BOOL.fieldOf("tradingOpen").orElse(true).forGetter(villagerData ->
-                                        ((ClaimedVillagerData) villagerData).clickVillagers_Fabric$isTradingOpen())
+                                        (ClaimedVillagerData.of(villagerData)).clickVillagers_Fabric$isTradingOpen())
                         ).apply(instance, (data, owner, tradingOpen) -> {
-                            ClaimedVillagerData claimedData = (ClaimedVillagerData) data;
+                            ClaimedVillagerData claimedData = ClaimedVillagerData.of(data);
                             claimedData.clickVillagers_Fabric$setOwner(owner.orElse(null));
                             claimedData.clickVillagers_Fabric$setTradingOpen(tradingOpen);
                             return data;
@@ -75,7 +76,7 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
 
     @Unique
     private VillagerData modifyData(VillagerData data) {
-        ClaimedVillagerData claimedData = (ClaimedVillagerData) data;
+        ClaimedVillagerData claimedData = ClaimedVillagerData.of(data);
         claimedData.clickVillagers_Fabric$setOwner(owner);
         claimedData.clickVillagers_Fabric$setTradingOpen(tradingOpen);
         return data;
@@ -101,4 +102,5 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
     public void clickVillagers_Fabric$setTradingOpen(boolean open) {
         tradingOpen = open;
     }
+
 }
