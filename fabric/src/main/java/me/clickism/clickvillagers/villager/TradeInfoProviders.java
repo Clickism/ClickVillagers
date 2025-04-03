@@ -156,7 +156,10 @@ public class TradeInfoProviders {
             .singleFormatter(ITEM_FORMATTER)
             .build();
 
-    private static final Map<VillagerProfession, TradeInfoProvider> PROVIDERS = Map.ofEntries(
+    //? if >=1.21.5 {
+    private static final Map<RegistryKey<VillagerProfession>, TradeInfoProvider> PROVIDERS = Map.ofEntries(
+    //?} else
+    /*private static final Map<VillagerProfession, TradeInfoProvider> PROVIDERS = Map.ofEntries(*/
             Map.entry(VillagerProfession.LIBRARIAN, LIBRARIAN),
             Map.entry(VillagerProfession.FARMER, FARMER),
             Map.entry(VillagerProfession.TOOLSMITH, SMITH),
@@ -172,9 +175,15 @@ public class TradeInfoProviders {
             Map.entry(VillagerProfession.SHEPHERD, SHEPHERD)
     );
 
-    public static TradeInfoProvider getProvider(VillagerProfession profession) {
+    //? if >=1.21.5 {
+    public static TradeInfoProvider getProvider(RegistryKey<VillagerProfession> profession) {
         return PROVIDERS.getOrDefault(profession, ALL_TRADES);
     }
+    //?} else {
+    /*public static TradeInfoProvider getProvider(VillagerProfession profession) {
+        return PROVIDERS.getOrDefault(profession, ALL_TRADES);
+    }
+    *///?}
 
     private static final Map<Item, String> PREFIX_MAP = Map.<Item, String>ofEntries(
             Map.entry(ENCHANTED_BOOK, "§d📖"),
@@ -216,7 +225,7 @@ public class TradeInfoProviders {
             Map.entry(CAMPFIRE, "§c🔥"),
             Map.entry(FISHING_ROD, "§6🎣"),
 
-            Map.entry(SHIELD, "§6🛡"),
+            Map.entry(SHIELD, "§6⛨"),
 
             Map.entry(LEATHER, "§6🐄"),
             Map.entry(RABBIT_HIDE, "§e🐇"),

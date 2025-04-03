@@ -7,21 +7,37 @@
 package me.clickism.clickvillagers.villager;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.datafixers.DataFix;
+import com.mojang.datafixers.DataFixUtils;
+import com.mojang.datafixers.DataFixer;
+import com.mojang.datafixers.DataFixerUpper;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
 import me.clickism.clickvillagers.anchor.AnchorHandler;
 import me.clickism.clickvillagers.config.Settings;
 import me.clickism.clickvillagers.util.MessageType;
+import me.clickism.clickvillagers.util.NbtFixer;
 import me.clickism.clickvillagers.util.Utils;
 import me.clickism.clickvillagers.util.VersionHelper;
+import net.minecraft.SharedConstants;
+import net.minecraft.datafixer.DataFixTypes;
+import net.minecraft.datafixer.Schemas;
+import net.minecraft.datafixer.TypeReferences;
+import net.minecraft.datafixer.fix.VillagerProfessionFix;
+import net.minecraft.datafixer.fix.VillagerTradeFix;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.*;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -32,21 +48,16 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.UserCache;
 import net.minecraft.village.Merchant;
+import net.minecraft.village.VillagerData;
 import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import java.util.*;
 //? if >=1.20.5 {
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.SpawnReason;
 //?} else {
 /*import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
@@ -55,14 +66,17 @@ import net.minecraft.nbt.NbtString;
 public class PickupHandler {
 
     private static final String TYPE_KEY = "EntityType";
+    private static final String DATA_VERSION_KEY = "CVDataVersion";
     //? if <1.21.1
     /*private static final String DATA_KEY = "ClickVillagersData";*/
+    private static final int DATA_VERSION = SharedConstants.getGameVersion().getSaveVersion().getId();
 
     public static <T extends LivingEntity & VillagerDataContainer> ItemStack toItemStack(T entity) {
         NbtCompound nbt = new NbtCompound();
         entity.writeNbt(nbt);
         String id = EntityType.getId(entity.getType()).toString();
-        nbt.putString("EntityType", id);
+        nbt.putString(TYPE_KEY, id);
+        nbt.putString(DATA_VERSION_KEY, String.valueOf(DATA_VERSION));
         List<Text> lore = getLore(new VillagerHandler<>(entity));
         ItemStack itemStack = getItemStack(getDisplayName(entity), lore, nbt);
         VillagerTextures.setEntityTexture(itemStack, entity);
@@ -110,7 +124,11 @@ public class PickupHandler {
             lore.add(Text.literal("🛍 Trades:")
                     .fillStyle(Style.EMPTY.withItalic(false))
                     .formatted(Formatting.GRAY));
-            VillagerProfession profession = container.getVillagerData().getProfession();
+            //? if >=1.21.5 {
+            RegistryKey<VillagerProfession> profession = container.getVillagerData().profession()
+                    .getKey().orElseThrow();
+            //?} else
+            /*VillagerProfession profession = container.getVillagerData().getProfession();*/
             TradeInfoProvider provider = (Settings.FORMAT_TRADES.isEnabled())
                     ? TradeInfoProviders.getProvider(profession)
                     : TradeInfoProviders.ALL_TRADES;
@@ -173,8 +191,15 @@ public class PickupHandler {
         try {
             NbtCompound nbt = readCustomData(itemStack);
             if (nbt == null) return null;
+            MinecraftServer server = world.getServer();
+            if (server == null) return null;
+            //? if >=1.21.5
+            NbtFixer.applyDataFixes(nbt);
             // PickupVillagerType type = PickupVillagerType.valueOf(nbt.getString(TYPE_KEY));
-            String id = nbt.getString(TYPE_KEY);
+            //? if >=1.21.5 {
+            String id = nbt.getString(TYPE_KEY).orElseThrow();
+            //?} else
+            /*String id = nbt.getString(TYPE_KEY);*/
             if (id == null) return null;
             EntityType<?> type = EntityType.get(id).orElse(null);
             if (type == null) return null;
@@ -207,11 +232,21 @@ public class PickupHandler {
         if (villager.isBaby()) {
             return Text.literal("Baby Villager");
         }
-        VillagerProfession profession = villager.getVillagerData().getProfession();
+        //? if >=1.21.5 {
+        RegistryEntry<VillagerProfession> profession = villager.getVillagerData().profession();
+        String professionName = profession.getKey().orElseThrow().getValue().getPath();
+        if (profession.matchesKey(VillagerProfession.NONE)) {
+            return Text.literal("Villager");
+        }
+        //?} else {
+        /*VillagerProfession profession = villager.getVillagerData().getProfession();
+        String professionName = profession.toString();
         if (profession.equals(VillagerProfession.NONE)) {
             return Text.literal("Villager");
         }
-        return Text.literal(Utils.titleCase(profession.toString()) + " Villager");
+        *///?}
+
+        return Text.literal(Utils.titleCase(professionName) + " Villager");
     }
 
     public static void notifyPickup(PlayerEntity player, Entity entity) {

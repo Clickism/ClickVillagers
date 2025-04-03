@@ -7,25 +7,26 @@
 package me.clickism.clickvillagers.villager;
 
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-//? if >=1.20.5 {
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ProfileComponent;
-//?} else {
-/*import com.mojang.authlib.GameProfile;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-*///?}
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.village.VillagerProfession;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
+//? if >=1.20.5 {
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ProfileComponent;
+//?}
 
 public class VillagerTextures {
 
@@ -33,7 +34,10 @@ public class VillagerTextures {
     public static final String BABY_TEXTURE = "ewogICJ0aW1lc3RhbXAiIDogMTczNDQ4OTE4OTUxNywKICAicHJvZmlsZUlkIiA6ICJjNWY3OWQ3ODkyNDA0ZGMwOGVhZjZiZDVlNGM4ZGYyYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJMb25naG9ybnM3MDkiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Q3Nzg4ODI2YjlhYzRkZWFmMzgzYjM4Nzk0NzA4NTIxMTQ0N2VkNTBmZGMyMWJmNzFjMjMwMDQ4ZGQ1OTg2ZiIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9";
     public static final String ZOMBIE_TEXTURE = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGM3NTA1ZjIyNGQ1MTY0YTExN2Q4YzY5ZjAxNWY5OWVmZjQzNDQ3MWM4YTJkZjkwNzA5NmM0MjQyYzM1MjRlOCJ9fX0=";
 
-    public static final Map<VillagerProfession, String> TEXTURE_MAP = Map.ofEntries(
+    //? if >=1.21.5 {
+    public static final Map<RegistryKey<VillagerProfession>, String> TEXTURE_MAP = Map.ofEntries(
+    //?} else
+    /*public static final Map<VillagerProfession, String> TEXTURE_MAP = Map.ofEntries(*/
             Map.entry(VillagerProfession.FISHERMAN, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWMxNWU1ZmI1NmZhMTZiMDc0N2IxYmNiMDUzMzVmNTVkMWZhMzE1NjFjMDgyYjVlMzY0M2RiNTU2NTQxMDg1MiJ9fX0="),
             Map.entry(VillagerProfession.ARMORER, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjUyMmRiOTJmMTg4ZWJjNzcxM2NmMzViNGNiYWVkMWNmZTI2NDJhNTk4NmMzYmRlOTkzZjVjZmIzNzI3NjY0YyJ9fX0="),
             Map.entry(VillagerProfession.BUTCHER, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY3NzRkMmRmNTE1ZWNlYWU5ZWVkMjkxYzFiNDBmOTRhZGY3MWRmMGFiODFjNzE5MTQwMmUxYTQ1YjNhMjA4NyJ9fX0="),
@@ -77,7 +81,11 @@ public class VillagerTextures {
         if (villager.isBaby()) {
             return BABY_TEXTURE;
         }
-        String texture = TEXTURE_MAP.get(villager.getVillagerData().getProfession());
+        //? if >=1.21.5 {
+        String texture = TEXTURE_MAP.get(villager.getVillagerData().profession()
+                .getKey().orElseThrow());
+        //?} else
+        /*String texture = TEXTURE_MAP.get(villager.getVillagerData().getProfession());*/
         if (texture != null) {
             return texture;
         }
