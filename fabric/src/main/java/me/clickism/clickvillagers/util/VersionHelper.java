@@ -8,6 +8,8 @@ package me.clickism.clickvillagers.util;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.sound.SoundCategory;
@@ -36,5 +38,19 @@ public class VersionHelper {
         /*return offer.getSecondBuyItem();
         *///?} else
         return offer.getDisplayedSecondBuyItem();
+    }
+
+    public static ItemStack getSelectedStack(PlayerInventory inventory) {
+        //? if >=1.21.5 {
+        return inventory.getSelectedStack();
+         //?} else
+        /*return inventory.getMainHandStack();*/
+    }
+
+    public static int getSelectedSlot(PlayerInventory inventory) {
+        //? if >=1.21.5 {
+        return inventory.getSelectedSlot();
+         //?} else
+        /*return inventory.selectedSlot;*/
     }
 }
