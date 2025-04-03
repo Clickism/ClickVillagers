@@ -50,7 +50,7 @@ public class Utils {
 
     public static void offerToHand(PlayerEntity player, ItemStack itemStack) {
         PlayerInventory inventory = player.getInventory();
-        int selectedSlot = inventory.selectedSlot;
+        int selectedSlot = VersionHelper.getSelectedSlot(inventory);
         if (inventory.getStack(selectedSlot).isEmpty()) {
             inventory.insertStack(selectedSlot, itemStack);
             return;

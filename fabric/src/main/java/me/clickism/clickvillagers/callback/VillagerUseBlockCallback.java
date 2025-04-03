@@ -51,7 +51,8 @@ public class VillagerUseBlockCallback implements UseBlockCallback {
         world.spawnEntity(entity);
         itemStack.decrement(1);
         if (itemStack.getCount() <= 0) {
-            player.getInventory().setStack(player.getInventory().selectedSlot, Items.AIR.getDefaultStack());
+            int slot = VersionHelper.getSelectedSlot(player.getInventory());
+            player.getInventory().setStack(slot, Items.AIR.getDefaultStack());
         }
         BlockPos posBelow = pos.down();
         VersionHelper.playSound(player, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, SoundCategory.NEUTRAL, 1, .5f);
