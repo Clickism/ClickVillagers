@@ -35,6 +35,7 @@ public class VillagerUseBlockCallback implements UseBlockCallback {
         if (player.isSpectator()) return ActionResult.PASS;
         ItemStack itemStack = player.getMainHandStack();
         if (!itemStack.isOf(Items.PLAYER_HEAD)) return ActionResult.PASS;
+        if (!PickupHandler.isVillager(itemStack)) return ActionResult.PASS;
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
         if (entity == null) {
             MessageType.FAIL.send(player, Text.literal("Couldn't read villager data."));
