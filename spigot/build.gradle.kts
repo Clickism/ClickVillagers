@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("com.gradleup.shadow") version "8.3.5"
     id("io.github.patrick.remapper") version "1.4.2"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
 val pluginVersion = property("plugin_version").toString()
@@ -39,6 +40,11 @@ dependencies {
     compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT:remapped-mojang")
     compileOnly("org.jetbrains:annotations:22.0.0")
     implementation("me.clickism:ClickGUI:1.0")
+}
+
+tasks.runServer {
+    dependsOn(tasks.remap)
+    minecraftVersion("1.20.1")
 }
 
 tasks.remap {
