@@ -1,6 +1,8 @@
 {
   "version": 3,
-  "credit": ["Clickism"],
+  "credit": [
+    "Clickism"
+  ],
   "update": "ClickVillagers: &a&lNew version available: &f{version}",
   "no_permission": "You don't have permission to do this.",
   "anchor_add": "You anchored this villager",
