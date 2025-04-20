@@ -46,7 +46,8 @@ to pick villagers up into your inventory, claim and protect them, change their b
 ### Villager Hoppers
 - Use **Villager Hoppers** to pick up villagers automatically.
   - Baby villagers and claimed villagers won't be picked up by default.
-  - Craft a villager hopper by combining **1 Hopper and 1 Emerald**
+  - For Paper/Spigot, craft a villager hopper by combining **1 Hopper and 1 Emerald**
+  - For Fabric, **regular hoppers** will pick up villagers instead, there is **no** custom item/recipe.
 - Especially useful for villager farms.
 
 ### Configuration
