@@ -53,8 +53,6 @@ public class PickupManager implements Listener {
     public static final NamespacedKey NBT_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "nbt");
     public static final NamespacedKey DATA_VERSION_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "data_version");
 
-    private static final int DATA_VERSION = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
-
     private final EntitySaver entitySaver;
     private final ClaimManager claimManager;
     private final AnchorManager anchorManager;
@@ -126,7 +124,10 @@ public class PickupManager implements Listener {
                 : VillagerType.VILLAGER.toString());
         String nbt = entitySaver.writeToString(entity);
         data.set(NBT_KEY, PersistentDataType.STRING, nbt);
-        data.set(DATA_VERSION_KEY, PersistentDataType.INTEGER, DATA_VERSION);
+        try {
+            int version = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
+            data.set(DATA_VERSION_KEY, PersistentDataType.INTEGER, version);
+        } catch (Exception ignored) {}
         item.setItemMeta(meta);
     }
 
