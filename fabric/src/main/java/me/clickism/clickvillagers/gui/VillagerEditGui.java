@@ -6,6 +6,7 @@
 
 package me.clickism.clickvillagers.gui;
 
+import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import me.clickism.clickvillagers.villager.PartnerState;
@@ -15,17 +16,22 @@ import me.clickism.clickvillagers.villager.VillagerTextures;
 import me.clickism.clickvillagers.util.MessageType;
 import me.clickism.clickvillagers.util.Utils;
 import net.minecraft.item.Items;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.UserCache;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class VillagerEditGui extends VillagerGui {
     public VillagerEditGui(ServerPlayerEntity player, VillagerHandler<?> villagerHandler) {
         super(player, villagerHandler);
+        String ownerName = getOwnerName(player.getServer(), villagerHandler);
         setTitle(Text.literal("⚒ ").formatted(Formatting.DARK_GREEN)
-                .append(Text.literal(player.getName().getString()).formatted(Formatting.DARK_GREEN, Formatting.BOLD))
+                .append(Text.literal(ownerName).formatted(Formatting.DARK_GREEN, Formatting.BOLD))
                 .append(Text.literal("'s Villager").formatted(Formatting.DARK_GREEN)));
         setSlot(14, new GuiElementBuilder(Items.BRUSH)
                 .setName(Text.literal("🌲 ").formatted(Formatting.GOLD)
@@ -110,5 +116,14 @@ public class VillagerEditGui extends VillagerGui {
                     .append(Text.literal(partner).formatted(Formatting.YELLOW)));
         }
         return builder;
+    }
+
+    private static String getOwnerName(@Nullable MinecraftServer server, VillagerHandler<?> villagerHandler) {
+        if (server == null) return "?";
+        UserCache userCache = server.getUserCache();
+        if (userCache == null) return "?";
+        return userCache.getByUuid(villagerHandler.getOwner())
+                .map(GameProfile::getName)
+                .orElse("?");
     }
 }
