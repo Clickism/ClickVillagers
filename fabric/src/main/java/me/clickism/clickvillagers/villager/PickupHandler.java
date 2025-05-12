@@ -120,10 +120,6 @@ public class PickupHandler {
         }
         if (entity instanceof Merchant merchant && entity instanceof VillagerDataContainer container
                 && !merchant.getOffers().isEmpty() && Settings.SHOW_TRADES.isEnabled()) {
-            lore.add(Text.literal(" "));
-            lore.add(Text.literal("🛍 Trades:")
-                    .fillStyle(Style.EMPTY.withItalic(false))
-                    .formatted(Formatting.GRAY));
             //? if >=1.21.5 {
             RegistryKey<VillagerProfession> profession = container.getVillagerData().profession()
                     .getKey().orElseThrow();
@@ -132,9 +128,16 @@ public class PickupHandler {
             TradeInfoProvider provider = (Settings.FORMAT_TRADES.isEnabled())
                     ? TradeInfoProviders.getProvider(profession)
                     : TradeInfoProviders.ALL_TRADES;
-            provider.getTradeInfoLines(merchant.getOffers()).forEach(line -> {
-                lore.add(Text.literal(line));
-            });
+            List<String> tradeInfoLines = provider.getTradeInfoLines(merchant.getOffers());
+            if (!tradeInfoLines.isEmpty()) {
+                lore.add(Text.literal(" "));
+                lore.add(Text.literal("🛍 Trades:")
+                        .fillStyle(Style.EMPTY.withItalic(false))
+                        .formatted(Formatting.GRAY));
+                tradeInfoLines.forEach(line -> {
+                    lore.add(Text.literal(line));
+                });
+            }
         }
         return lore;
     }
