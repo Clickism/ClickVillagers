@@ -41,7 +41,7 @@ public class DispenserListener implements Listener {
         if (!pickupManager.isVillager(item)) return;
         Block block = event.getBlock();
         BlockState state = block.getState();
-        if (!(state instanceof Dispenser) /*&& !(state instanceof Dropper)*/) return;
+        if (!(state instanceof Dispenser dispenser) /*&& !(state instanceof Dropper)*/) return;
         event.setCancelled(true);
         if (event instanceof BlockDispenseArmorEvent) {
             // Skip armor dispense events
@@ -52,9 +52,8 @@ public class DispenserListener implements Listener {
         try {
             pickupManager.spawnFromItemStack(item, location);
             SCHEDULER.runTask(ClickVillagers.INSTANCE, () -> {
-                Container container = (Container) state;
-                container.getInventory().removeItem(item);
-                container.update();
+                dispenser.getInventory().removeItem(item);
+                dispenser.update();
             });
         } catch (IllegalArgumentException exception) {
             ClickVillagers.LOGGER.severe("Failed to spawn villager from NBT data: " + exception.getMessage());
