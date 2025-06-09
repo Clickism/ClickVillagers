@@ -8,7 +8,7 @@ package me.clickism.clickvillagers.listener;
 
 import me.clickism.clickgui.menu.MenuManager;
 import me.clickism.clickvillagers.ClickVillagers;
-import me.clickism.clickvillagers.config.Permission;
+import me.clickism.clickvillagers.command.Permission;
 import me.clickism.clickvillagers.gui.ChatInputListener;
 import me.clickism.clickvillagers.gui.VillagerClaimMenu;
 import me.clickism.clickvillagers.gui.VillagerEditMenu;

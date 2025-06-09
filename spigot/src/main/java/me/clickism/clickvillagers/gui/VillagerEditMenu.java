@@ -10,7 +10,7 @@ import me.clickism.clickgui.menu.Button;
 import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickgui.menu.Menu;
 import me.clickism.clickgui.menu.MenuType;
-import me.clickism.clickvillagers.config.Permission;
+import me.clickism.clickvillagers.command.Permission;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.message.MessageType;
 import me.clickism.clickvillagers.util.Utils;

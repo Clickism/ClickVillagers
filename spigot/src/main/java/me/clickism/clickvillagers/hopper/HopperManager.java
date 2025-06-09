@@ -8,7 +8,7 @@ package me.clickism.clickvillagers.hopper;
 
 import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickvillagers.ClickVillagers;
-import me.clickism.clickvillagers.config.Permission;
+import me.clickism.clickvillagers.command.Permission;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.villager.ClaimManager;
 import me.clickism.clickvillagers.villager.PickupManager;

@@ -8,7 +8,7 @@ package me.clickism.clickvillagers;
 
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 import me.clickism.clickgui.menu.MenuManager;
-import me.clickism.clickvillagers.config.ReloadCommand;
+import me.clickism.clickvillagers.command.ReloadCommand;
 import me.clickism.clickvillagers.entity.EntitySaver;
 import me.clickism.clickvillagers.entity.EntitySaverFactory;
 import me.clickism.clickvillagers.gui.ChatInputListener;
@@ -19,7 +19,6 @@ import me.clickism.clickvillagers.listener.CooldownManager;
 import me.clickism.clickvillagers.listener.DispenserListener;
 import me.clickism.clickvillagers.listener.InteractListener;
 import me.clickism.clickvillagers.listener.JoinListener;
-import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.villager.AnchorManager;
 import me.clickism.clickvillagers.villager.ClaimManager;
 import me.clickism.clickvillagers.villager.PartnerManager;

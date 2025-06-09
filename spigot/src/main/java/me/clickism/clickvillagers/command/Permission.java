@@ -1,10 +1,10 @@
 /*
- * Copyright 2020-2025 Clickism
+ * Copyright 2025 Clickism
  * Released under the GNU General Public License 3.0.
  * See LICENSE.md for details.
  */
 
-package me.clickism.clickvillagers.config;
+package me.clickism.clickvillagers.command;
 
 import me.clickism.clickvillagers.message.Message;
 import org.bukkit.command.CommandSender;
