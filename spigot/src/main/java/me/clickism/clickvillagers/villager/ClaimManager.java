@@ -7,7 +7,6 @@
 package me.clickism.clickvillagers.villager;
 
 import me.clickism.clickvillagers.ClickVillagers;
-import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.listener.AutoRegistered;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -24,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
+import static me.clickism.clickvillagers.ClickVillagersConfig.*;
+
 public class ClaimManager implements Listener {
 
     public static final NamespacedKey OWNER_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "owner");
@@ -32,7 +33,7 @@ public class ClaimManager implements Listener {
 
     @AutoRegistered
     public ClaimManager(JavaPlugin plugin) {
-        if (Setting.CLAIMED_DAMAGE.isDisabled()) {
+        if (!CONFIG.get(CLAIMED_DAMAGE)) {
             plugin.getServer().getPluginManager().registerEvents(this, plugin);
         }
     }
@@ -44,7 +45,7 @@ public class ClaimManager implements Listener {
         if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) return;
         LivingEntity villager = (LivingEntity) entity;
         if (!hasOwner(villager)) return;
-        if (Setting.CLAIMED_IMMUNE_KILL_COMMAND.isDisabled()
+        if (!CONFIG.get(CLAIMED_IMMUNE_KILL_COMMAND)
             && event.getCause() == EntityDamageEvent.DamageCause.KILL) return;
         event.setCancelled(true);
     }

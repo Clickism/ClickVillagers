@@ -43,12 +43,6 @@ public class JoinListener implements Listener {
         notifiedPlayers.add(player.getUniqueId());
         // Delay the message
         Bukkit.getScheduler().runTaskLater(plugin,
-                () -> notifyPlayer(player, newerVersion), 10L);
-    }
-
-    private void notifyPlayer(Player player, String newerVersion) {
-        Message.UPDATE.parameterizer()
-                .put("version", newerVersion)
-                .send(player);
+                () -> Message.UPDATE.send(player, newerVersion), 10L);
     }
 }

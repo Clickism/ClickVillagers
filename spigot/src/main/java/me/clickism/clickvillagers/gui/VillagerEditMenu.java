@@ -11,7 +11,6 @@ import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickgui.menu.Menu;
 import me.clickism.clickgui.menu.MenuType;
 import me.clickism.clickvillagers.config.Permission;
-import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.message.MessageType;
 import me.clickism.clickvillagers.util.Utils;
@@ -28,6 +27,9 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import static me.clickism.clickvillagers.message.Message.*;
+import static me.clickism.clickvillagers.ClickVillagersConfig.*;
+
 public class VillagerEditMenu extends Menu {
     public VillagerEditMenu(Player viewer, LivingEntity villager, ClaimManager claimManager,
                             PickupManager pickupManager, PartnerManager partnerManager,
@@ -35,19 +37,19 @@ public class VillagerEditMenu extends Menu {
         super(viewer, MenuType.MENU_9X3);
         UUID owner = claimManager.getOwnerUUID(villager);
         String ownerName = (owner == null) ? null : Bukkit.getOfflinePlayer(owner).getName();
-        setTitle("&2⚒ " + Message.TITLE_EDIT.parameterizer()
-                .put("owner", ownerName == null ? "?" : ownerName));
+        setTitle("&2⚒ " + localize(TITLE_EDIT, ownerName == null ? "?" : ownerName));
         setBackground(new VillagerBackground());
-        addButton(10, Message.BUTTON_PICK_UP_VILLAGER.toButton(Icon.of(VillagerTextures.getDefaultVillagerItem(villager)))
+        addButton(10, Button.withIcon(BUTTON_PICK_UP_VILLAGER
+                        .toIcon(VillagerTextures.getDefaultVillagerItem(villager)))
                 .setOnClick((player, view, slot) -> {
                     view.close();
                     if (!hasPermission(player, villager, claimManager)) return;
                     Utils.setHandOrGive(player, pickupManager.toItemStack(villager));
-                    Message.PICK_UP_VILLAGER.sendActionbarSilently(player);
+                    PICK_UP_VILLAGER.sendActionbarSilently(player);
                     pickupManager.sendPickupEffect(villager);
                 }));
         addButton(12, addPartnerLore(
-                Message.BUTTON_PARTNER.toButton(Icon.of(Material.WRITABLE_BOOK))
+                Button.withIcon(BUTTON_PARTNER.toIcon(Material.WRITABLE_BOOK))
                         .setOnClick((player, view, slot) -> {
                             view.close();
                             if (Permission.PARTNER.lacksAndNotify(player)) return;
@@ -62,13 +64,14 @@ public class VillagerEditMenu extends Menu {
                 partnerManager.getPartners(player.getUniqueId())
         ));
         addButton(13, getTradeButton(villager, claimManager));
-        addButton(14, Message.BUTTON_REDIRECT_CHANGE_BIOME_MENU.toButton(Icon.of(Material.BRUSH))
+        addButton(14, Button.withIcon(BUTTON_REDIRECT_CHANGE_BIOME_MENU
+                        .toIcon(Material.BRUSH))
                 .setOnClick((player, view, slot) -> {
                     if (!hasPermission(player, villager, claimManager)) return;
                     MessageType.CONFIRM.playSound(player);
                     view.open(new VillagerBiomeChangeMenu(player, villager, view));
                 }));
-        addButton(16, Message.BUTTON_UNCLAIM_VILLAGER.toButton(Icon.of(Material.BARRIER))
+        addButton(16, Button.withIcon(BUTTON_UNCLAIM_VILLAGER.toIcon(Material.BARRIER))
                 .setOnClick((player, view, slot) -> {
                     view.close();
                     if (!hasPermission(player, villager, claimManager)) return;
@@ -79,10 +82,9 @@ public class VillagerEditMenu extends Menu {
     }
 
     protected Button getTradeButton(LivingEntity entity, ClaimManager claimManager) {
-        Supplier<Icon> iconSupplier = () -> ((claimManager.isTradeOpen(entity))
-                ? Message.BUTTON_TRADE_OPEN.toButton(Icon.of(Material.EMERALD))
-                : Message.BUTTON_TRADE_CLOSED.toButton(Icon.of(Material.REDSTONE)))
-                .getIcon();
+        Supplier<Icon> iconSupplier = () -> claimManager.isTradeOpen(entity)
+                ? BUTTON_TRADE_OPEN.toIcon(Material.EMERALD)
+                : BUTTON_TRADE_CLOSED.toIcon(Material.REDSTONE);
         return Button.withIcon(Icon.of(iconSupplier)).setOnClick((player, view, slot) -> {
             boolean tradeOpen = claimManager.isTradeOpen(entity);
             claimManager.setTradeOpen(entity, !tradeOpen);
@@ -99,9 +101,7 @@ public class VillagerEditMenu extends Menu {
         UUID uuid = player.getUniqueId();
         if (partnerManager.isPartner(uuid, input)) {
             partnerManager.removePartner(uuid, input);
-            Message.PARTNER_REMOVE.parameterizer()
-                    .put("partner", input)
-                    .send(player);
+            PARTNER_REMOVE.send(player, input);
             return;
         }
         if (!isValidPartner(player, input)) {
@@ -109,15 +109,13 @@ public class VillagerEditMenu extends Menu {
             Message.ENTER_PARTNER_TIMEOUT.sendSilently(player);
             return;
         }
-        if (partnerManager.getPartners(uuid).size() > Setting.PARTNER_LIMIT_PER_PLAYER.getInt()
+        if (partnerManager.getPartners(uuid).size() > CONFIG.get(PARTNER_LIMIT_PER_PLAYER)
             && Permission.BYPASS_LIMITS.lacks(player)) {
             Message.PARTNER_LIMIT_REACHED.send(player);
             return;
         }
         partnerManager.addPartner(uuid, input);
-        Message.PARTNER_ADD.parameterizer()
-                .put("partner", input)
-                .send(player);
+        PARTNER_ADD.send(player, input);
     }
 
     @SuppressWarnings("deprecation")
@@ -125,7 +123,7 @@ public class VillagerEditMenu extends Menu {
         if (input.equals(player.getName())) {
             return false;
         }
-        if (Setting.VALIDATE_PARTNER_NAMES.isDisabled()) {
+        if (!CONFIG.get(VALIDATE_PARTNER_NAMES)) {
             return input.length() >= 3 && !input.contains(" ");
         }
         return Bukkit.getOfflinePlayer(input).hasPlayedBefore();

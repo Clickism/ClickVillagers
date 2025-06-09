@@ -1,28 +1,27 @@
 /*
- * Copyright 2020-2025 Clickism
+ * Copyright 2025 Clickism
  * Released under the GNU General Public License 3.0.
  * See LICENSE.md for details.
  */
 
 package me.clickism.clickvillagers.message;
 
-import me.clickism.clickgui.menu.Button;
+import de.clickism.configured.localization.Localization;
+import de.clickism.configured.localization.LocalizationKey;
+import de.clickism.configured.localization.Parameters;
 import me.clickism.clickgui.menu.Icon;
-import me.clickism.clickvillagers.config.Setting;
-import me.clickism.clickvillagers.util.MessageParameterizer;
-import me.clickism.clickvillagers.util.Parameterizer;
+import me.clickism.clickvillagers.ClickVillagers;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public enum Message {
-
+public enum Message implements LocalizationKey {
     // GENERAL
     UPDATE(MessageType.WARN),
     NO_PERMISSION(MessageType.FAIL),
@@ -36,17 +35,17 @@ public enum Message {
     CLAIM_VILLAGER(MessageType.CONFIRM),
     UNCLAIM_VILLAGER(MessageType.WARN),
     INVALID_PARTNER(MessageType.FAIL),
-    @WithParameters("partner")
+    @Parameters("partner")
     PARTNER_ADD(MessageType.CONFIRM),
-    @WithParameters("partner")
+    @Parameters("partner")
     PARTNER_REMOVE(MessageType.WARN),
-    @WithParameters("limit")
+    @Parameters("limit")
     PARTNER_LIMIT_REACHED(MessageType.FAIL),
-    @WithParameters("limit")
+    @Parameters("limit")
     HOPPER_LIMIT_REACHED(MessageType.FAIL),
-    @WithParameters("owner")
+    @Parameters("owner")
     BELONGS_TO(MessageType.FAIL),
-    @WithParameters("biome")
+    @Parameters("biome")
     BIOME_CHANGED(MessageType.CONFIRM),
 
     WRITE_ERROR(MessageType.FAIL),
@@ -60,14 +59,13 @@ public enum Message {
     // ITEMS
     VILLAGER,
     BABY_VILLAGER,
-    @WithParameters("profession")
+    @Parameters("profession")
     VILLAGER_WITH_PROFESSION,
-
     VILLAGER_HOPPER,
 
     // TITLES
     TITLE_CLAIM_VILLAGER,
-    @WithParameters("owner")
+    @Parameters("owner")
     TITLE_EDIT,
     TITLE_CHANGE_BIOME,
 
@@ -83,107 +81,72 @@ public enum Message {
     BUTTON_BACK,
 
     // COMMANDS
-    @WithParameters("usage")
+    @Parameters("usage")
     USAGE(MessageType.FAIL),
     RELOAD_SUCCESS(MessageType.CONFIRM),
     RELOAD_FAIL(MessageType.FAIL),
 
-    @WithParameters("seconds")
+    @Parameters("seconds")
     PICK_UP_COOLDOWN(MessageType.FAIL),
-
-    @WithParameters("seconds")
     CLAIM_COOLDOWN(MessageType.FAIL);
 
-    private static final MessageType MISSING = MessageType.silent("&2[?] &c", "&8< &2? &c%s &8>");
+    public static final Localization LOCALIZATION =
+            Localization.of(lang -> "plugins/ClickVillagers/lang/" + lang + ".json")
+                    .resourceProvider(ClickVillagers.class, lang -> "/lang/" + lang + ".json")
+                    .fallbackLanguage("en_US");
 
-    @Nullable
-    private static MessageManager messageManager;
-
-    private final String path;
-    private final MessageType type;
+    private final @Nullable MessageType type;
 
     Message() {
         this(null);
     }
 
-    Message(MessageType type) {
+    Message(@Nullable MessageType type) {
         this.type = type;
-        this.path = name().toLowerCase();
     }
 
-    public void send(CommandSender player) {
-        getTypeOrDefault().send(player, toString());
+    public static String localize(LocalizationKey key, Object... params) {
+        return LOCALIZATION.get(key, params);
     }
 
-    public void sendSilently(CommandSender player) {
-        getTypeOrDefault().sendSilently(player, toString());
+    public static String localize(String key, Object... params) {
+        return localize(LocalizationKey.of(key), params);
     }
 
-    public void sendActionbar(CommandSender player) {
-        getTypeOrDefault().sendActionbar(player, toString());
+    public void send(CommandSender sender, Object... params) {
+        getTypeOrDefault().sendSilently(sender, localize(this, params));
     }
 
-    public void sendActionbarSilently(CommandSender player) {
-        getTypeOrDefault().sendActionbarSilently(player, toString());
+    public void sendSilently(CommandSender sender, Object... params) {
+        getTypeOrDefault().sendSilently(sender, localize(this, params));
     }
 
-    @Override
-    public String toString() {
-        return get(path);
+    public void sendActionbar(CommandSender sender, Object... params) {
+        getTypeOrDefault().sendActionbar(sender, localize(this, params));
     }
 
-    public Icon toIcon(Material material) {
-        return Icon.of(material)
-                .setName(toString())
-                .setLore(getLore());
-    }
-
-    public Icon toIcon(Material material, Parameterizer parameterizer) {
-        return Icon.of(material)
-                .setName(parameterizer.replace(toString()))
-                .setLore(getParameterizedLore(parameterizer));
-    }
-
-    public Button toButton(Icon icon) {
-        return Button.withIcon(icon)
-                .setName(toString())
-                .setLore(getLore());
-    }
-
-    public Button toButton(Icon icon, Parameterizer parameterizer) {
-        return Button.withIcon(icon)
-                .setName(parameterizer.replace(toString()))
-                .setLore(getParameterizedLore(parameterizer));
+    public void sendActionbarSilently(CommandSender sender, Object... params) {
+        getTypeOrDefault().sendActionbarSilently(sender, localize(this, params));
     }
 
     public List<String> getLore() {
-        if (messageManager == null) return List.of(path);
-        return messageManager.getLore(path);
+        String pathToLore = name().toLowerCase() + ".lore";
+        String text = localize(LocalizationKey.of(pathToLore));
+        return Arrays.stream(text.split("\n"))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public List<String> getParameterizedLore(Parameterizer parameterizer) {
-        return getLore().stream()
-                .map(parameterizer::replace)
-                .collect(Collectors.toList());
+    private MessageType getTypeOrDefault() {
+        return type != null ? type : MessageType.FAIL;
     }
 
-    public MessageType getTypeOrDefault() {
-        return type != null ? type : MISSING;
+    public Icon toIcon(ItemStack itemStack) {
+        return Icon.of(itemStack)
+                .setName(localize(this))
+                .setLore(getLore());
     }
 
-    public MessageParameterizer parameterizer() {
-        return new MessageParameterizer(this);
-    }
-
-    public static void initialize(JavaPlugin plugin) throws IOException {
-        if (messageManager != null) return;
-        Setting.initialize(plugin);
-        messageManager = new MessageManager(plugin, Setting.LANGUAGE.getString());
-    }
-    
-    @NotNull
-    public static String get(String key) {
-        if (messageManager == null) return key;
-        return messageManager.getOrPath(key);
+    public Icon toIcon(Material material) {
+        return toIcon(new ItemStack(material));
     }
 }

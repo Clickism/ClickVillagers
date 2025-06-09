@@ -6,9 +6,9 @@
 
 package me.clickism.clickvillagers;
 
+import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 import me.clickism.clickgui.menu.MenuManager;
 import me.clickism.clickvillagers.config.ReloadCommand;
-import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.entity.EntitySaver;
 import me.clickism.clickvillagers.entity.EntitySaverFactory;
 import me.clickism.clickvillagers.gui.ChatInputListener;
@@ -20,8 +20,6 @@ import me.clickism.clickvillagers.listener.DispenserListener;
 import me.clickism.clickvillagers.listener.InteractListener;
 import me.clickism.clickvillagers.listener.JoinListener;
 import me.clickism.clickvillagers.message.Message;
-import me.clickism.clickvillagers.util.MessageParameterizer;
-import me.clickism.clickvillagers.util.UpdateChecker;
 import me.clickism.clickvillagers.villager.AnchorManager;
 import me.clickism.clickvillagers.villager.ClaimManager;
 import me.clickism.clickvillagers.villager.PartnerManager;
@@ -34,6 +32,9 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static me.clickism.clickvillagers.message.Message.*;
+import static me.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public final class ClickVillagers extends JavaPlugin {
 
@@ -52,15 +53,7 @@ public final class ClickVillagers extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Load config/messages
-        try {
-            Setting.initialize(this);
-            Message.initialize(this);
-        } catch (IOException exception) {
-            LOGGER.log(Level.SEVERE, "Failed to load config/messages: ", exception);
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        CONFIG.load(); // Will also load messages
         // Load data
         PartnerManager partnerManager;
         try {
@@ -79,7 +72,7 @@ public final class ClickVillagers extends JavaPlugin {
         HopperManager hopperManager = new HopperManager(this, pickupManager, claimManager);
         ChatInputListener chatInputListener = new ChatInputListener(this);
 
-        CooldownManager cooldownManager = new CooldownManager(() -> Setting.COOLDOWN.getInt() * 1000L);
+        CooldownManager cooldownManager = new CooldownManager(() -> CONFIG.get(COOLDOWN) * 1000L);
 
         new InteractListener(this, claimManager, pickupManager,
                 anchorHandler, partnerManager, chatInputListener, menuManager, cooldownManager);
@@ -90,7 +83,7 @@ public final class ClickVillagers extends JavaPlugin {
             command.setExecutor(new ReloadCommand());
         }
         // Check updates
-        if (Setting.CHECK_UPDATE.isEnabled()) {
+        if (CONFIG.get(CHECK_UPDATES)) {
             checkUpdates();
             new JoinListener(this, () -> newerVersion);
         }
@@ -101,15 +94,13 @@ public final class ClickVillagers extends JavaPlugin {
 
     private void checkUpdates() {
         LOGGER.info("Checking for updates...");
-        new UpdateChecker(PROJECT_ID, "spigot", null).checkVersion(version -> {
+        new ModrinthUpdateChecker(PROJECT_ID, "spigot", null).checkVersion(version -> {
             if (getDescription().getVersion().equals(version)) return;
             newerVersion = version;
             LOGGER.info("New version available: " + version);
-            MessageParameterizer parameterizer = Message.UPDATE.parameterizer()
-                    .put("version", version);
             Bukkit.getOnlinePlayers().forEach(player -> {
                 if (!player.isOp()) return;
-                parameterizer.send(player);
+                UPDATE.send(player, version);
             });
         });
     }

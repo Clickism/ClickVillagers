@@ -7,6 +7,7 @@
 package me.clickism.clickvillagers.config;
 
 import me.clickism.clickvillagers.ClickVillagers;
+import me.clickism.clickvillagers.ClickVillagersConfig;
 import me.clickism.clickvillagers.message.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,7 +34,7 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
         }
         if (Permission.RELOAD.lacksAndNotify(sender)) return false;
         try {
-            Setting.reloadSettings();
+            ClickVillagersConfig.CONFIG.load();
             Message.RELOAD_SUCCESS.send(sender);
         } catch (Exception exception) {
             ClickVillagers.LOGGER.log(Level.SEVERE, "Failed to reload config/messages: ", exception);
@@ -52,8 +53,6 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendUsage(CommandSender sender) {
-        Message.USAGE.parameterizer()
-                .put("usage", "/clickvillagers <reload>")
-                .send(sender);
+        Message.USAGE.send(sender, "/clickvillagers <reload>");
     }
 }

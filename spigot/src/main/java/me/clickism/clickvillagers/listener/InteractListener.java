@@ -143,18 +143,14 @@ public class InteractListener implements Listener {
         if (claimManager.isOwner(villager, player)) return;
         if (partnerManager.isPartner(claimManager.getOwnerUUID(villager), player.getName())) return;
         event.setCancelled(true);
-        Message.BELONGS_TO.parameterizer()
-                .put("owner", claimManager.getOwnerName(villager))
-                .send(player);
+        Message.BELONGS_TO.send(player, claimManager.getOwnerName(villager));
     }
 
     private void handleAnchor(Player player, LivingEntity villager) {
         if (Permission.ANCHOR.lacksAndNotify(player)) return;
         if (claimManager.hasOwner(villager) && !claimManager.isOwner(villager, player)
                 && Permission.BYPASS_CLAIMS.lacks(player)) {
-            Message.BELONGS_TO.parameterizer()
-                    .put("owner", claimManager.getOwnerName(villager))
-                    .send(player);
+            Message.BELONGS_TO.send(player, claimManager.getOwnerName(villager));
             return;
         }
         Location location = villager.getLocation();
@@ -181,9 +177,7 @@ public class InteractListener implements Listener {
         }
         if (Permission.CLAIM.lacksAndNotify(player)) return;
         if (cooldownManager.hasCooldown(player) && Permission.BYPASS_CLAIMS.lacks(player)) {
-            Message.CLAIM_COOLDOWN.parameterizer()
-                    .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
-                    .sendActionbar(player);
+            Message.CLAIM_COOLDOWN.sendActionbar(player, cooldownManager.getRemainingCooldownSeconds(player));
             return;
         }
         new VillagerClaimMenu(player, villager, claimManager, pickupManager, partnerManager, chatInputListener,
@@ -198,17 +192,13 @@ public class InteractListener implements Listener {
             playOpenSound(player, villager);
             return;
         }
-        Message.BELONGS_TO.parameterizer()
-                .put("owner", claimManager.getOwnerName(villager))
-                .send(player);
+        Message.BELONGS_TO.send(player, claimManager.getOwnerName(villager));
     }
 
     private void handlePickup(Player player, LivingEntity villager) {
         if (Permission.PICKUP.lacksAndNotify(player)) return;
         if (cooldownManager.hasCooldown(player) && Permission.BYPASS_CLAIMS.lacks(player)) {
-            Message.PICK_UP_COOLDOWN.parameterizer()
-                    .put("seconds", cooldownManager.getRemainingCooldownSeconds(player))
-                    .sendActionbar(player);
+            Message.PICK_UP_COOLDOWN.sendActionbar(player, cooldownManager.getRemainingCooldownSeconds(player));
             return;
         }
         ItemStack item;

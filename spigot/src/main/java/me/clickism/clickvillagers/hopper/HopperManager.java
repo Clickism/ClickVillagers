@@ -9,7 +9,6 @@ package me.clickism.clickvillagers.hopper;
 import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickvillagers.ClickVillagers;
 import me.clickism.clickvillagers.config.Permission;
-import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.message.Message;
 import me.clickism.clickvillagers.villager.ClaimManager;
 import me.clickism.clickvillagers.villager.PickupManager;
@@ -39,8 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static me.clickism.clickvillagers.ClickVillagersConfig.*;
+
 public class HopperManager implements Listener {
-    private static final float HOPPER_VIEW_RANGE = Setting.HOPPER_BLOCK_DISPLAY_VIEW_RANGE.getFloat();
     private static final Transformation FRAME_TRANSFORMATION = new Transformation(
             new Vector3f(-.525f, -.235f, -.525f),
             new AxisAngle4f(),
@@ -61,10 +61,10 @@ public class HopperManager implements Listener {
         this.claimManager = claimManager;
         this.villagerHopper = createHopperItem();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        if (Setting.HOPPER_RECIPE.isEnabled()) {
+        if (CONFIG.get(HOPPER_RECIPE)) {
             registerHopperRecipe(plugin);
         }
-        if (Setting.TICK_HOPPERS.isEnabled()) {
+        if (CONFIG.get(TICK_HOPPERS)) {
             startTickingHoppers(plugin);
         }
     }
@@ -93,11 +93,9 @@ public class HopperManager implements Listener {
             return;
         }
         // Check limit
-        int limit = Setting.HOPPER_LIMIT_PER_CHUNK.getInt();
+        int limit = CONFIG.get(HOPPER_LIMIT_PER_CHUNK);
         if (isHopperLimitReached(block.getChunk(), limit) && Permission.BYPASS_LIMITS.lacks(player)) {
-            Message.HOPPER_LIMIT_REACHED.parameterizer()
-                    .put("limit", limit)
-                    .send(player);
+            Message.HOPPER_LIMIT_REACHED.send(player, limit);
             event.setCancelled(true);
             return;
         }
@@ -107,7 +105,7 @@ public class HopperManager implements Listener {
     }
 
     public static void markHopper(Hopper hopper) {
-        if (Setting.HOPPER_BLOCK_DISPLAY.isEnabled()) {
+        if (CONFIG.get(HOPPER_BLOCK_DISPLAY)) {
             Block block = hopper.getBlock();
             BlockDisplay display = createBlockDisplay(block);
             markHopper(hopper, display.getUniqueId());
@@ -168,9 +166,9 @@ public class HopperManager implements Listener {
     }
 
     private void startTickingHoppers(JavaPlugin plugin) {
-        boolean ignoreBabies = Setting.IGNORE_BABY_VILLAGERS.isEnabled();
-        boolean ignoreClaimed = Setting.IGNORE_CLAIMED_VILLAGERS.isEnabled();
-        int tickRate = Setting.HOPPER_TICK_RATE.getInt();
+        boolean ignoreBabies = CONFIG.get(IGNORE_BABY_VILLAGERS);
+        boolean ignoreClaimed = CONFIG.get(IGNORE_CLAIMED_VILLAGERS);
+        int tickRate = CONFIG.get(HOPPER_TICK_RATE);
         Bukkit.getScheduler().runTaskTimer(plugin, () -> tickHoppers(ignoreBabies, ignoreClaimed), tickRate, tickRate);
     }
 
@@ -260,7 +258,7 @@ public class HopperManager implements Listener {
         return block.getWorld().spawn(location, BlockDisplay.class, display -> {
             display.setTransformation(FRAME_TRANSFORMATION);
             display.setShadowRadius(0f);
-            display.setViewRange(HOPPER_VIEW_RANGE);
+            display.setViewRange(CONFIG.get(HOPPER_BLOCK_DISPLAY_VIEW_RANGE));
             display.setBlock(Material.EMERALD_BLOCK.createBlockData());
         });
     }

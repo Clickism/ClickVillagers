@@ -9,7 +9,6 @@ package me.clickism.clickvillagers.villager;
 import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickvillagers.ClickVillagers;
 import me.clickism.clickvillagers.config.Permission;
-import me.clickism.clickvillagers.config.Setting;
 import me.clickism.clickvillagers.entity.EntitySaver;
 import me.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import me.clickism.clickvillagers.listener.AutoRegistered;
@@ -34,6 +33,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static me.clickism.clickvillagers.ClickVillagersConfig.*;
+import static me.clickism.clickvillagers.message.Message.*;
 
 public class PickupManager implements Listener {
     private enum VillagerType {
@@ -171,7 +173,8 @@ public class PickupManager implements Listener {
         String customName = entity.getCustomName();
         Villager.Profession profession = Utils.getVillagerProfession(entity);
         boolean adult = ((Ageable) entity).isAdult();
-        int modelData = Setting.getCustomModelData(profession, !adult, entity instanceof ZombieVillager);
+        String key = getCustomModelDataKey(profession, !adult, entity instanceof ZombieVillager);
+        int modelData = CONFIG.get(CUSTOM_MODEL_DATAS).getOrDefault(key, 0);
         boolean hasTrades = entity instanceof Villager villager && !villager.getRecipes().isEmpty();
         Icon icon = Message.VILLAGER.toIcon(Material.PLAYER_HEAD)
                 .setName(ChatColor.YELLOW + getName(customName, profession, adult))
@@ -183,10 +186,10 @@ public class PickupManager implements Listener {
                         i -> i.addLoreLine("&3⚓ " + Message.INFO_ANCHORED))
                 .runIf(claimManager.hasOwner(entity) && !claimManager.isTradeOpen(entity),
                         i -> i.addLoreLine("&c👥 " + Message.INFO_TRADE_CLOSED))
-                .runIf(hasTrades && Setting.SHOW_TRADES.isEnabled(),
+                .runIf(hasTrades && CONFIG.get(SHOW_TRADES),
                         i -> {
                             if (!(entity instanceof Villager villager)) return;
-                            TradeInfoProvider provider = (Setting.FORMAT_TRADES.isEnabled())
+                            TradeInfoProvider provider = (CONFIG.get(FORMAT_TRADES))
                                     ? TradeInfoProviders.getProvider(villager.getProfession())
                                     : TradeInfoProviders.ALL_TRADES;
                             List<String> infoLines = provider.getTradeInfoLines(villager.getRecipes());
@@ -209,10 +212,8 @@ public class PickupManager implements Listener {
         if (profession == Villager.Profession.NONE) {
             return Message.VILLAGER.toString();
         }
-        String professionName = Message.get("profession." + profession.toString().toLowerCase());
-        return Message.VILLAGER_WITH_PROFESSION.parameterizer()
-                .put("profession", professionName)
-                .toString();
+        String professionName = localize("profession." + profession.toString().toLowerCase());
+        return localize(VILLAGER_WITH_PROFESSION, professionName);
     }
 
     private record ItemResult(ItemStack item, EquipmentSlot slot) {

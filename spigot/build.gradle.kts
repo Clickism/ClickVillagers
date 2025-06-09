@@ -35,11 +35,20 @@ repositories {
     }
 }
 
+val configuredVersion = "0.2.4"
+
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT:remapped-mojang")
     compileOnly("org.jetbrains:annotations:22.0.0")
     implementation("me.clickism:ClickGUI:1.0")
+    // Configuration & Localization
+    implementation("de.clickism:configured-core:$configuredVersion")
+    implementation("de.clickism:configured-yaml:$configuredVersion")
+    implementation("de.clickism:configured-json:$configuredVersion")
+    implementation("de.clickism:configured-localization:$configuredVersion")
+    // Update Checker
+    implementation("de.clickism:modrinth-update-checker:1.0")
 }
 
 tasks.runServer {

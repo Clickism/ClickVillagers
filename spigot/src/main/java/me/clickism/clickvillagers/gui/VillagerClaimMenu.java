@@ -6,6 +6,7 @@
 
 package me.clickism.clickvillagers.gui;
 
+import me.clickism.clickgui.menu.Button;
 import me.clickism.clickgui.menu.Icon;
 import me.clickism.clickgui.menu.Menu;
 import me.clickism.clickgui.menu.MenuType;
@@ -26,7 +27,8 @@ public class VillagerClaimMenu extends Menu {
         super(viewer, MenuType.MENU_9X3);
         setTitle("&8&l🔒 " + Message.TITLE_CLAIM_VILLAGER);
         setBackground(new VillagerBackground());
-        addButton(13, Message.BUTTON_CLAIM_VILLAGER.toButton(Icon.of(Material.GOLDEN_SHOVEL))
+        addButton(13, Button.withIcon(Message.BUTTON_CLAIM_VILLAGER
+                        .toIcon(Material.GOLDEN_SHOVEL))
                 .hideAllAttributes()
                 .addEnchantmentGlint()
                 .setOnClick((player, view, slot) -> {
