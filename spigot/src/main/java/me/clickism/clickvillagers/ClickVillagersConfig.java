@@ -176,6 +176,14 @@ public class ClickVillagersConfig {
                             """)
                     .appendDefaultValue();
 
+    public static final ConfigOption<Boolean> ALLOW_ZOMBIE_VILLAGERS =
+            CONFIG.optionOf("allow_zombie_villagers", true)
+                    .description("""
+                            Whether to allow zombie villagers to be picked up.
+                            If this is disabled, zombie villagers will not be picked up by villager hoppers.
+                            """)
+                    .appendDefaultValue();
+
     public static final ConfigOption<Map<String, Integer>> CUSTOM_MODEL_DATAS =
             CONFIG.optionOf("custom_model_datas", new HashMap<>() {{
                         put("baby", 0);

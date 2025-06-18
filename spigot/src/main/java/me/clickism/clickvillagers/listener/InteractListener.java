@@ -35,6 +35,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
+import static me.clickism.clickvillagers.ClickVillagersConfig.*;
+
 public class InteractListener implements Listener {
 
     private final ClaimManager claimManager;
@@ -67,6 +69,9 @@ public class InteractListener implements Listener {
         Entity entity = event.getRightClicked();
         if (!(entity instanceof Villager) && !(entity instanceof ZombieVillager)) return;
         LivingEntity villager = (LivingEntity) entity;
+        if (villager instanceof ZombieVillager && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) {
+            return;
+        }
         LegacyVillagerCompatibility.convertDataIfLegacy(villager);
         Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.SPECTATOR) return;

@@ -209,6 +209,7 @@ public class HopperManager implements Listener {
             EntityType type = entity.getType();
             // Check if entity is a villager
             if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) continue;
+            if (type == EntityType.ZOMBIE_VILLAGER && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) continue;
             Block block = entity.getLocation().getBlock();
             // Check if entity is a baby villager
             if (ignoreBabies && entity instanceof Villager && !((Ageable) entity).isAdult()) continue;
