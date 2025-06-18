@@ -37,7 +37,7 @@ public class VillagerEditMenu extends Menu {
         super(viewer, MenuType.MENU_9X3);
         UUID owner = claimManager.getOwnerUUID(villager);
         String ownerName = (owner == null) ? null : Bukkit.getOfflinePlayer(owner).getName();
-        setTitle("&2⚒ " + localize(TITLE_EDIT, ownerName == null ? "?" : ownerName));
+        setTitle("&2⚒ " + TITLE_EDIT.localized(ownerName == null ? "?" : ownerName));
         setBackground(new VillagerBackground());
         addButton(10, Button.withIcon(BUTTON_PICK_UP_VILLAGER
                         .toIcon(VillagerTextures.getDefaultVillagerItem(villager)))

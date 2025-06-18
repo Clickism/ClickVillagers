@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 public enum Message implements LocalizationKey {
     // GENERAL
+    @Parameters("version")
     UPDATE(MessageType.WARN),
     NO_PERMISSION(MessageType.FAIL),
     ANCHOR_ADD(MessageType.ANCHOR_ADD),
@@ -105,33 +106,33 @@ public enum Message implements LocalizationKey {
         this.type = type;
     }
 
-    public static String localize(LocalizationKey key, Object... params) {
-        return LOCALIZATION.get(key, params);
+    public String localized(Object... params) {
+        return LOCALIZATION.get(this, params);
     }
 
     public static String localize(String key, Object... params) {
-        return localize(LocalizationKey.of(key), params);
+        return LOCALIZATION.get(LocalizationKey.of(key), params);
     }
 
     public void send(CommandSender sender, Object... params) {
-        getTypeOrDefault().sendSilently(sender, localize(this, params));
+        getTypeOrDefault().sendSilently(sender, localized(params));
     }
 
     public void sendSilently(CommandSender sender, Object... params) {
-        getTypeOrDefault().sendSilently(sender, localize(this, params));
+        getTypeOrDefault().sendSilently(sender, localized(params));
     }
 
     public void sendActionbar(CommandSender sender, Object... params) {
-        getTypeOrDefault().sendActionbar(sender, localize(this, params));
+        getTypeOrDefault().sendActionbar(sender, localized(params));
     }
 
     public void sendActionbarSilently(CommandSender sender, Object... params) {
-        getTypeOrDefault().sendActionbarSilently(sender, localize(this, params));
+        getTypeOrDefault().sendActionbarSilently(sender, localized(params));
     }
 
     public List<String> getLore() {
         String pathToLore = name().toLowerCase() + ".lore";
-        String text = localize(LocalizationKey.of(pathToLore));
+        String text = localize(pathToLore);
         return Arrays.stream(text.split("\n"))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -142,11 +143,16 @@ public enum Message implements LocalizationKey {
 
     public Icon toIcon(ItemStack itemStack) {
         return Icon.of(itemStack)
-                .setName(localize(this))
+                .setName(localized())
                 .setLore(getLore());
     }
 
     public Icon toIcon(Material material) {
         return toIcon(new ItemStack(material));
+    }
+
+    @Override
+    public String toString() {
+        return localized();
     }
 }

@@ -213,7 +213,7 @@ public class PickupManager implements Listener {
             return Message.VILLAGER.toString();
         }
         String professionName = localize("profession." + profession.toString().toLowerCase());
-        return localize(VILLAGER_WITH_PROFESSION, professionName);
+        return VILLAGER_WITH_PROFESSION.localized(professionName);
     }
 
     private record ItemResult(ItemStack item, EquipmentSlot slot) {

@@ -6,7 +6,6 @@
 
 package me.clickism.clickvillagers.gui;
 
-import de.clickism.configured.localization.LocalizationKey;
 import me.clickism.clickgui.menu.*;
 import me.clickism.clickvillagers.message.Message;
 import org.bukkit.Material;
@@ -51,7 +50,7 @@ public class VillagerBiomeChangeMenu extends Menu {
     }
 
     private Button getBiomeButton(LivingEntity entity, Villager.Type type, Material material) {
-        String name = localize(LocalizationKey.of("biome." + type.name().toLowerCase()));
+        String name = localize("biome." + type.name().toLowerCase());
         return Button.withIcon(() -> Message.BUTTON_CHANGE_BIOME.toIcon(material)
                         .setName("&2🌲 &l" + name)
                         .runIf(type == getType(entity), Icon::addEnchantmentGlint))
