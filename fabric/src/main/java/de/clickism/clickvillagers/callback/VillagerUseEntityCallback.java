@@ -29,6 +29,7 @@ import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -149,7 +150,11 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         if (AnchorHandler.isAnchored(entity)) {
             AnchorHandler.removeAnchorEffect(entity);
             MessageType.ANCHOR_REMOVE.sendActionbarSilently(player, Text.literal("You removed this villager's anchor."));
-            VersionHelper.playSound(player, SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.MASTER, 1, 1);
+            //? if >= 1.21.6 {
+            SoundEvent sound = SoundEvents.ITEM_LEAD_TIED;
+            //?} else
+            /*SoundEvent sound = SoundEvents.ENTITY_LEASH_KNOT_PLACE;*/
+            VersionHelper.playSound(player, sound, SoundCategory.MASTER, 1, 1);
             world.spawnParticles(
                     ParticleTypes.WAX_OFF,
                     entity.getX(), entity.getY(), entity.getZ(),

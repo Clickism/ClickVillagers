@@ -12,6 +12,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
+//? if <1.20.5 {
+/*import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import java.util.stream.Stream;
+*///?}
 
 public class Utils {
     /**

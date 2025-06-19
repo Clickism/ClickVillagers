@@ -42,6 +42,12 @@ import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
+//? if >=1.21.6 {
+import net.minecraft.storage.NbtReadView;
+import net.minecraft.storage.NbtWriteView;
+import net.minecraft.storage.ReadView;
+import net.minecraft.util.ErrorReporter;
+//?}
 //? if >=1.20.5 {
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
@@ -57,9 +63,26 @@ public class PickupHandler {
     private static final String DATA_VERSION_KEY = "CVDataVersion";
     //? if <1.21.1
     /*private static final String DATA_KEY = "ClickVillagersData";*/
-    private static final int DATA_VERSION = SharedConstants.getGameVersion().getSaveVersion().getId();
+    //? if >=1.21.6 {
+    private static final int DATA_VERSION = SharedConstants.getGameVersion().dataVersion().id();
+    //?} else
+    /*private static final int DATA_VERSION = SharedConstants.getGameVersion().getSaveVersion().getId();*/
 
+    //? if >=1.21.6 {
     public static <T extends LivingEntity & VillagerDataContainer> ItemStack toItemStack(T entity) {
+        NbtWriteView view = NbtWriteView.create(new ErrorReporter.Impl());
+        entity.writeData(view);
+        String id = EntityType.getId(entity.getType()).toString();
+        view.putString(TYPE_KEY, id);
+        view.putString(DATA_VERSION_KEY, String.valueOf(DATA_VERSION));
+        List<Text> lore = getLore(new VillagerHandler<>(entity));
+        ItemStack itemStack = getItemStack(getDisplayName(entity), lore, view);
+        VillagerTextures.setEntityTexture(itemStack, entity);
+        entity.remove(Entity.RemovalReason.DISCARDED);
+        return itemStack;
+    }
+    //?} else {
+    /*public static <T extends LivingEntity & VillagerDataContainer> ItemStack toItemStack(T entity) {
         NbtCompound nbt = new NbtCompound();
         entity.writeNbt(nbt);
         String id = EntityType.getId(entity.getType()).toString();
@@ -71,8 +94,14 @@ public class PickupHandler {
         entity.remove(Entity.RemovalReason.DISCARDED);
         return itemStack;
     }
+    *///?}
 
-    private static ItemStack getItemStack(Text name, List<Text> lore, NbtCompound nbt) {
+    private static ItemStack getItemStack(Text name, List<Text> lore,
+                                          //? if >=1.21.6 {
+                                          NbtWriteView nbt
+                                          //?} else
+                                          /*NbtCompound nbt*/
+    ) {
         ItemStack itemStack = Items.PLAYER_HEAD.getDefaultStack();
         writeCustomData(itemStack, nbt);
         formatItem(itemStack, name.copy().fillStyle(Style.EMPTY.withItalic(false).withColor(Formatting.YELLOW)), lore);
@@ -137,8 +166,18 @@ public class PickupHandler {
     }
 
     //? if >=1.20.5 {
-    private static void writeCustomData(ItemStack itemStack, NbtCompound nbt) {
-        itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
+    private static void writeCustomData(ItemStack itemStack,
+                                        //? if >=1.21.6 {
+                                        NbtWriteView view
+                                        //?} else
+                                        /*NbtCompound nbt*/
+    ) {
+        itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(
+                //? if >=1.21.6 {
+                view.getNbt()
+                //?} else
+                /*nbt*/
+        ));
     }
 
     @Nullable
@@ -199,7 +238,11 @@ public class PickupHandler {
             //?} else
             /*Entity entity = type.create(world);*/
             if (entity == null) return null;
-            entity.readNbt(nbt);
+            //? if >=1.21.6 {
+            ReadView view = NbtReadView.create(new ErrorReporter.Impl(), world.getRegistryManager(), nbt);
+            entity.readData(view);
+            //?} else
+            /*entity.readNbt(nbt);*/
             return entity;
         } catch (Exception e) {
             return null;
