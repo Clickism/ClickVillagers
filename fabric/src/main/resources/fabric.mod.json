@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"me.clickism.clickvillagers.ClickVillagers"
+			"de.clickism.clickvillagers.ClickVillagers"
 		]
 	},
 	"mixins": [
