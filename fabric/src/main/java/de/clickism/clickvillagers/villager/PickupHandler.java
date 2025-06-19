@@ -70,7 +70,7 @@ public class PickupHandler {
 
     //? if >=1.21.6 {
     public static <T extends LivingEntity & VillagerDataContainer> ItemStack toItemStack(T entity) {
-        NbtWriteView view = NbtWriteView.create(new ErrorReporter.Impl());
+        NbtWriteView view = NbtWriteView.create(new ErrorReporter.Impl(), entity.getWorld().getRegistryManager());
         entity.writeData(view);
         String id = EntityType.getId(entity.getType()).toString();
         view.putString(TYPE_KEY, id);
