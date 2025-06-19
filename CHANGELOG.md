@@ -1,2 +1,6 @@
-- Fixed: Viewer's name is displayed instead of the owner's when 
-an operator accesses a claimed villager.
+- Switched to [Configured](https://github.com/Clickism/Configured) for configuration and localization.
+    - Config options are now *snake_case*.
+- Added **Vietnamese** language support.
+- Added **Russian** language support.
+- Added config option to disable picking up zombie villagers.
+- Updated to 1.21.6
