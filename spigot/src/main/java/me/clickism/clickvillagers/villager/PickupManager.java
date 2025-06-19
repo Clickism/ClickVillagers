@@ -13,8 +13,8 @@ import me.clickism.clickvillagers.entity.EntitySaver;
 import me.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import me.clickism.clickvillagers.listener.AutoRegistered;
 import me.clickism.clickvillagers.message.Message;
+import me.clickism.clickvillagers.util.DataVersionUtil;
 import me.clickism.clickvillagers.util.Utils;
-import net.minecraft.SharedConstants;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -126,10 +126,8 @@ public class PickupManager implements Listener {
                 : VillagerType.VILLAGER.toString());
         String nbt = entitySaver.writeToString(entity);
         data.set(NBT_KEY, PersistentDataType.STRING, nbt);
-        try {
-            int version = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
-            data.set(DATA_VERSION_KEY, PersistentDataType.INTEGER, version);
-        } catch (Exception ignored) {}
+        DataVersionUtil.getDataVersion()
+                .ifPresent(version -> data.set(DATA_VERSION_KEY, PersistentDataType.INTEGER, version));
         item.setItemMeta(meta);
     }
 
