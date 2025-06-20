@@ -29,7 +29,7 @@
   "info_trade_closed": "Đã khoá trao đổi",
   "info_trades": "Trao đổi",
   "villager": "Dân làng",
-  "baby_villager": "Dân làng con (ngọt con)",
+  "baby_villager": "Dân làng trẻ em",
   "villager_with_profession": "Dân làng {profession}",
   "villager.lore": [
     "\u00268Chuột phải để đặt lại dân làng."
@@ -73,7 +73,7 @@
   ],
   "button_redirect_change_biome_menu": "\u00266🌲 \u0026lĐỔI BIOME",
   "button_redirect_change_biome_menu.lore": [
-    "\u0026eNhấp vào để đổi quốc tịch (ba que) của con đân làng này."
+    "\u0026eNhấp vào để đổi biome của con đân làng này."
   ],
   "button_change_biome.lore": [
     "\u0026aNhấp vào để đổi biome của con dân làng này"
