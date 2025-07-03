@@ -1,1 +1,1 @@
-- Fix villager trades not saving correctly.
+- Update to 1.21.7
