@@ -14,8 +14,10 @@ import net.minecraft.block.HopperBlock;
 import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.world.World;
@@ -48,6 +50,10 @@ public abstract class HopperBlockMixin extends BlockWithEntity {
             && entity instanceof PassiveEntity passiveEntity
             && passiveEntity.isBaby()) {
             // Baby villagers can't be picked up by hoppers.
+            return;
+        }
+        if (!CONFIG.get(ALLOW_ZOMBIE_VILLAGERS) && entity instanceof ZombieVillagerEntity) {
+            // Don't allow zombie villagers if setting is disabled
             return;
         }
         Integer slot = null;

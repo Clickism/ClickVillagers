@@ -80,6 +80,9 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
             handleEdit(player, villagerHandler);
             return ActionResult.CONSUME;
         }
+        if (!CONFIG.get(ENABLE_PICKUP)) {
+            return ActionResult.PASS; // Pickup is disabled
+        }
         handlePickup(player, villagerHandler);
         return ActionResult.CONSUME;
     }
@@ -89,6 +92,10 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
         if (owner == null) {
             // Allow claim
+            if (!CONFIG.get(ENABLE_CLAIMS)) {
+                MessageType.FAIL.send(player, Text.literal("Claiming villagers is disabled."));
+                return;
+            }
             if (cooldownManager.hasCooldown(player)) {
                 long seconds = cooldownManager.getRemainingCooldownSeconds(player);
                 MessageType.FAIL.send(player, Text.literal("Please wait §l" + seconds
@@ -165,6 +172,10 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
                     10, .2, 0, .2, 2
             );
         } else {
+            if (!CONFIG.get(ENABLE_ANCHORS)) {
+                MessageType.FAIL.send(player, Text.literal("Anchoring villagers is disabled."));
+                return;
+            }
             AnchorHandler.addAnchorEffect(entity);
             MessageType.ANCHOR_ADD.sendActionbarSilently(player, Text.literal("You anchored this villager."));
             VersionHelper.playSound(player, SoundEvents.BLOCK_BEEHIVE_SHEAR, SoundCategory.NEUTRAL, 1, 1);

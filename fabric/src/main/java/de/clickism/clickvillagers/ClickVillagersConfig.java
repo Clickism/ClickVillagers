@@ -116,4 +116,27 @@ public class ClickVillagersConfig {
                             """)
                     .appendDefaultValue();
 
+    public static final ConfigOption<Boolean> ENABLE_PICKUP =
+            CONFIG.optionOf("enable_pickup", true)
+                    .description("""
+                            Whether players can pick up villagers.
+                            Already picked up villagers will not be affected by this setting.
+                            """)
+                    .appendDefaultValue();
+
+    public static final ConfigOption<Boolean> ENABLE_CLAIMS =
+            CONFIG.optionOf("enable_claims", true)
+                    .description("""
+                            Whether players can claim villagers.
+                            Already claimed villagers will not be affected by this setting.
+                            """)
+                    .appendDefaultValue();
+
+    public static final ConfigOption<Boolean> ENABLE_ANCHORS =
+            CONFIG.optionOf("enable_anchors", true)
+                    .description("""
+                            Whether players can anchor villagers.
+                            """)
+                    .appendDefaultValue();
+
 }
