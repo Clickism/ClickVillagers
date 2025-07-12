@@ -18,6 +18,7 @@ import de.clickism.clickvillagers.villager.VillagerHandler;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
@@ -41,11 +42,12 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
-public class VillagerUseEntityCallback implements UseEntityCallback {
+public class UseVillagerEntityCallback implements UseEntityCallback {
     private final CooldownManager cooldownManager;
 
-    public VillagerUseEntityCallback(CooldownManager cooldownManager) {
+    public UseVillagerEntityCallback(CooldownManager cooldownManager) {
         this.cooldownManager = cooldownManager;
     }
 
@@ -55,6 +57,8 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         if (!hand.equals(Hand.MAIN_HAND)) return ActionResult.PASS;
         if (player.isSpectator()) return ActionResult.PASS;
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return ActionResult.PASS;
+        // Don't allow zombie villagers if setting is disabled
+        if (!CONFIG.get(ALLOW_ZOMBIE_VILLAGERS) && entity instanceof ZombieVillagerEntity) return ActionResult.PASS;
         var villager = (LivingEntity & VillagerDataContainer) entity;
         VillagerHandler<?> villagerHandler = new VillagerHandler<>(villager);
         if (hitResult != null) return ActionResult.CONSUME;

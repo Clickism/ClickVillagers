@@ -16,12 +16,20 @@ repositories {
 	}
 }
 
+val configuredVersion = "0.2.4"
+
 dependencies {
 	minecraft("com.mojang:minecraft:${stonecutter.current.project}")
 	mappings("net.fabricmc:yarn:${property("deps.yarn_mappings")}:v2")
 	modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
 	modImplementation(include("eu.pb4:sgui:${property("deps.sgui")}")!!)
+	// Configured
+	implementation(include("de.clickism:configured-core:${configuredVersion}")!!)
+	implementation(include("de.clickism:configured-yaml:${configuredVersion}")!!)
+	implementation(include("de.clickism:configured-json:${configuredVersion}")!!)
+	// Configured Dependency
+	implementation(include("org.yaml:snakeyaml:2.0")!!)
 }
 
 tasks.processResources {

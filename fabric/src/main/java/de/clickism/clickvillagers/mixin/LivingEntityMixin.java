@@ -6,7 +6,6 @@
 
 package de.clickism.clickvillagers.mixin;
 
-import de.clickism.clickvillagers.config.Settings;
 import de.clickism.clickvillagers.villager.VillagerHandler;
 import net.minecraft.entity.Attackable;
 import net.minecraft.entity.Entity;
@@ -22,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements Attackable {
 
@@ -35,10 +36,10 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
             ServerWorld world,
             DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (!(this instanceof VillagerDataContainer container)) return;
-        if (Settings.CLAIMED_IMMUNE_KILL_COMMAND.isDisabled() && source.isOf(DamageTypes.GENERIC_KILL)) {
+        if (CONFIG.get(CLAIMED_IMMUNE_KILL_COMMAND) && source.isOf(DamageTypes.GENERIC_KILL)) {
             return;
         }
-        if (Settings.CLAIMED_DAMAGE.isEnabled()) {
+        if (CONFIG.get(CLAIMED_DAMAGE)) {
             return;
         }
         VillagerHandler<?> handler = new VillagerHandler<>((LivingEntity & VillagerDataContainer) container);

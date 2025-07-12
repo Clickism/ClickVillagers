@@ -8,7 +8,6 @@ package de.clickism.clickvillagers.villager;
 
 import com.mojang.authlib.GameProfile;
 import de.clickism.clickvillagers.anchor.AnchorHandler;
-import de.clickism.clickvillagers.config.Settings;
 import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.NbtFixer;
 import de.clickism.clickvillagers.util.Utils;
@@ -42,6 +41,7 @@ import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 //? if >=1.21.6 {
 import net.minecraft.storage.NbtReadView;
 import net.minecraft.storage.NbtWriteView;
@@ -136,13 +136,13 @@ public class PickupHandler {
                     .formatted(Formatting.RED));
         }
         if (entity instanceof Merchant merchant && entity instanceof VillagerDataContainer container
-                && !merchant.getOffers().isEmpty() && Settings.SHOW_TRADES.isEnabled()) {
+                && !merchant.getOffers().isEmpty() && CONFIG.get(SHOW_TRADES)) {
             //? if >=1.21.5 {
             RegistryKey<VillagerProfession> profession = container.getVillagerData().profession()
                     .getKey().orElseThrow();
             //?} else
             /*VillagerProfession profession = container.getVillagerData().getProfession();*/
-            TradeInfoProvider provider = (Settings.FORMAT_TRADES.isEnabled())
+            TradeInfoProvider provider = (CONFIG.get(FORMAT_TRADES))
                     ? TradeInfoProviders.getProvider(profession)
                     : TradeInfoProviders.ALL_TRADES;
             List<String> tradeInfoLines = provider.getTradeInfoLines(merchant.getOffers());

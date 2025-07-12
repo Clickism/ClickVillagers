@@ -21,6 +21,8 @@ import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
+
 @Mixin(HopperBlock.class)
 public abstract class HopperBlockMixin extends BlockWithEntity {
     protected HopperBlockMixin(Settings settings) {
@@ -30,20 +32,21 @@ public abstract class HopperBlockMixin extends BlockWithEntity {
     @Override
     public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         if (world.isClient()) return;
-        if (de.clickism.clickvillagers.config.Settings.ENABLE_HOPPERS.isDisabled()) return;
+        if (CONFIG.get(ENABLE_HOPPERS)) return;
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return;
         if (!(world.getBlockEntity(pos) instanceof HopperBlockEntity hopper)) return;
         if (!world.getBlockState(pos.up()).isAir()) {
             // If the hopper has a block above it, don't pick up the villager.
             return;
         }
-        if (de.clickism.clickvillagers.config.Settings.IGNORE_CLAIMED_VILLAGERS.isEnabled()
-                && new VillagerHandler<>((LivingEntity & VillagerDataContainer) entity).hasOwner()) {
+        if (CONFIG.get(IGNORE_CLAIMED_VILLAGERS) &&
+            new VillagerHandler<>((LivingEntity & VillagerDataContainer) entity).hasOwner()) {
             // Claimed villagers can't be picked up by hoppers.
             return;
         }
-        if (de.clickism.clickvillagers.config.Settings.IGNORE_BABY_VILLAGERS.isEnabled()
-                && entity instanceof PassiveEntity passiveEntity && passiveEntity.isBaby()) {
+        if (CONFIG.get(IGNORE_BABY_VILLAGERS)
+            && entity instanceof PassiveEntity passiveEntity
+            && passiveEntity.isBaby()) {
             // Baby villagers can't be picked up by hoppers.
             return;
         }

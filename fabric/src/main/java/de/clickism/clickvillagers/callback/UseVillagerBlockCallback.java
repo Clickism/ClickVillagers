@@ -26,7 +26,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class VillagerUseBlockCallback implements UseBlockCallback {
+public class UseVillagerBlockCallback implements UseBlockCallback {
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
         if (!hand.equals(Hand.MAIN_HAND)) return ActionResult.PASS;
