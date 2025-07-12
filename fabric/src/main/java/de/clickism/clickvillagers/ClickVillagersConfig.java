@@ -42,13 +42,13 @@ public class ClickVillagersConfig {
                     .appendDefaultValue();
 
     public static final ConfigOption<Boolean> ENABLE_HOPPERS =
-            CONFIG.optionOf("tick_hoppers", true)
+            CONFIG.optionOf("enable_hoppers", true)
                     .header("""
                             ---------------------------------------------------------
                             Hopper Settings
                             ---------------------------------------------------------
                             """)
-                    .description("Whether hoppers should tick.")
+                    .description("Whether villager hoppers should be enabled.")
                     .appendDefaultValue();
 
     public static final ConfigOption<Boolean> IGNORE_BABY_VILLAGERS =
