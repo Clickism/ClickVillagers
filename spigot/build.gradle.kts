@@ -7,7 +7,7 @@ plugins {
 
 val pluginVersion = property("plugin_version").toString()
 
-group = "me.clickism"
+group = "de.clickism"
 version = "$name-$pluginVersion"
 
 base {
