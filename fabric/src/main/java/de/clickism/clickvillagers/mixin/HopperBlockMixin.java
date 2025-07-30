@@ -34,7 +34,7 @@ public abstract class HopperBlockMixin extends BlockWithEntity {
     @Override
     public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         if (world.isClient()) return;
-        if (CONFIG.get(ENABLE_HOPPERS)) return;
+        if (!CONFIG.get(ENABLE_HOPPERS)) return;
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return;
         if (!(world.getBlockEntity(pos) instanceof HopperBlockEntity hopper)) return;
         if (!world.getBlockState(pos.up()).isAir()) {
