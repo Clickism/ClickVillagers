@@ -1,1 +1,2 @@
-- Update to 1.21.8
+- Fix: Villager Hoppers are enabled when config setting is `false`,
+and disabled when set to `true`.
