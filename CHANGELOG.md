@@ -1,2 +1,1 @@
-- Fix: Villager Hoppers are enabled when config setting is `false`,
-and disabled when set to `true`.
+- Fix: Villager Hoppers don't drop items when broken.
