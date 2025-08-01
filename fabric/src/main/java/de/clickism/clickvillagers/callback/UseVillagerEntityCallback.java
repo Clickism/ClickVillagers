@@ -18,6 +18,7 @@ import de.clickism.clickvillagers.villager.VillagerHandler;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
@@ -41,11 +42,12 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
-public class VillagerUseEntityCallback implements UseEntityCallback {
+public class UseVillagerEntityCallback implements UseEntityCallback {
     private final CooldownManager cooldownManager;
 
-    public VillagerUseEntityCallback(CooldownManager cooldownManager) {
+    public UseVillagerEntityCallback(CooldownManager cooldownManager) {
         this.cooldownManager = cooldownManager;
     }
 
@@ -55,6 +57,8 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         if (!hand.equals(Hand.MAIN_HAND)) return ActionResult.PASS;
         if (player.isSpectator()) return ActionResult.PASS;
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return ActionResult.PASS;
+        // Don't allow zombie villagers if setting is disabled
+        if (!CONFIG.get(ALLOW_ZOMBIE_VILLAGERS) && entity instanceof ZombieVillagerEntity) return ActionResult.PASS;
         var villager = (LivingEntity & VillagerDataContainer) entity;
         VillagerHandler<?> villagerHandler = new VillagerHandler<>(villager);
         if (hitResult != null) return ActionResult.CONSUME;
@@ -76,6 +80,9 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
             handleEdit(player, villagerHandler);
             return ActionResult.CONSUME;
         }
+        if (!CONFIG.get(ENABLE_PICKUP)) {
+            return ActionResult.PASS; // Pickup is disabled
+        }
         handlePickup(player, villagerHandler);
         return ActionResult.CONSUME;
     }
@@ -85,6 +92,10 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
         if (owner == null) {
             // Allow claim
+            if (!CONFIG.get(ENABLE_CLAIMS)) {
+                MessageType.FAIL.send(player, Text.literal("Claiming villagers is disabled."));
+                return;
+            }
             if (cooldownManager.hasCooldown(player)) {
                 long seconds = cooldownManager.getRemainingCooldownSeconds(player);
                 MessageType.FAIL.send(player, Text.literal("Please wait §l" + seconds
@@ -161,6 +172,10 @@ public class VillagerUseEntityCallback implements UseEntityCallback {
                     10, .2, 0, .2, 2
             );
         } else {
+            if (!CONFIG.get(ENABLE_ANCHORS)) {
+                MessageType.FAIL.send(player, Text.literal("Anchoring villagers is disabled."));
+                return;
+            }
             AnchorHandler.addAnchorEffect(entity);
             MessageType.ANCHOR_ADD.sendActionbarSilently(player, Text.literal("You anchored this villager."));
             VersionHelper.playSound(player, SoundEvents.BLOCK_BEEHIVE_SHEAR, SoundCategory.NEUTRAL, 1, 1);

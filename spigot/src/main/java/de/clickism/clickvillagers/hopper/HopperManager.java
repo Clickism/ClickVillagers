@@ -149,10 +149,15 @@ public class HopperManager implements Listener {
         // Hopper broken
         event.setDropItems(false);
         Player player = event.getPlayer();
+        World world = block.getWorld();
+        Location location = block.getLocation();
         if (player.getGameMode() != GameMode.CREATIVE) {
-            Location location = block.getLocation();
-            block.getWorld().dropItemNaturally(location, villagerHopper.clone());
+            world.dropItemNaturally(location, villagerHopper.clone());
         }
+        hopper.getInventory().forEach(item -> {
+            if (item == null) return;
+            world.dropItemNaturally(location, item);
+        });
         sendHopperBreakMessage(player, block);
     }
 

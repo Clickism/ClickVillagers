@@ -7,8 +7,6 @@
 package de.clickism.clickvillagers;
 
 import de.clickism.clickvillagers.callback.*;
-import de.clickism.clickvillagers.config.Config;
-import de.clickism.clickvillagers.config.Settings;
 import de.clickism.clickvillagers.util.UpdateChecker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -19,7 +17,7 @@ import net.minecraft.MinecraftVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public class ClickVillagers implements ModInitializer {
     public static final String MOD_ID = "clickvillagers";
@@ -29,16 +27,12 @@ public class ClickVillagers implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        try {
-            new Config("ClickVillagers.json");
-        } catch (IOException e) {
-            LOGGER.error("Failed to load config file", e);
-        }
-        CooldownManager cooldownManager = new CooldownManager(Settings.COOLDOWN::getLong);
-        UseEntityCallback.EVENT.register(new VillagerUseEntityCallback(cooldownManager));
-        UseEntityCallback.EVENT.register(new VehicleUseEntityCallback());
-        UseBlockCallback.EVENT.register(new VillagerUseBlockCallback());
-        if (Settings.CHECK_UPDATE.isEnabled()) {
+        CONFIG.load();
+        CooldownManager cooldownManager = new CooldownManager(() -> CONFIG.get(COOLDOWN));
+        UseEntityCallback.EVENT.register(new UseVillagerEntityCallback(cooldownManager));
+        UseEntityCallback.EVENT.register(new UseVehicleEntityCallback());
+        UseBlockCallback.EVENT.register(new UseVillagerBlockCallback());
+        if (CONFIG.get(CHECK_UPDATES)) {
             checkUpdates();
             ServerPlayConnectionEvents.JOIN.register(new UpdateNotifier(() -> newerVersion));
         }

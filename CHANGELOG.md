@@ -1,1 +1,1 @@
-- Fix villager trades not saving correctly.
+- Fix: Villager Hoppers don't drop items when broken.

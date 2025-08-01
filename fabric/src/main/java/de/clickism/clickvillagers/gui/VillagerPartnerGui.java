@@ -9,7 +9,6 @@ package de.clickism.clickvillagers.gui;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
-import de.clickism.clickvillagers.config.Settings;
 import de.clickism.clickvillagers.villager.PartnerState;
 import de.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Items;
@@ -18,6 +17,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import java.util.UUID;
+
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public class VillagerPartnerGui extends AnvilInputGui {
     private final MinecraftServer server;
@@ -56,7 +57,7 @@ public class VillagerPartnerGui extends AnvilInputGui {
                         partnerState.removePartner(uuid, input);
                         MessageType.WARN.send(player, Text.literal("Removed " + input + " from your trading partners."));
                     } else {
-                        int limit = Settings.PARTNER_LIMIT_PER_PLAYER.getInt();
+                        int limit = CONFIG.get(PARTNER_LIMIT_PER_PLAYER);
                         if (partnerState.getPartners(uuid).size() >= limit) {
                             MessageType.FAIL.send(player, Text.literal("You have reached the partner limit: ")
                                     .append(Text.literal(String.valueOf(limit)).formatted(Formatting.BOLD)));
