@@ -50,7 +50,7 @@
   "button_unclaim_villager": "\u00264🔓 \u0026lBỎ SỞ HỮU DÂN LÀNG",
   "button_unclaim_villager.lore": [
     "\u0026c\u0026lNhấp để bỏ sở hữu dân làng",
-    "\u0026cDân làng đã được bỏ sở hũu có thể được nhặt lên",
+    "\u0026cDân làng sẽ được bỏ sở hữu chủ và sẽ nhận sở hữu",
     "\u0026cbởi bất cứ ai"
   ],
   "button_pick_up_villager": "\u00266\u0026l↑ \u0026lNHẶT DÂN LÀNG \u00266\u0026l↑",
@@ -91,8 +91,8 @@
   "biome.taiga": "RỪNG TAIGA",
   "profession.armorer": "Thợ Rèn",
   "profession.butcher": "Người bán thịt",
-  "profession.cartographer": "Thợ Bản Đồ",
-  "profession.cleric": "Giáo Sĩ",
+  "profession.cartographer": "Thợ bản dồ",
+  "profession.cleric": "Giáo sĩ",
   "profession.farmer": "Nông dân",
   "profession.fisherman": "Ngư dân đánh cá",
   "profession.fletcher": "Thợ làm cung",
