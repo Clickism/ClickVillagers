@@ -7,7 +7,7 @@
 package de.clickism.clickvillagers;
 
 import de.clickism.clickvillagers.callback.*;
-import de.clickism.clickvillagers.util.UpdateChecker;
+import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
@@ -46,8 +46,8 @@ public class ClickVillagers implements ModInitializer {
         String minecraftVersion = MinecraftVersion.CURRENT.name();
         //?} else
         /*String minecraftVersion = MinecraftVersion.CURRENT.getName();*/
-        new UpdateChecker(MOD_ID, "fabric", minecraftVersion).checkVersion(version -> {
-            if (modVersion == null || UpdateChecker.getRawVersion(modVersion).equals(version)) {
+        new ModrinthUpdateChecker(MOD_ID, "fabric", minecraftVersion).checkVersion(version -> {
+            if (modVersion == null || ModrinthUpdateChecker.getRawVersion(modVersion).equals(version)) {
                 return;
             }
             newerVersion = version;

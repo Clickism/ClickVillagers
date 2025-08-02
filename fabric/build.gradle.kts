@@ -24,6 +24,7 @@ dependencies {
 	modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
 	modImplementation(include("eu.pb4:sgui:${property("deps.sgui")}")!!)
+	implementation(include("de.clickism:modrinth-update-checker:1.0")!!)
 	// Configured
 	implementation(include("de.clickism:configured-core:${configuredVersion}")!!)
 	implementation(include("de.clickism:configured-yaml:${configuredVersion}")!!)
