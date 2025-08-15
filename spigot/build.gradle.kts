@@ -17,22 +17,10 @@ base {
 repositories {
     mavenCentral()
     mavenLocal()
-    maven {
-        name = "spigotmc-repo"
-        url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    }
-    maven {
-        name = "sonatype"
-        url = uri("https://oss.sonatype.org/content/groups/public/")
-    }
-    maven {
-        name = "minecraft-repo"
-        url = uri("https://libraries.minecraft.net/")
-    }
-    maven {
-        name = "codemc-snapshots"
-        url = uri("https://repo.codemc.io/repository/maven-snapshots/")
-    }
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/groups/public/")
+    maven("https://libraries.minecraft.net/")
+    maven("https://repo.codemc.io/repository/maven-snapshots/")
 }
 
 val configuredVersion = "0.2.4"
