@@ -161,14 +161,16 @@ public class InteractListener implements Listener {
         Location location = villager.getLocation();
         World world = player.getWorld();
         if (anchorManager.isAnchored(villager)) {
+            // Remove anchor
             anchorManager.removeAnchorEffect(villager);
             Message.ANCHOR_REMOVE.sendActionbarSilently(player);
-            world.playSound(location, Sound.ENTITY_LEASH_KNOT_PLACE, 1, 1);
+            world.playSound(location, Sound.BLOCK_CHAIN_PLACE, 1, 1f);
             world.spawnParticle(Particle.WAX_OFF, location, 10, .2, 0, .2, 2);
         } else {
+            // Add anchor
             anchorManager.addAnchorEffect(villager);
             Message.ANCHOR_ADD.sendActionbarSilently(player);
-            world.playSound(player, Sound.BLOCK_BEEHIVE_SHEAR, 1, 1);
+            world.playSound(player, Sound.BLOCK_CHAIN_PLACE, 1, .5f);
             world.spawnParticle(Particle.WAX_ON, location, 10, .2, 0, .2, 2);
             Block blockBelow = location.getBlock().getRelative(BlockFace.DOWN);
             world.spawnParticle(Particle.BLOCK_CRACK, location, 30, blockBelow.getBlockData());
