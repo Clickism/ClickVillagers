@@ -44,6 +44,9 @@ public class VillagerEditMenu extends Menu {
                 .setOnClick((player, view, slot) -> {
                     view.close();
                     if (!hasPermission(player, villager, claimManager)) return;
+                    if (!CONFIG.get(CLAIMED_VILLAGERS_BYPASS_PERMISSIONS)) {
+                        if (Permission.PICKUP.lacksAndNotify(player)) return;
+                    }
                     Utils.setHandOrGive(player, pickupManager.toItemStack(villager));
                     PICK_UP_VILLAGER.sendActionbarSilently(player);
                     pickupManager.sendPickupEffect(villager);

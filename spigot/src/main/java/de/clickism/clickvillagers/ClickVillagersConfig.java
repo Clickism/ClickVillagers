@@ -17,7 +17,7 @@ import java.util.Map;
 public class ClickVillagersConfig {
     public static final Config CONFIG =
             Config.of("plugins/ClickVillagers/config.yml")
-                    .version(4)
+                    .version(5)
                     .oldKeyGenerator(key -> key.replace('_', '-'))
                     .header("""
                             ---------------------------------------------------------
@@ -181,6 +181,16 @@ public class ClickVillagersConfig {
                     .description("""
                             Whether to allow zombie villagers to be picked up.
                             If this is disabled, zombie villagers will not be picked up by villager hoppers.
+                            """)
+                    .appendDefaultValue();
+
+
+    public static final ConfigOption<Boolean> CLAIMED_VILLAGERS_BYPASS_PERMISSIONS =
+            CONFIG.optionOf("claimed_villagers_bypass_permissions", false)
+                    .description("""
+                            Whether picking up claimed villagers should bypass permissions.
+                            If this is enabled, players can pick up villagers they claimed
+                            even if they don't have the "clickvillagers.pickup" permission.
                             """)
                     .appendDefaultValue();
 
