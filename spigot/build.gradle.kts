@@ -71,7 +71,7 @@ tasks.shadowJar {
     archiveClassifier.set("")
     mergeServiceFiles()
     isEnableRelocation = true
-    relocationPrefix = "de.clickism.clickauth.shadow"
+    relocationPrefix = "de.clickism.clickvillagers.shadow"
     // Exclude Gson and Snakeyaml since it is already provided in Spigot
     dependencies {
         exclude(dependency("com.google.code.gson:gson"))
