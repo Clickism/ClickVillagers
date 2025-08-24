@@ -41,7 +41,7 @@ dependencies {
 
 tasks.runServer {
     dependsOn(tasks.build)
-    minecraftVersion("1.20.1")
+    minecraftVersion("1.21.8")
 }
 
 tasks.remap {
