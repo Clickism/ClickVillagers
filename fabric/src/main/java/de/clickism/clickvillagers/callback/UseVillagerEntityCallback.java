@@ -161,11 +161,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
         if (AnchorHandler.isAnchored(entity)) {
             AnchorHandler.removeAnchorEffect(entity);
             MessageType.ANCHOR_REMOVE.sendActionbarSilently(player, Text.literal("You removed this villager's anchor."));
-            //? if >= 1.21.6 {
-            SoundEvent sound = SoundEvents.ITEM_LEAD_TIED;
-            //?} else
-            /*SoundEvent sound = SoundEvents.ENTITY_LEASH_KNOT_PLACE;*/
-            VersionHelper.playSound(player, sound, SoundCategory.MASTER, 1, 1);
+            VersionHelper.playSound(player, SoundEvents.BLOCK_CHAIN_PLACE, SoundCategory.MASTER, 1, 1);
             world.spawnParticles(
                     ParticleTypes.WAX_OFF,
                     entity.getX(), entity.getY(), entity.getZ(),
@@ -178,7 +174,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
             }
             AnchorHandler.addAnchorEffect(entity);
             MessageType.ANCHOR_ADD.sendActionbarSilently(player, Text.literal("You anchored this villager."));
-            VersionHelper.playSound(player, SoundEvents.BLOCK_BEEHIVE_SHEAR, SoundCategory.NEUTRAL, 1, 1);
+            VersionHelper.playSound(player, SoundEvents.BLOCK_CHAIN_PLACE, SoundCategory.NEUTRAL, 1, .5f);
             BlockPos posBelow = entity.getBlockPos().down();
             world.spawnParticles(
                     ParticleTypes.WAX_ON,
