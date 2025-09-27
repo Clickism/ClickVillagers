@@ -78,6 +78,8 @@ public class PickupHandler {
         List<Text> lore = getLore(new VillagerHandler<>(entity));
         ItemStack itemStack = getItemStack(getDisplayName(entity), lore, view);
         VillagerTextures.setEntityTexture(itemStack, entity);
+        // Clear inventory to prevent item drops
+        entity.getInventory().clear();
         entity.remove(Entity.RemovalReason.DISCARDED);
         return itemStack;
     }
@@ -91,7 +93,7 @@ public class PickupHandler {
         List<Text> lore = getLore(new VillagerHandler<>(entity));
         ItemStack itemStack = getItemStack(getDisplayName(entity), lore, nbt);
         VillagerTextures.setEntityTexture(itemStack, entity);
-        entity.remove(Entity.RemovalReason.DISCARDED);
+        // entity.remove(Entity.RemovalReason.DISCARDED); // Commented out to prevent item dropping
         return itemStack;
     }
     *///?}
