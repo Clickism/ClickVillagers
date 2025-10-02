@@ -120,7 +120,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
         if (!villagerHandler.hasOwner()) return ActionResult.PASS;
         if (villagerHandler.isOwner(player.getUuid())) return ActionResult.PASS;
         @SuppressWarnings("DataFlowIssue")
-        PartnerState partnerState = PartnerState.getServerState(player.getServer());
+        PartnerState partnerState = PartnerState.getServerState(VersionHelper.getServer(player));
         if (partnerState.isPartner(villagerHandler.getOwner(), player.getName().getString())) {
             // Player is a partner
             return ActionResult.PASS;
@@ -157,7 +157,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
             return;
         }
         LivingEntity entity = villagerHandler.getEntity();
-        ServerWorld world = (ServerWorld) player.getWorld();
+        ServerWorld world = (ServerWorld) VersionHelper.getWorld(entity);
         if (AnchorHandler.isAnchored(entity)) {
             AnchorHandler.removeAnchorEffect(entity);
             MessageType.ANCHOR_REMOVE.sendActionbarSilently(player, Text.literal("You removed this villager's anchor."));

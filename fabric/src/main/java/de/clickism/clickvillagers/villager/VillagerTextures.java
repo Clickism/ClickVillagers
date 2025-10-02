@@ -58,7 +58,14 @@ public class VillagerTextures {
         setTexture(itemStack, getTexture(entity));
     }
 
-    //? if >=1.20.5 {
+    //? if >=1.21.9 {
+    /*private static void setTexture(ItemStack itemStack, String texture) {
+        PropertyMap propertyMap = new PropertyMap(PropertyMap.EMPTY);
+        propertyMap.put("textures", new Property("textures", texture));
+        var profile = ProfileComponent.ofStatic(new GameProfile(UUID.randomUUID(), null, propertyMap));
+        itemStack.set(DataComponentTypes.PROFILE, profile);
+    }
+    *///?} elif >=1.20.5 {
     private static void setTexture(ItemStack itemStack, String texture) {
         PropertyMap propertyMap = new PropertyMap();
         propertyMap.put("textures", new Property("textures", texture));

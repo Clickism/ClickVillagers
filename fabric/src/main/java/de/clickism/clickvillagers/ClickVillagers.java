@@ -42,7 +42,9 @@ public class ClickVillagers implements ModInitializer {
         String modVersion = FabricLoader.getInstance().getModContainer(MOD_ID)
                 .map(container -> container.getMetadata().getVersion().getFriendlyString())
                 .orElse(null);
-        //? if >= 1.21.6 {
+        //? if >=1.21.9 {
+        /*String minecraftVersion = MinecraftVersion.create().name();
+        *///?} elif >= 1.21.6 {
         String minecraftVersion = MinecraftVersion.CURRENT.name();
         //?} else
         /*String minecraftVersion = MinecraftVersion.CURRENT.getName();*/

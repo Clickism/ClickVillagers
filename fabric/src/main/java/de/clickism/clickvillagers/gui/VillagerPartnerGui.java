@@ -6,6 +6,7 @@
 
 package de.clickism.clickvillagers.gui;
 
+import de.clickism.clickvillagers.util.VersionHelper;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
@@ -26,7 +27,7 @@ public class VillagerPartnerGui extends AnvilInputGui {
 
     public VillagerPartnerGui(ServerPlayerEntity player, VillagerGui previous) {
         super(player, false);
-        this.server = player.getServer();
+        this.server = VersionHelper.getServer(player);
         this.previous = previous;
         if (this.server == null) throw new IllegalStateException("Server is null");
         setTitle(Text.literal("✍ ").formatted(Formatting.DARK_GRAY)

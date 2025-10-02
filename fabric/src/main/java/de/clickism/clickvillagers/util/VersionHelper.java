@@ -6,17 +6,25 @@
 
 package de.clickism.clickvillagers.util;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.UserCache;
 import net.minecraft.village.TradeOffer;
+import net.minecraft.world.World;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public class VersionHelper {
     public static void playSound(PlayerEntity player, SoundEvent soundEvent, SoundCategory category, float volume, float pitch) {
@@ -52,5 +60,30 @@ public class VersionHelper {
         return inventory.getSelectedSlot();
          //?} else
         /*return inventory.selectedSlot;*/
+    }
+
+    public static MinecraftServer getServer(Entity entity) {
+        //? if >=1.21.9 {
+        /*return entity.getEntityWorld().getServer();
+        *///?} else
+        return entity.getServer();
+    }
+
+    public static World getWorld(Entity entity) {
+        //? if >=1.21.9 {
+        /*return entity.getEntityWorld();
+        *///?} else
+        return entity.getWorld();
+    }
+
+    public static Optional<String> getPlayerName(UUID uuid, MinecraftServer server) {
+        //? if >= 1.21.9 {
+        /*return server.getApiServices().profileResolver().getProfile(Either.right(uuid))
+                .map(GameProfile::name);
+        *///?} else {
+        UserCache userCache = server.getUserCache();
+        if (userCache == null) return Optional.empty();
+        return userCache.getByUuid(uuid).map(GameProfile::getName);
+        //?}
     }
 }

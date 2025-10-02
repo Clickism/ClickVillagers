@@ -6,7 +6,6 @@
 
 package de.clickism.clickvillagers.villager;
 
-import com.mojang.authlib.GameProfile;
 import de.clickism.clickvillagers.anchor.AnchorHandler;
 import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.NbtFixer;
@@ -34,7 +33,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.UserCache;
 import net.minecraft.village.Merchant;
 import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.village.VillagerProfession;
@@ -70,7 +68,7 @@ public class PickupHandler {
 
     //? if >=1.21.6 {
     public static <T extends LivingEntity & VillagerDataContainer> ItemStack toItemStack(T entity) {
-        NbtWriteView view = NbtWriteView.create(new ErrorReporter.Impl(), entity.getWorld().getRegistryManager());
+        NbtWriteView view = NbtWriteView.create(new ErrorReporter.Impl(), VersionHelper.getWorld(entity).getRegistryManager());
         entity.writeData(view);
         String id = EntityType.getId(entity.getType()).toString();
         view.putString(TYPE_KEY, id);
@@ -116,9 +114,9 @@ public class PickupHandler {
         LivingEntity entity = villager.getEntity();
         if (villager.hasOwner()) {
             UUID ownerUuid = villager.getOwner();
-            MinecraftServer server = entity.getServer();
+            MinecraftServer server = VersionHelper.getServer(entity);
             String ownerName = (server != null)
-                    ? getPlayerName(ownerUuid, server).orElse("?")
+                    ? VersionHelper.getPlayerName(ownerUuid, server).orElse("?")
                     : "?";
             lore.add(Text.literal("🔑 Owner: ")
                     .fillStyle(Style.EMPTY.withItalic(false))
@@ -157,12 +155,6 @@ public class PickupHandler {
             }
         }
         return lore;
-    }
-
-    private static Optional<String> getPlayerName(UUID uuid, MinecraftServer server) {
-        UserCache userCache = server.getUserCache();
-        if (userCache == null) return Optional.empty();
-        return userCache.getByUuid(uuid).map(GameProfile::getName);
     }
 
     //? if >=1.20.5 {
@@ -285,7 +277,7 @@ public class PickupHandler {
 
     public static void notifyPickup(PlayerEntity player, Entity entity) {
         MessageType.PICKUP_MESSAGE.sendActionbarSilently(player, Text.literal("You picked up a villager"));
-        ServerWorld world = (ServerWorld) player.getWorld();
+        ServerWorld world = (ServerWorld) VersionHelper.getWorld(entity);
         double x = entity.getX();
         double y = entity.getY() + .25f;
         double z = entity.getZ();

@@ -6,21 +6,20 @@
 
 package de.clickism.clickvillagers.gui;
 
-import com.mojang.authlib.GameProfile;
-import eu.pb4.sgui.api.elements.GuiElement;
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import de.clickism.clickvillagers.util.MessageType;
+import de.clickism.clickvillagers.util.Utils;
+import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.PartnerState;
 import de.clickism.clickvillagers.villager.PickupHandler;
 import de.clickism.clickvillagers.villager.VillagerHandler;
 import de.clickism.clickvillagers.villager.VillagerTextures;
-import de.clickism.clickvillagers.util.MessageType;
-import de.clickism.clickvillagers.util.Utils;
+import eu.pb4.sgui.api.elements.GuiElement;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -28,7 +27,7 @@ import java.util.Set;
 public class VillagerEditGui extends VillagerGui {
     public VillagerEditGui(ServerPlayerEntity player, VillagerHandler<?> villagerHandler) {
         super(player, villagerHandler);
-        String ownerName = getOwnerName(player.getServer(), villagerHandler);
+        String ownerName = getOwnerName(VersionHelper.getServer(player), villagerHandler);
         setTitle(Text.literal("⚒ ").formatted(Formatting.DARK_GREEN)
                 .append(Text.literal(ownerName).formatted(Formatting.DARK_GREEN, Formatting.BOLD))
                 .append(Text.literal("'s Villager").formatted(Formatting.DARK_GREEN)));
@@ -108,7 +107,7 @@ public class VillagerEditGui extends VillagerGui {
 
     private GuiElementBuilder addTradePartnersLore(GuiElementBuilder builder) {
         @SuppressWarnings("DataFlowIssue")
-        PartnerState partnerState = PartnerState.getServerState(player.getServer());
+        PartnerState partnerState = PartnerState.getServerState(VersionHelper.getServer(player));
         Set<String> partners = partnerState.getPartners(player.getUuid());
         for (String partner : partners) {
             builder.addLoreLine(Text.literal("→ ").formatted(Formatting.GRAY)
@@ -119,10 +118,7 @@ public class VillagerEditGui extends VillagerGui {
 
     private static String getOwnerName(@Nullable MinecraftServer server, VillagerHandler<?> villagerHandler) {
         if (server == null) return "?";
-        UserCache userCache = server.getUserCache();
-        if (userCache == null) return "?";
-        return userCache.getByUuid(villagerHandler.getOwner())
-                .map(GameProfile::getName)
+        return VersionHelper.getPlayerName(villagerHandler.getOwner(), server)
                 .orElse("?");
     }
 }

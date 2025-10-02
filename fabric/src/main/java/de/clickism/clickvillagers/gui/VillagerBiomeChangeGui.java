@@ -63,13 +63,16 @@ public class VillagerBiomeChangeGui extends VillagerGui {
 
     //? if >=1.21.5 {
     private GuiElement getBiomeButton(RegistryKey<VillagerType> typeKey, Item icon) {
+        //? if >= 1.21.9 {
+        /*MinecraftServer server = player.getCommandSource().getServer();
+        *///?} else
         MinecraftServer server = player.getServer();
         if (server == null) {
             return new GuiElementBuilder(icon)
                     .setName(Text.literal("Error: Server is null").formatted(Formatting.RED))
                     .build();
         }
-        RegistryEntry<VillagerType> type = player.getServer().getRegistryManager()
+        RegistryEntry<VillagerType> type = server.getRegistryManager()
                 .getOrThrow(net.minecraft.registry.RegistryKeys.VILLAGER_TYPE)
                 .getEntry(typeKey.getValue())
                 .orElseThrow();
