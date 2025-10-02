@@ -13,6 +13,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.clickism.clickvillagers.util.CodecUtils;
 import de.clickism.clickvillagers.util.LazyCodec;
 import de.clickism.clickvillagers.villager.ClaimedVillagerData;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.util.Uuids;
 import net.minecraft.village.VillagerData;
 import org.jetbrains.annotations.Nullable;
@@ -59,12 +62,42 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
         ));
     }
 
-    @ModifyReturnValue(method = "withType", at = @At("RETURN"))
+    @ModifyExpressionValue(
+            method = "<clinit>",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/network/codec/PacketCodec;tuple(Lnet/minecraft/network/codec/PacketCodec;Ljava/util/function/Function;Lnet/minecraft/network/codec/PacketCodec;Ljava/util/function/Function;Lnet/minecraft/network/codec/PacketCodec;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function3;)Lnet/minecraft/network/codec/PacketCodec;"
+            )
+    )
+    private static PacketCodec<RegistryByteBuf, VillagerData> modifyPacketCodec(
+            PacketCodec<RegistryByteBuf, VillagerData> original
+    ) {
+        return PacketCodec.tuple(
+                original,
+                Function.identity(),
+
+                PacketCodecs.optional(Uuids.PACKET_CODEC),
+                villagerData -> Optional.ofNullable(ClaimedVillagerData.of(villagerData).clickVillagers_Fabric$getOwner()),
+
+                PacketCodecs.BOOLEAN,
+                villagerData -> ClaimedVillagerData.of(villagerData).clickVillagers_Fabric$isTradingOpen(),
+
+                (data, ownerOpt, tradingOpen) -> {
+                    ClaimedVillagerData claimed = ClaimedVillagerData.of(data);
+                    claimed.clickVillagers_Fabric$setOwner(ownerOpt.orElse(null));
+                    claimed.clickVillagers_Fabric$setTradingOpen(tradingOpen);
+                    return data;
+                }
+        );
+    }
+
+
+    @ModifyReturnValue(method = "withType*", at = @At("RETURN"))
     private VillagerData modifyWithType(VillagerData data) {
         return modifyData(data);
     }
 
-    @ModifyReturnValue(method = "withProfession", at = @At("RETURN"))
+    @ModifyReturnValue(method = "withProfession*", at = @At("RETURN"))
     private VillagerData modifyWithProfession(VillagerData data) {
         return modifyData(data);
     }
