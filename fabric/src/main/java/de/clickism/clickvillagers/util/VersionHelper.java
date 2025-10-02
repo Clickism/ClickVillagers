@@ -16,6 +16,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.UserCache;
@@ -78,8 +79,8 @@ public class VersionHelper {
 
     public static Optional<String> getPlayerName(UUID uuid, MinecraftServer server) {
         //? if >= 1.21.9 {
-        return server.getApiServices().profileResolver().getProfile(Either.right(uuid))
-                .map(GameProfile::name);
+        return server.getApiServices().nameToIdCache().getByUuid(uuid)
+                .map(PlayerConfigEntry::name);
         //?} else {
         /*UserCache userCache = server.getUserCache();
         if (userCache == null) return Optional.empty();

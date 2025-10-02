@@ -74,7 +74,8 @@ public class PickupHandler {
         view.putString(TYPE_KEY, id);
         view.putString(DATA_VERSION_KEY, String.valueOf(DATA_VERSION));
         List<Text> lore = getLore(new VillagerHandler<>(entity));
-        ItemStack itemStack = getItemStack(getDisplayName(entity), lore, view);
+        MutableText displayName = getDisplayName(entity);
+        ItemStack itemStack = getItemStack(displayName, lore, view);
         VillagerTextures.setEntityTexture(itemStack, entity);
         entity.remove(Entity.RemovalReason.DISCARDED);
         return itemStack;
@@ -181,6 +182,7 @@ public class PickupHandler {
 
     private static void formatItem(ItemStack itemStack, Text name, List<Text> lore) {
         itemStack.set(DataComponentTypes.ITEM_NAME, name);
+        itemStack.set(DataComponentTypes.CUSTOM_NAME, name);
         itemStack.set(DataComponentTypes.LORE, new LoreComponent(lore));
     }
     //?} else {

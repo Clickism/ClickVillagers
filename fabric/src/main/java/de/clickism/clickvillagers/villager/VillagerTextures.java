@@ -7,6 +7,7 @@
 package de.clickism.clickvillagers.villager;
 
 
+import com.google.common.collect.ArrayListMultimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
@@ -26,6 +27,7 @@ import java.util.UUID;
 //? if >=1.20.5 {
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ProfileComponent;
+import org.spongepowered.include.com.google.common.collect.Multimap;
 //?}
 
 public class VillagerTextures {
@@ -60,9 +62,10 @@ public class VillagerTextures {
 
     //? if >=1.21.9 {
     private static void setTexture(ItemStack itemStack, String texture) {
-        PropertyMap propertyMap = new PropertyMap(PropertyMap.EMPTY);
-        propertyMap.put("textures", new Property("textures", texture));
-        var profile = ProfileComponent.ofStatic(new GameProfile(UUID.randomUUID(), null, propertyMap));
+        ArrayListMultimap<String, Property> properties = ArrayListMultimap.create();
+        properties.put("textures", new Property("textures", texture));
+        PropertyMap propertyMap = new PropertyMap(properties);
+        var profile = ProfileComponent.ofStatic(new GameProfile(UUID.randomUUID(), "", propertyMap));
         itemStack.set(DataComponentTypes.PROFILE, profile);
     }
     //?} elif >=1.20.5 {
