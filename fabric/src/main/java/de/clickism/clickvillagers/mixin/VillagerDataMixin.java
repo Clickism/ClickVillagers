@@ -13,9 +13,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.clickism.clickvillagers.util.CodecUtils;
 import de.clickism.clickvillagers.util.LazyCodec;
 import de.clickism.clickvillagers.villager.ClaimedVillagerData;
+//? if >=1.21.8 {
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
+//?}
 import net.minecraft.util.Uuids;
 import net.minecraft.village.VillagerData;
 import org.jetbrains.annotations.Nullable;
@@ -62,6 +64,7 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
         ));
     }
 
+    //? if >=1.21.8 {
     @ModifyExpressionValue(
             method = "<clinit>",
             at = @At(
@@ -90,7 +93,7 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
                 }
         );
     }
-
+    //?}
 
     @ModifyReturnValue(method = "withType*", at = @At("RETURN"))
     private VillagerData modifyWithType(VillagerData data) {

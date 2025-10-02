@@ -16,6 +16,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.server.MinecraftServer;
+//? if >=1.21.9
 import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
