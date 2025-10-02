@@ -64,26 +64,26 @@ public class VersionHelper {
 
     public static MinecraftServer getServer(Entity entity) {
         //? if >=1.21.9 {
-        /*return entity.getEntityWorld().getServer();
-        *///?} else
-        return entity.getServer();
+        return entity.getEntityWorld().getServer();
+        //?} else
+        /*return entity.getServer();*/
     }
 
     public static World getWorld(Entity entity) {
         //? if >=1.21.9 {
-        /*return entity.getEntityWorld();
-        *///?} else
-        return entity.getWorld();
+        return entity.getEntityWorld();
+        //?} else
+        /*return entity.getWorld();*/
     }
 
     public static Optional<String> getPlayerName(UUID uuid, MinecraftServer server) {
         //? if >= 1.21.9 {
-        /*return server.getApiServices().profileResolver().getProfile(Either.right(uuid))
+        return server.getApiServices().profileResolver().getProfile(Either.right(uuid))
                 .map(GameProfile::name);
-        *///?} else {
-        UserCache userCache = server.getUserCache();
+        //?} else {
+        /*UserCache userCache = server.getUserCache();
         if (userCache == null) return Optional.empty();
         return userCache.getByUuid(uuid).map(GameProfile::getName);
-        //?}
+        *///?}
     }
 }

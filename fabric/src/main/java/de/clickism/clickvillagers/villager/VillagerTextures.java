@@ -59,20 +59,20 @@ public class VillagerTextures {
     }
 
     //? if >=1.21.9 {
-    /*private static void setTexture(ItemStack itemStack, String texture) {
+    private static void setTexture(ItemStack itemStack, String texture) {
         PropertyMap propertyMap = new PropertyMap(PropertyMap.EMPTY);
         propertyMap.put("textures", new Property("textures", texture));
         var profile = ProfileComponent.ofStatic(new GameProfile(UUID.randomUUID(), null, propertyMap));
         itemStack.set(DataComponentTypes.PROFILE, profile);
     }
-    *///?} elif >=1.20.5 {
-    private static void setTexture(ItemStack itemStack, String texture) {
+    //?} elif >=1.20.5 {
+    /*private static void setTexture(ItemStack itemStack, String texture) {
         PropertyMap propertyMap = new PropertyMap();
         propertyMap.put("textures", new Property("textures", texture));
         itemStack.set(DataComponentTypes.PROFILE,
                 new ProfileComponent(Optional.empty(), Optional.of(UUID.randomUUID()), propertyMap));
     }
-    //?} else {
+    *///?} else {
     /*private static void setTexture(ItemStack itemStack, String texture) {
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
         profile.getProperties().put("textures", new Property("textures", texture));
