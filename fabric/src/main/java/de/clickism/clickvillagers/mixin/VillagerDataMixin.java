@@ -64,37 +64,6 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
         ));
     }
 
-    //? if >=1.21.8 {
-    @ModifyExpressionValue(
-            method = "<clinit>",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/network/codec/PacketCodec;tuple(Lnet/minecraft/network/codec/PacketCodec;Ljava/util/function/Function;Lnet/minecraft/network/codec/PacketCodec;Ljava/util/function/Function;Lnet/minecraft/network/codec/PacketCodec;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function3;)Lnet/minecraft/network/codec/PacketCodec;"
-            )
-    )
-    private static PacketCodec<RegistryByteBuf, VillagerData> modifyPacketCodec(
-            PacketCodec<RegistryByteBuf, VillagerData> original
-    ) {
-        return PacketCodec.tuple(
-                original,
-                Function.identity(),
-
-                PacketCodecs.optional(Uuids.PACKET_CODEC),
-                villagerData -> Optional.ofNullable(ClaimedVillagerData.of(villagerData).clickVillagers_Fabric$getOwner()),
-
-                PacketCodecs.BOOLEAN,
-                villagerData -> ClaimedVillagerData.of(villagerData).clickVillagers_Fabric$isTradingOpen(),
-
-                (data, ownerOpt, tradingOpen) -> {
-                    ClaimedVillagerData claimed = ClaimedVillagerData.of(data);
-                    claimed.clickVillagers_Fabric$setOwner(ownerOpt.orElse(null));
-                    claimed.clickVillagers_Fabric$setTradingOpen(tradingOpen);
-                    return data;
-                }
-        );
-    }
-    //?}
-
     @ModifyReturnValue(method = "withType*", at = @At("RETURN"))
     private VillagerData modifyWithType(VillagerData data) {
         return modifyData(data);
