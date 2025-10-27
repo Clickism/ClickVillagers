@@ -1,1 +1,1 @@
-- Fixed crash when sending packet.
+- Added support for 1.21.10
