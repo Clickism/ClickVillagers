@@ -17,7 +17,7 @@ import java.util.Map;
 public class ClickVillagersConfig {
     public static final Config CONFIG =
             Config.of("plugins/ClickVillagers/config.yml")
-                    .version(5)
+                    .version(6)
                     .oldKeyGenerator(key -> key.replace('_', '-'))
                     .header("""
                             ---------------------------------------------------------
@@ -191,6 +191,13 @@ public class ClickVillagersConfig {
                             Whether picking up claimed villagers should bypass permissions.
                             If this is enabled, players can pick up villagers they claimed
                             even if they don't have the "clickvillagers.pickup" permission.
+                            """)
+                    .appendDefaultValue();
+
+    public static final ConfigOption<Boolean> ENABLE_DISPENSERS =
+            CONFIG.optionOf("enable_dispensers", true)
+                    .description("""
+                            Whether dispensers can dispense picked up villagers.
                             """)
                     .appendDefaultValue();
 
