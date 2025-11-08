@@ -6,12 +6,12 @@
 
 package de.clickism.clickvillagers.hopper;
 
-import me.clickism.clickgui.menu.Icon;
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PickupManager;
+import me.clickism.clickgui.menu.Icon;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -29,18 +29,23 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.BlockVector;
 import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.Nullable;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public class HopperManager implements Listener {
+    private record ChunkLocation(int x, int z, String worldName) {
+        static ChunkLocation of(Chunk chunk) {
+            return new ChunkLocation(chunk.getX(), chunk.getZ(), chunk.getWorld().getName());
+        }
+    }
+
     private static final Transformation FRAME_TRANSFORMATION = new Transformation(
             new Vector3f(-.525f, -.235f, -.525f),
             new AxisAngle4f(),
@@ -56,6 +61,8 @@ public class HopperManager implements Listener {
 
     private final ItemStack villagerHopper;
 
+    private final Map<ChunkLocation, Set<BlockVector>> loadedHopperChunks = new HashMap<>();
+
     public HopperManager(JavaPlugin plugin, PickupManager pickupManager, ClaimManager claimManager) {
         this.pickupManager = pickupManager;
         this.claimManager = claimManager;
@@ -67,6 +74,31 @@ public class HopperManager implements Listener {
         if (CONFIG.get(TICK_HOPPERS)) {
             startTickingHoppers(plugin);
         }
+    }
+
+    /**
+     * (Re)Load villager hoppers in the given chunk.
+     * @param chunk The chunk to load hoppers from.
+     */
+    public void loadHoppersInChunk(Chunk chunk) {
+        ChunkLocation chunkLocation = ChunkLocation.of(chunk);
+        Set<BlockVector> hopperLocations = new HashSet<>();
+        for (BlockState tileEntity : chunk.getTileEntities()) {
+            if (tileEntity.getType() != Material.HOPPER) return;
+            Hopper hopper = (Hopper) tileEntity;
+            if (!hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
+            hopperLocations.add(hopper.getBlock().getLocation().toVector().toBlockVector());
+        }
+        loadedHopperChunks.put(chunkLocation, hopperLocations);
+    }
+
+    /**
+     * Unload villager hoppers in the given chunk.
+     * @param chunk The chunk to unload hoppers from.
+     */
+    public void unloadHoppersInChunk(Chunk chunk) {
+        ChunkLocation chunkLocation = ChunkLocation.of(chunk);
+        loadedHopperChunks.remove(chunkLocation);
     }
 
     private void registerHopperRecipe(JavaPlugin plugin) {
@@ -104,7 +136,7 @@ public class HopperManager implements Listener {
         sendHopperPlaceMessage(player, block);
     }
 
-    public static void markHopper(Hopper hopper) {
+    public void markHopper(Hopper hopper) {
         if (CONFIG.get(HOPPER_BLOCK_DISPLAY)) {
             Block block = hopper.getBlock();
             BlockDisplay display = createBlockDisplay(block);
@@ -114,7 +146,7 @@ public class HopperManager implements Listener {
         markHopper(hopper, null);
     }
 
-    public static void markHopper(Hopper hopper, @Nullable UUID displayUUID) {
+    public void markHopper(Hopper hopper, @Nullable UUID displayUUID) {
         PersistentDataContainer data = hopper.getPersistentDataContainer();
         data.set(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN, true);
         if (displayUUID != null) {
@@ -124,19 +156,16 @@ public class HopperManager implements Listener {
         }
         hopper.setCustomName(ChatColor.DARK_GRAY + "📥 " + ChatColor.BOLD + Message.VILLAGER_HOPPER);
         hopper.update();
+        ChunkLocation chunkLocation = ChunkLocation.of(hopper.getWorld().getChunkAt(hopper.getBlock()));
+        loadedHopperChunks.computeIfAbsent(chunkLocation, key -> new HashSet<>())
+                .add(hopper.getBlock().getLocation().toVector().toBlockVector());
     }
 
     private boolean isHopperLimitReached(Chunk chunk, int limit) {
         if (limit < 0) return false;
-        int count = 0;
-        for (BlockState tileEntity : chunk.getTileEntities()) {
-            if (tileEntity.getType() != Material.HOPPER) continue;
-            Hopper hopper = (Hopper) tileEntity;
-            if (hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) {
-                count++;
-            }
-        }
-        return count >= limit;
+        ChunkLocation chunkLocation = ChunkLocation.of(chunk);
+        Set<BlockVector> loadedHoppers = loadedHopperChunks.get(chunkLocation);
+        return loadedHoppers != null && loadedHoppers.size() >= limit;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -159,6 +188,15 @@ public class HopperManager implements Listener {
             world.dropItemNaturally(location, item);
         });
         sendHopperBreakMessage(player, block);
+        // Remove from loaded hoppers
+        ChunkLocation chunkLocation = ChunkLocation.of(block.getChunk());
+        Set<BlockVector> hopperLocations = loadedHopperChunks.get(chunkLocation);
+        if (hopperLocations != null) {
+            hopperLocations.remove(block.getLocation().toVector().toBlockVector());
+            if (hopperLocations.isEmpty()) {
+                loadedHopperChunks.remove(chunkLocation);
+            }
+        }
     }
 
     private void removeBlockDisplayIfExists(PersistentDataContainer data) {
@@ -178,27 +216,35 @@ public class HopperManager implements Listener {
     }
 
     private void tickHoppers(boolean ignoreBabies, boolean ignoreClaimed) {
-        for (World world : Bukkit.getWorlds()) {
-            for (Chunk chunk : world.getLoadedChunks()) {
-                List<Entity> villagers = getFilteredVillagers(chunk.getEntities(), ignoreBabies, ignoreClaimed);
-                for (BlockState tileEntity : chunk.getTileEntities()) {
-                    tickTileEntity(tileEntity, villagers);
-                }
+        loadedHopperChunks.forEach(((chunkLocation, blockVectors) -> {
+            World world = Bukkit.getWorld(chunkLocation.worldName);
+            if (world == null) return;
+            // Skip if unloaded for some reason
+            if (!world.isChunkLoaded(chunkLocation.x, chunkLocation.z)) return;
+            Chunk chunk = world.getChunkAt(chunkLocation.x, chunkLocation.z);
+            List<Entity> villagers = getFilteredVillagers(chunk.getEntities(), ignoreBabies, ignoreClaimed);
+            for (BlockVector vector : blockVectors) {
+                Block block = world.getBlockAt(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
+                tickTileEntity(block, villagers);
             }
-        }
+        }));
     }
 
-    private void tickTileEntity(BlockState tileEntity, List<Entity> villagers) {
-        if (tileEntity.getType() != Material.HOPPER) return;
-        Hopper hopper = (Hopper) tileEntity;
-        if (!hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
-        Block block = hopper.getBlock();
+    private void tickTileEntity(Block block, List<Entity> villagers) {
+//        if (tileEntity.getType() != Material.HOPPER) return;
+//        Hopper hopper = (Hopper) tileEntity;
+//        if (!hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
+//        Block block = hopper.getBlock();
         Block blockAbove = block.getRelative(BlockFace.UP);
         Material material = blockAbove.getType();
         if (material.isOccluding() || material == Material.HOPPER) return;
-        if (!hasSpace(hopper)) return;
+        Hopper hopper = null;
         for (Entity entity : villagers) {
             if (!isInHopper(entity, block.getLocation())) continue;
+            if (hopper == null) {
+                hopper = (Hopper) block.getState();
+            }
+            if (!hasSpace(hopper)) return;
             try {
                 ItemStack item = pickupManager.toItemStack((LivingEntity) entity);
                 hopper.getInventory().addItem(item);

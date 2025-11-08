@@ -26,7 +26,13 @@ public class LegacyHopperCompatibility {
 
     private static final String LOG_PREFIX = "[LegacyCompatibility] ";
 
-    public static void startConversionIfLegacy(JavaPlugin plugin) {
+    private final HopperManager hopperManager;
+
+    public LegacyHopperCompatibility(HopperManager hopperManager) {
+        this.hopperManager = hopperManager;
+    }
+
+    public void startConversionIfLegacy(JavaPlugin plugin) {
         File legacyDataFile = new File(plugin.getDataFolder(), "data.yml");
         if (!legacyDataFile.exists()) return;
         YAMLDataManager dataManager;
@@ -47,18 +53,18 @@ public class LegacyHopperCompatibility {
         }
     }
 
-    private static void convertHoppers(JavaPlugin plugin, Map<Location, UUID> hopperMap) {
+    private void convertHoppers(JavaPlugin plugin, Map<Location, UUID> hopperMap) {
         Logger logger = plugin.getLogger();
         logger.info(LOG_PREFIX + "Converting legacy villager hoppers...");
-        hopperMap.forEach(LegacyHopperCompatibility::convertHopper);
+        hopperMap.forEach(this::convertHopper);
         hopperMap.clear();
         logger.info(LOG_PREFIX + "Legacy villager hopper conversion complete.");
     }
 
-    private static void convertHopper(Location location, UUID displayUUID) {
+    private void convertHopper(Location location, UUID displayUUID) {
         try {
             Hopper hopper = (Hopper) location.getBlock().getState();
-            HopperManager.markHopper(hopper, displayUUID);
+            hopperManager.markHopper(hopper, displayUUID);
             ClickVillagers.LOGGER.info(LOG_PREFIX + "Converted legacy villager hopper at: " + formatLocation(location));
         } catch (Exception exception) {
             ClickVillagers.LOGGER.warning(LOG_PREFIX + "Failed to convert legacy villager hopper at: " + formatLocation(location));
@@ -66,7 +72,7 @@ public class LegacyHopperCompatibility {
     }
 
     @SuppressWarnings("unchecked")
-    private static Map<Location, UUID> loadMap(YAMLDataManager dataManager) {
+    private Map<Location, UUID> loadMap(YAMLDataManager dataManager) {
         Map<Location, UUID> hopperMap = new HashMap<>();
         List<Location> hopperLocations = (List<Location>) dataManager.getConfig().get("hoppers_list");
         if (hopperLocations == null) return hopperMap;

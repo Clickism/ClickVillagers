@@ -6,6 +6,7 @@
 
 package de.clickism.clickvillagers;
 
+import de.clickism.clickvillagers.hopper.ChunkListener;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 import me.clickism.clickgui.menu.MenuManager;
 import de.clickism.clickvillagers.command.ReloadCommand;
@@ -69,6 +70,7 @@ public final class ClickVillagers extends JavaPlugin {
         EntitySaver entitySaver = EntitySaverFactory.create();
         PickupManager pickupManager = new PickupManager(this, entitySaver, claimManager, anchorHandler);
         HopperManager hopperManager = new HopperManager(this, pickupManager, claimManager);
+        new ChunkListener(this, hopperManager); // Register chunk listener for hopper loading/unloading
         ChatInputListener chatInputListener = new ChatInputListener(this);
 
         CooldownManager cooldownManager = new CooldownManager(() -> CONFIG.get(COOLDOWN) * 1000L);
@@ -87,7 +89,8 @@ public final class ClickVillagers extends JavaPlugin {
             new JoinListener(this, () -> newerVersion);
         }
         // Legacy conversions
-        LegacyHopperCompatibility.startConversionIfLegacy(this);
+        var hopperCompatibility = new LegacyHopperCompatibility(hopperManager);
+        hopperCompatibility.startConversionIfLegacy(this);
         LegacyMessagesCompatibility.removeLegacyMessageFile(this);
     }
 
