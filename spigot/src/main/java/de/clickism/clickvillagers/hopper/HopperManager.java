@@ -40,12 +40,6 @@ import java.util.*;
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public class HopperManager implements Listener {
-    private record ChunkLocation(int x, int z, String worldName) {
-        static ChunkLocation of(Chunk chunk) {
-            return new ChunkLocation(chunk.getX(), chunk.getZ(), chunk.getWorld().getName());
-        }
-    }
-
     private static final Transformation FRAME_TRANSFORMATION = new Transformation(
             new Vector3f(-.525f, -.235f, -.525f),
             new AxisAngle4f(),
@@ -61,7 +55,7 @@ public class HopperManager implements Listener {
 
     private final ItemStack villagerHopper;
 
-    private final Map<ChunkLocation, Set<BlockVector>> loadedHopperChunks = new HashMap<>();
+    private final Map<Chunk, Set<BlockVector>> loadedHopperChunks = new HashMap<>();
 
     public HopperManager(JavaPlugin plugin, PickupManager pickupManager, ClaimManager claimManager) {
         this.pickupManager = pickupManager;
@@ -78,10 +72,10 @@ public class HopperManager implements Listener {
 
     /**
      * (Re)Load villager hoppers in the given chunk.
+     *
      * @param chunk The chunk to load hoppers from.
      */
     public void loadHoppersInChunk(Chunk chunk) {
-        ChunkLocation chunkLocation = ChunkLocation.of(chunk);
         Set<BlockVector> hopperLocations = new HashSet<>();
         for (BlockState tileEntity : chunk.getTileEntities()) {
             if (tileEntity.getType() != Material.HOPPER) return;
@@ -89,16 +83,16 @@ public class HopperManager implements Listener {
             if (!hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
             hopperLocations.add(hopper.getBlock().getLocation().toVector().toBlockVector());
         }
-        loadedHopperChunks.put(chunkLocation, hopperLocations);
+        loadedHopperChunks.put(chunk, hopperLocations);
     }
 
     /**
      * Unload villager hoppers in the given chunk.
+     *
      * @param chunk The chunk to unload hoppers from.
      */
     public void unloadHoppersInChunk(Chunk chunk) {
-        ChunkLocation chunkLocation = ChunkLocation.of(chunk);
-        loadedHopperChunks.remove(chunkLocation);
+        loadedHopperChunks.remove(chunk);
     }
 
     private void registerHopperRecipe(JavaPlugin plugin) {
@@ -136,6 +130,10 @@ public class HopperManager implements Listener {
         sendHopperPlaceMessage(player, block);
     }
 
+    /**
+     * Mark the given hopper as a villager hopper.
+     * @param hopper The hopper to mark.
+     */
     public void markHopper(Hopper hopper) {
         if (CONFIG.get(HOPPER_BLOCK_DISPLAY)) {
             Block block = hopper.getBlock();
@@ -146,6 +144,11 @@ public class HopperManager implements Listener {
         markHopper(hopper, null);
     }
 
+    /**
+     * Mark the given hopper as a villager hopper.
+     * @param hopper The hopper to mark.
+     * @param displayUUID The UUID of the block display, or null if no block display is used.
+     */
     public void markHopper(Hopper hopper, @Nullable UUID displayUUID) {
         PersistentDataContainer data = hopper.getPersistentDataContainer();
         data.set(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN, true);
@@ -156,15 +159,14 @@ public class HopperManager implements Listener {
         }
         hopper.setCustomName(ChatColor.DARK_GRAY + "📥 " + ChatColor.BOLD + Message.VILLAGER_HOPPER);
         hopper.update();
-        ChunkLocation chunkLocation = ChunkLocation.of(hopper.getWorld().getChunkAt(hopper.getBlock()));
-        loadedHopperChunks.computeIfAbsent(chunkLocation, key -> new HashSet<>())
+        Chunk chunk = hopper.getChunk();
+        loadedHopperChunks.computeIfAbsent(chunk, key -> new HashSet<>())
                 .add(hopper.getBlock().getLocation().toVector().toBlockVector());
     }
 
     private boolean isHopperLimitReached(Chunk chunk, int limit) {
         if (limit < 0) return false;
-        ChunkLocation chunkLocation = ChunkLocation.of(chunk);
-        Set<BlockVector> loadedHoppers = loadedHopperChunks.get(chunkLocation);
+        Set<BlockVector> loadedHoppers = loadedHopperChunks.get(chunk);
         return loadedHoppers != null && loadedHoppers.size() >= limit;
     }
 
@@ -189,12 +191,12 @@ public class HopperManager implements Listener {
         });
         sendHopperBreakMessage(player, block);
         // Remove from loaded hoppers
-        ChunkLocation chunkLocation = ChunkLocation.of(block.getChunk());
-        Set<BlockVector> hopperLocations = loadedHopperChunks.get(chunkLocation);
+        Chunk chunk = block.getChunk();
+        Set<BlockVector> hopperLocations = loadedHopperChunks.get(chunk);
         if (hopperLocations != null) {
             hopperLocations.remove(block.getLocation().toVector().toBlockVector());
             if (hopperLocations.isEmpty()) {
-                loadedHopperChunks.remove(chunkLocation);
+                loadedHopperChunks.remove(chunk);
             }
         }
     }
@@ -216,25 +218,24 @@ public class HopperManager implements Listener {
     }
 
     private void tickHoppers(boolean ignoreBabies, boolean ignoreClaimed) {
-        loadedHopperChunks.forEach(((chunkLocation, blockVectors) -> {
-            World world = Bukkit.getWorld(chunkLocation.worldName);
-            if (world == null) return;
-            // Skip if unloaded for some reason
-            if (!world.isChunkLoaded(chunkLocation.x, chunkLocation.z)) return;
-            Chunk chunk = world.getChunkAt(chunkLocation.x, chunkLocation.z);
-            List<Entity> villagers = getFilteredVillagers(chunk.getEntities(), ignoreBabies, ignoreClaimed);
-            for (BlockVector vector : blockVectors) {
-                Block block = world.getBlockAt(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
-                tickTileEntity(block, villagers);
-            }
+        loadedHopperChunks.forEach(((chunk, blockVectors) -> {
+            tickChunk(chunk, blockVectors, ignoreBabies, ignoreClaimed);
         }));
     }
 
-    private void tickTileEntity(Block block, List<Entity> villagers) {
-//        if (tileEntity.getType() != Material.HOPPER) return;
-//        Hopper hopper = (Hopper) tileEntity;
-//        if (!hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
-//        Block block = hopper.getBlock();
+    private void tickChunk(Chunk chunk, Set<BlockVector> blockVectors, boolean ignoreBabies, boolean ignoreClaimed) {
+        World world = chunk.getWorld();
+        // Skip if unloaded for some reason
+        if (!chunk.isLoaded()) return;
+        List<Entity> villagers = getFilteredVillagers(chunk.getEntities(), ignoreBabies, ignoreClaimed);
+        for (BlockVector vector : blockVectors) {
+            Block block = world.getBlockAt(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
+            tickHopper(block, villagers);
+        }
+    }
+
+    private void tickHopper(Block block, List<Entity> villagers) {
+        if (block.getType() != Material.HOPPER) return;
         Block blockAbove = block.getRelative(BlockFace.UP);
         Material material = blockAbove.getType();
         if (material.isOccluding() || material == Material.HOPPER) return;
@@ -244,10 +245,13 @@ public class HopperManager implements Listener {
             if (hopper == null) {
                 hopper = (Hopper) block.getState();
             }
-            if (!hasSpace(hopper)) return;
+            // Check if hopper
+            if (!hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
+            Inventory inventory = hopper.getInventory();
+            if (!hasSpace(inventory)) return;
             try {
                 ItemStack item = pickupManager.toItemStack((LivingEntity) entity);
-                hopper.getInventory().addItem(item);
+                inventory.addItem(item);
             } catch (Exception exception) {
                 ClickVillagers.LOGGER.severe("Failed to write villager data: " + exception.getMessage());
             }
@@ -255,23 +259,22 @@ public class HopperManager implements Listener {
     }
 
     private List<Entity> getFilteredVillagers(Entity[] entities, boolean ignoreBabies, boolean ignoreClaimed) {
-        List<Entity> villagers = new ArrayList<>(entities.length);
-        for (Entity entity : entities) {
-            EntityType type = entity.getType();
-            // Check if entity is a villager
-            if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) continue;
-            if (type == EntityType.ZOMBIE_VILLAGER && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) continue;
-            Block block = entity.getLocation().getBlock();
-            // Check if entity is a baby villager
-            if (ignoreBabies && entity instanceof Villager && !((Ageable) entity).isAdult()) continue;
-            // Check if entity is a claimed villager
-            if (ignoreClaimed && claimManager.hasOwner((LivingEntity) entity)) continue;
-            // Check if entity is in a hopper
-            if (block.getType() != Material.HOPPER
-                && block.getRelative(BlockFace.DOWN).getType() != Material.HOPPER) continue;
-            villagers.add(entity);
-        }
-        return villagers;
+        return Arrays.stream(entities)
+                .filter(entity -> {
+                    EntityType type = entity.getType();
+                    // Check if entity is a villager
+                    if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) return false;
+                    if (type == EntityType.ZOMBIE_VILLAGER && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) return false;
+                    Block block = entity.getLocation().getBlock();
+                    // Check if entity is a baby villager
+                    if (ignoreBabies && entity instanceof Villager && !((Ageable) entity).isAdult()) return false;
+                    // Check if entity is a claimed villager
+                    if (ignoreClaimed && claimManager.hasOwner((LivingEntity) entity)) return false;
+                    // Check if entity is in a hopper
+                    return block.getType() == Material.HOPPER
+                           || block.getRelative(BlockFace.DOWN).getType() == Material.HOPPER;
+                })
+                .toList();
     }
 
     private static boolean isInHopper(Entity entity, Location hopper) {
@@ -285,8 +288,7 @@ public class HopperManager implements Listener {
         return x1 == x2 && (y1 == y2 || y1 == y2 + 1) && z1 == z2;
     }
 
-    private static boolean hasSpace(Hopper hopper) {
-        Inventory inventory = hopper.getInventory();
+    private static boolean hasSpace(Inventory inventory) {
         for (ItemStack item : inventory) {
             if (item == null || item.getType() == Material.AIR) {
                 return true;
