@@ -115,8 +115,11 @@ public final class ClickVillagers extends JavaPlugin {
     private void setupBStats(HopperManager hopperManager) {
         int pluginId = 27919;
         Metrics metrics = new Metrics(this, pluginId);
-        metrics.addCustomChart(new SingleLineChart("active_villager_hoppers", hopperManager::getActiveHopperCount));
+        metrics.addCustomChart(new SingleLineChart("active_villager_hoppers",
+                hopperManager::getActiveHopperCount));
         metrics.addCustomChart(new SimplePie("hopper_tick_rate", () ->
-                String.valueOf(ClickVillagersConfig.CONFIG.get(ClickVillagersConfig.HOPPER_TICK_RATE))));
+                String.valueOf(CONFIG.get(HOPPER_TICK_RATE))));
+        metrics.addCustomChart(new SimplePie("language", () ->
+                String.valueOf(CONFIG.get(LANGUAGE))));
     }
 }
