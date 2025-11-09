@@ -26,12 +26,10 @@ public class ChunkListener implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         hopperManager.loadHoppersInChunk(event.getChunk());
-        Bukkit.broadcastMessage("Loaded hoppers in chunk " + event.getChunk().getX() + ", " + event.getChunk().getZ());
     }
 
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent event) {
         hopperManager.unloadHoppersInChunk(event.getChunk());
-        Bukkit.broadcastMessage("Unloaded hoppers in chunk " + event.getChunk().getX() + ", " + event.getChunk().getZ());
     }
 }
