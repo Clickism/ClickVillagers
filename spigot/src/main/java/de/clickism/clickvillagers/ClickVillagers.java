@@ -6,13 +6,11 @@
 
 package de.clickism.clickvillagers;
 
-import de.clickism.clickvillagers.hopper.ChunkListener;
-import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
-import me.clickism.clickgui.menu.MenuManager;
 import de.clickism.clickvillagers.command.ReloadCommand;
 import de.clickism.clickvillagers.entity.EntitySaver;
 import de.clickism.clickvillagers.entity.EntitySaverFactory;
 import de.clickism.clickvillagers.gui.ChatInputListener;
+import de.clickism.clickvillagers.hopper.ChunkListener;
 import de.clickism.clickvillagers.hopper.HopperManager;
 import de.clickism.clickvillagers.legacy.LegacyHopperCompatibility;
 import de.clickism.clickvillagers.legacy.LegacyMessagesCompatibility;
@@ -24,6 +22,11 @@ import de.clickism.clickvillagers.villager.AnchorManager;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PartnerManager;
 import de.clickism.clickvillagers.villager.PickupManager;
+import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
+import me.clickism.clickgui.menu.MenuManager;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,8 +36,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static de.clickism.clickvillagers.message.Message.*;
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
+import static de.clickism.clickvillagers.message.Message.UPDATE;
 
 public final class ClickVillagers extends JavaPlugin {
 
@@ -92,6 +95,8 @@ public final class ClickVillagers extends JavaPlugin {
         var hopperCompatibility = new LegacyHopperCompatibility(hopperManager);
         hopperCompatibility.startConversionIfLegacy(this);
         LegacyMessagesCompatibility.removeLegacyMessageFile(this);
+        // Metrics
+        setupBStats(hopperManager);
     }
 
     private void checkUpdates() {
@@ -105,5 +110,13 @@ public final class ClickVillagers extends JavaPlugin {
                 UPDATE.send(player, version);
             });
         });
+    }
+
+    private void setupBStats(HopperManager hopperManager) {
+        int pluginId = 27919;
+        Metrics metrics = new Metrics(this, pluginId);
+        metrics.addCustomChart(new SingleLineChart("active_villager_hoppers", hopperManager::getActiveHopperCount));
+        metrics.addCustomChart(new SimplePie("hopper_tick_rate", () ->
+                String.valueOf(ClickVillagersConfig.CONFIG.get(ClickVillagersConfig.HOPPER_TICK_RATE))));
     }
 }

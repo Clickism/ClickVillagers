@@ -95,6 +95,10 @@ public class HopperManager implements Listener {
         loadedHopperChunks.remove(chunk);
     }
 
+    public int getActiveHopperCount() {
+        return loadedHopperChunks.values().stream().mapToInt(Set::size).sum();
+    }
+
     private void registerHopperRecipe(JavaPlugin plugin) {
         ShapelessRecipe hopperRecipe = new ShapelessRecipe(new NamespacedKey(plugin, "villager_hopper"), villagerHopper);
         hopperRecipe.addIngredient(Material.HOPPER);

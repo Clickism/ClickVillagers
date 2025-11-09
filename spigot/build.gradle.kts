@@ -21,6 +21,7 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://libraries.minecraft.net/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://repo.bstats.org/content/repositories/releases/")
 }
 
 val configuredVersion = "0.2.4"
@@ -37,6 +38,8 @@ dependencies {
     implementation("de.clickism:configured-localization:$configuredVersion")
     // Update Checker
     implementation("de.clickism:modrinth-update-checker:1.0")
+    // Metrics
+    implementation("org.bstats:bstats-bukkit:3.1.0")
 }
 
 tasks.runServer {
