@@ -40,6 +40,7 @@ import java.util.*;
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public class HopperManager implements Listener {
+    public static final Set<BlockVector> ALL_HOPPERS_STATS = new HashSet<>();
     private static final Transformation FRAME_TRANSFORMATION = new Transformation(
             new Vector3f(-.525f, -.235f, -.525f),
             new AxisAngle4f(),
@@ -84,6 +85,7 @@ public class HopperManager implements Listener {
             hopperLocations.add(hopper.getBlock().getLocation().toVector().toBlockVector());
         }
         loadedHopperChunks.put(chunk, hopperLocations);
+        ALL_HOPPERS_STATS.addAll(hopperLocations);
     }
 
     /**
@@ -93,10 +95,6 @@ public class HopperManager implements Listener {
      */
     public void unloadHoppersInChunk(Chunk chunk) {
         loadedHopperChunks.remove(chunk);
-    }
-
-    public int getActiveHopperCount() {
-        return loadedHopperChunks.values().stream().mapToInt(Set::size).sum();
     }
 
     private void registerHopperRecipe(JavaPlugin plugin) {
