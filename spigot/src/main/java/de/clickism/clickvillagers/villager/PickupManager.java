@@ -210,7 +210,7 @@ public class PickupManager implements Listener {
         if (profession == Villager.Profession.NONE) {
             return Message.VILLAGER.toString();
         }
-        String professionName = localize("profession." + profession.toString().toLowerCase());
+        String professionName = localize("profession." + profession.name().toLowerCase());
         return VILLAGER_WITH_PROFESSION.localized(professionName);
     }
 
