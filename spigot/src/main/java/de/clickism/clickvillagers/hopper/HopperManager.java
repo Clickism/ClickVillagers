@@ -9,8 +9,10 @@ package de.clickism.clickvillagers.hopper;
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.message.Message;
+import de.clickism.clickvillagers.util.SpigotAdapter;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PickupManager;
+import io.papermc.lib.PaperLib;
 import me.clickism.clickgui.menu.Icon;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -19,6 +21,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -31,6 +34,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Transformation;
+import org.eclipse.sisu.Priority;
 import org.jetbrains.annotations.Nullable;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
@@ -61,11 +65,11 @@ public class HopperManager implements Listener {
         this.pickupManager = pickupManager;
         this.claimManager = claimManager;
         this.villagerHopper = createHopperItem();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
         if (CONFIG.get(HOPPER_RECIPE)) {
             registerHopperRecipe(plugin);
         }
         if (CONFIG.get(TICK_HOPPERS)) {
+            plugin.getServer().getPluginManager().registerEvents(this, plugin);
             startTickingHoppers(plugin);
         }
     }
@@ -77,9 +81,8 @@ public class HopperManager implements Listener {
      */
     public void loadHoppersInChunk(Chunk chunk) {
         Set<BlockVector> hopperLocations = new HashSet<>();
-        for (BlockState tileEntity : chunk.getTileEntities()) {
-            if (tileEntity.getType() != Material.HOPPER) return;
-            Hopper hopper = (Hopper) tileEntity;
+        for (BlockState tileEntity : SpigotAdapter.getTileEntities(chunk, block -> block.getType() == Material.HOPPER, false)) {
+            if (!(tileEntity instanceof Hopper hopper)) return;
             if (!hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
             hopperLocations.add(hopper.getBlock().getLocation().toVector().toBlockVector());
         }
@@ -106,7 +109,7 @@ public class HopperManager implements Listener {
         Bukkit.addRecipe(hopperRecipe);
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     private void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -116,7 +119,7 @@ public class HopperManager implements Listener {
         if (!meta.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
         // Villager hopper placed
         Block block = event.getBlockPlaced();
-        if (!(block.getState() instanceof Hopper hopper)) return;
+        if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
         // Check permission
         if (Permission.HOPPER.lacksAndNotify(player)) {
             event.setCancelled(true);
@@ -136,6 +139,7 @@ public class HopperManager implements Listener {
 
     /**
      * Mark the given hopper as a villager hopper.
+     *
      * @param hopper The hopper to mark.
      */
     public void markHopper(Hopper hopper) {
@@ -150,7 +154,8 @@ public class HopperManager implements Listener {
 
     /**
      * Mark the given hopper as a villager hopper.
-     * @param hopper The hopper to mark.
+     *
+     * @param hopper      The hopper to mark.
      * @param displayUUID The UUID of the block display, or null if no block display is used.
      */
     public void markHopper(Hopper hopper, @Nullable UUID displayUUID) {
@@ -174,10 +179,10 @@ public class HopperManager implements Listener {
         return loadedHoppers != null && loadedHoppers.size() >= limit;
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     private void onBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
-        if (!(block.getState() instanceof Hopper hopper)) return;
+        if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
         PersistentDataContainer data = hopper.getPersistentDataContainer();
         if (!data.has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
         removeBlockDisplayIfExists(data);
@@ -223,38 +228,49 @@ public class HopperManager implements Listener {
 
     private void tickHoppers(boolean ignoreBabies, boolean ignoreClaimed) {
         loadedHopperChunks.forEach(((chunk, blockVectors) -> {
-            tickChunk(chunk, blockVectors, ignoreBabies, ignoreClaimed);
+            tickHoppersInChunk(chunk, blockVectors, ignoreBabies, ignoreClaimed);
         }));
     }
 
-    private void tickChunk(Chunk chunk, Set<BlockVector> blockVectors, boolean ignoreBabies, boolean ignoreClaimed) {
+    /**
+     * The logic behind the ticking mechanism is the following:
+     * Iterate through all the tracked chunks, iterate through each villager hopper in those chunks
+     * for each hopper check if there are villagers above it, if there are any, remove the entity
+     * and put the villager item in the hopper
+     *
+     * @param chunk Chunks where we have at least a Villager hopper
+     * @param blockVectors Location of the villager hoppers
+     * @param ignoreBabies whether we should ignore babies or not
+     * @param ignoreClaimed whether we should ignore claimed villagers or not
+     */
+    private void tickHoppersInChunk(Chunk chunk, Set<BlockVector> blockVectors, boolean ignoreBabies, boolean ignoreClaimed) {
         World world = chunk.getWorld();
         // Skip if unloaded for some reason
         if (!chunk.isLoaded()) return;
-        List<Entity> villagers = getFilteredVillagers(chunk.getEntities(), ignoreBabies, ignoreClaimed);
         for (BlockVector vector : blockVectors) {
-            Block block = world.getBlockAt(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
-            tickHopper(block, villagers);
+            Location hopperLocation = new Location(world, vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
+
+            tickHopper(hopperLocation, ignoreBabies, ignoreClaimed);
         }
     }
 
-    private void tickHopper(Block block, List<Entity> villagers) {
+    private void tickHopper(Location hopperLocation, boolean ignoreBabies, boolean ignoreClaimed) {
+        Block block = hopperLocation.getBlock();
         if (block.getType() != Material.HOPPER) return;
         Block blockAbove = block.getRelative(BlockFace.UP);
         Material material = blockAbove.getType();
         if (material.isOccluding() || material == Material.HOPPER) return;
-        Hopper hopper = null;
-        for (Entity entity : villagers) {
-            if (!isInHopper(entity, block.getLocation())) continue;
-            if (hopper == null) {
-                hopper = (Hopper) block.getState();
-            }
-            // Check if hopper
+
+        // All the villagers and zombie villagers here already satisfy all the requirements, no other checks are needed
+        List<LivingEntity> villagers = getEligibleVillagers(hopperLocation, ignoreBabies, ignoreClaimed);
+
+        for (LivingEntity entity : villagers) {
+            if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) continue;
             if (!hopper.getPersistentDataContainer().has(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
             Inventory inventory = hopper.getInventory();
             if (!hasSpace(inventory)) return;
             try {
-                ItemStack item = pickupManager.toItemStack((LivingEntity) entity);
+                ItemStack item = pickupManager.toItemStack(entity);
                 inventory.addItem(item);
             } catch (Exception exception) {
                 ClickVillagers.LOGGER.severe("Failed to write villager data: " + exception.getMessage());
@@ -262,34 +278,28 @@ public class HopperManager implements Listener {
         }
     }
 
-    private List<Entity> getFilteredVillagers(Entity[] entities, boolean ignoreBabies, boolean ignoreClaimed) {
-        return Arrays.stream(entities)
-                .filter(entity -> {
-                    EntityType type = entity.getType();
-                    // Check if entity is a villager
-                    if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) return false;
-                    if (type == EntityType.ZOMBIE_VILLAGER && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) return false;
-                    Block block = entity.getLocation().getBlock();
-                    // Check if entity is a baby villager
-                    if (ignoreBabies && entity instanceof Villager && !((Ageable) entity).isAdult()) return false;
-                    // Check if entity is a claimed villager
-                    if (ignoreClaimed && claimManager.hasOwner((LivingEntity) entity)) return false;
-                    // Check if entity is in a hopper
-                    return block.getType() == Material.HOPPER
-                           || block.getRelative(BlockFace.DOWN).getType() == Material.HOPPER;
-                })
-                .toList();
+    private List<LivingEntity> getEligibleVillagers(Location hopperLocation, boolean ignoreBabies, boolean ignoreClaimed) {
+        List<LivingEntity> eligible = new ArrayList<>();
+        for (Entity entity : getVillagersAboveHopper(hopperLocation)) {
+            if (!(entity instanceof LivingEntity living)) continue;
+            EntityType type = living.getType();
+            // Check if entity is a villager
+            if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) continue;
+            if (type == EntityType.ZOMBIE_VILLAGER && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) continue;
+            // Check if entity is a baby villager
+            if (ignoreBabies && living instanceof Villager villager && !villager.isAdult()) continue;
+            // Check if entity is a claimed villager
+            if (ignoreClaimed && claimManager.hasOwner(living)) continue;
+            Block block = living.getLocation().getBlock();
+            if (block.getType() == Material.HOPPER || block.getRelative(BlockFace.DOWN).getType() == Material.HOPPER) {
+                eligible.add(living);
+            }
+        }
+        return eligible;
     }
 
-    private static boolean isInHopper(Entity entity, Location hopper) {
-        Location location = entity.getLocation();
-        int x1 = location.getBlockX();
-        int y1 = location.getBlockY();
-        int z1 = location.getBlockZ();
-        int x2 = hopper.getBlockX();
-        int y2 = hopper.getBlockY();
-        int z2 = hopper.getBlockZ();
-        return x1 == x2 && (y1 == y2 || y1 == y2 + 1) && z1 == z2;
+    private static Collection<Entity> getVillagersAboveHopper(Location hopperLocation) {
+        return hopperLocation.toCenterLocation().getNearbyEntities(0.5, 1.0, 0.5);
     }
 
     private static boolean hasSpace(Inventory inventory) {

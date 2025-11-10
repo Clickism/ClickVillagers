@@ -8,6 +8,7 @@ package de.clickism.clickvillagers.listener;
 
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.villager.PickupManager;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -66,7 +67,7 @@ public class DispenserListener implements Listener {
     }
 
     private void dispenseMob(Block block) {
-        Dispenser dispenser = (Dispenser) block.getState();
+        Dispenser dispenser = (Dispenser) PaperLib.getBlockState(block, false).getState();
         Inventory inventory = dispenser.getSnapshotInventory();
         List<ItemStack> mobs = new ArrayList<>();
         for (ItemStack item : inventory) {

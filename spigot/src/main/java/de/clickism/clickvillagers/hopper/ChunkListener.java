@@ -7,7 +7,6 @@
 package de.clickism.clickvillagers.hopper;
 
 import de.clickism.clickvillagers.listener.AutoRegistered;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
