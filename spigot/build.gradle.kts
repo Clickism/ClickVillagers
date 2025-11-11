@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("com.gradleup.shadow") version "8.3.5"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
@@ -76,8 +76,8 @@ tasks.shadowJar {
         exclude(dependency("org.yaml:snakeyaml"))
     }
     // Stop Gson and Snakeyaml from being relocated
-//    relocate("com.google.gson", "com.google.gson")
-//    relocate("org.yaml.snakeyaml", "org.yaml.snakeyaml")
+    relocate("com.google.gson", "com.google.gson")
+    relocate("org.yaml.snakeyaml", "org.yaml.snakeyaml")
     relocate("io.papermc.lib", "$relocationPrefix.paperlib")
 }
 
