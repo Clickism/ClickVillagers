@@ -1,0 +1,60 @@
+package de.clickism.clickvillagers.hopper.util;
+
+import de.clickism.clickvillagers.hopper.config.HopperConfig;
+import de.clickism.clickvillagers.villager.ClaimManager;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
+
+public final class HopperUtil {
+    private HopperUtil() {}
+
+    public static boolean hasSpace(Inventory inv) {
+        for (ItemStack i : inv) {
+            if (i == null || i.getType() == Material.AIR) return true;
+        }
+        return false;
+    }
+
+    public static List<LivingEntity> getEligibleVillagers(Location hopperLoc, HopperConfig config, ClaimManager claimManager) {
+        List<LivingEntity> list = new ArrayList<>();
+        for (Entity e : getVillagersAboveHopper(hopperLoc)) {
+            if (!(e instanceof LivingEntity living)) continue;
+            EntityType type = living.getType();
+            if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) continue;
+            if (type == EntityType.ZOMBIE_VILLAGER && !config.allowZombieVillagers) continue;
+            if (config.ignoreBabies && living instanceof Villager v && !v.isAdult()) continue;
+            if (config.ignoreClaimed && claimManager.hasOwner(living)) continue;
+
+            Block block = living.getLocation().getBlock();
+            if (block.getType() == Material.HOPPER || block.getRelative(BlockFace.DOWN).getType() == Material.HOPPER)
+                list.add(living);
+        }
+        return list;
+    }
+
+    public static Collection<Entity> getVillagersAboveHopper(Location loc) {
+        return loc.toCenterLocation().getNearbyEntities(0.5, 1.0, 0.5);
+    }
+
+    public static void playPlaceSound(Block block, Player player) {
+        World w = block.getWorld();
+        Location l = block.getLocation();
+        w.playSound(l, Sound.BLOCK_METAL_PLACE, 1, .5f);
+        w.playSound(l, Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1, .5f);
+        player.sendActionBar(ChatColor.GRAY + "Villager Hopper placed!");
+    }
+
+    public static void playBreakSound(Block block, Player player) {
+        World w = block.getWorld();
+        Location l = block.getLocation();
+        w.playSound(l, Sound.BLOCK_METAL_BREAK, 1, .5f);
+        w.playSound(l, Sound.BLOCK_IRON_TRAPDOOR_CLOSE, 1, .5f);
+        player.sendActionBar(ChatColor.RED + "Villager Hopper removed!");
+    }
+}
