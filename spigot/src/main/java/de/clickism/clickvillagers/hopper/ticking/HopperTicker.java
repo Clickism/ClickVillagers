@@ -36,7 +36,7 @@ public class HopperTicker {
     }
 
     private void tickChunk(Chunk chunk, Set<BlockVector> vectors) {
-        if (!chunk.isLoaded()) return;
+        if (!chunk.isLoaded()) return; // Should never happen
         World world = chunk.getWorld();
         Location hopperLoc = new Location(world, 0, 0, 0);
 
@@ -45,6 +45,11 @@ public class HopperTicker {
 
             hopperLoc.set(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
             tickHopper(setIterator, hopperLoc);
+        }
+
+        // Handle empty sets if an invalid hopper was removed in tickHopper
+        if (vectors.isEmpty()) {
+            storage.remove(chunk);
         }
     }
 

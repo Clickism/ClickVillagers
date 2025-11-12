@@ -33,7 +33,14 @@ public final class HopperItemFactory {
         ShapelessRecipe recipe = new ShapelessRecipe(VILLAGER_HOPPER_KEY, item);
         recipe.addIngredient(Material.HOPPER);
         recipe.addIngredient(Material.EMERALD);
-        Bukkit.addRecipe(recipe);
+
+        // TODO: check this
+        boolean registered = Bukkit.addRecipe(recipe);
+        if (registered) {
+            ClickVillagers.LOGGER.info("Successfully registered Hopper Villager recipe");
+        } else {
+            ClickVillagers.LOGGER.warning("Failed to register Hopper Villager recipe");
+        }
     }
 
     public static void unregisterRecipe() {

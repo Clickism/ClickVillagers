@@ -47,6 +47,7 @@ public class HopperManager {
         unregisterEvents();
 
         // Always refresh recipe to avoid duplicates or stale data
+        // TODO: Only unregister if the recipe has changed
         HopperItemFactory.unregisterRecipe();
         if (hopperConfig.recipeEnabled) {
             HopperItemFactory.registerRecipe();
@@ -54,9 +55,9 @@ public class HopperManager {
 
         // Enable ticking logic and events only if configured
         if (hopperConfig.tickingEnabled) {
-            tickerTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(
+            tickerTaskId = Bukkit.getScheduler().runTaskTimer(
                     plugin, ticker::tickAll, hopperConfig.tickRate, hopperConfig.tickRate
-            );
+            ).getTaskId();
             Bukkit.getPluginManager().registerEvents(events, plugin);
             eventsRegistered = true;
         }

@@ -56,6 +56,16 @@ public class HopperStorage {
     }
 
     /**
+     * Removes a chunk entry if no more hoppers remain in the chunk
+     *
+     * @param chunk the chunk the hopper resides in
+     */
+    public void remove(Chunk chunk) {
+        Set<BlockVector> set = loadedHoppers.get(chunk);
+        if (set == null || set.isEmpty()) loadedHoppers.remove(chunk);
+    }
+
+    /**
      * Scans a chunk for villager hoppers and loads them into memory.
      * <p>
      * This method should be called when a chunk is loaded to ensure that
