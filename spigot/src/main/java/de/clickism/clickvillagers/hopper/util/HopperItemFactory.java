@@ -12,7 +12,6 @@ public final class HopperItemFactory {
     private HopperItemFactory() {}
 
     public static final NamespacedKey VILLAGER_HOPPER_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "villager_hopper");
-    public static final NamespacedKey DISPLAY_UUID_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "display_uuid");
     private static final ItemStack HOPPER_ITEM = createHopperItem();
 
     private static ItemStack createHopperItem() {

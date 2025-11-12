@@ -90,7 +90,7 @@ public final class ClickVillagers extends JavaPlugin {
             new JoinListener(this, () -> newerVersion);
         }
         // Legacy conversions
-        LegacyHopperCompatibility hopperCompatibility = new LegacyHopperCompatibility(hopperManager); // TODO: Check if the order is correct here
+        LegacyHopperCompatibility hopperCompatibility = new LegacyHopperCompatibility(hopperManager);
         hopperCompatibility.startConversionIfLegacy(this);
         LegacyMessagesCompatibility.removeLegacyMessageFile(this);
         // Metrics

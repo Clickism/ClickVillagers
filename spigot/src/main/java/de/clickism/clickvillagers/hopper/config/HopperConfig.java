@@ -10,6 +10,8 @@ public class HopperConfig {
     public boolean recipeEnabled;
     public int tickRate;
 
+    public int limitPerChunk;
+
     public boolean allowZombieVillagers;
     public boolean ignoreBabies;
     public boolean ignoreClaimed;
@@ -27,6 +29,7 @@ public class HopperConfig {
         this.tickingEnabled = config.get(TICK_HOPPERS);
         this.recipeEnabled = config.get(HOPPER_RECIPE);
         this.tickRate = config.get(HOPPER_TICK_RATE);
+        this.limitPerChunk = config.get(HOPPER_LIMIT_PER_CHUNK);
         this.displayViewRange = config.get(HOPPER_BLOCK_DISPLAY_VIEW_RANGE);
 
         this.allowZombieVillagers = config.get(ALLOW_ZOMBIE_VILLAGERS);

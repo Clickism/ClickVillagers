@@ -6,6 +6,7 @@ import de.clickism.clickvillagers.hopper.ticking.HopperStorage;
 import de.clickism.clickvillagers.hopper.config.HopperConfig;
 import de.clickism.clickvillagers.hopper.util.HopperDisplayUtil;
 import de.clickism.clickvillagers.hopper.util.HopperUtil;
+import de.clickism.clickvillagers.message.Message;
 import io.papermc.lib.PaperLib;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -19,6 +20,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 public class HopperEvents implements Listener {
@@ -49,7 +51,14 @@ public class HopperEvents implements Listener {
         }
 
         Block block = e.getBlockPlaced();
-        if (!(block.getState() instanceof Hopper hopper)) return;
+        if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
+
+        // Check limit
+        if (storage.isHopperLimitReached(block.getChunk(), config.limitPerChunk, player)) {
+            Message.HOPPER_LIMIT_REACHED.send(player, config.limitPerChunk);
+            e.setCancelled(true);
+            return;
+        }
 
         HopperDisplayUtil.applyMark(hopper, config);
         storage.add(block.getChunk(), block);
@@ -62,7 +71,7 @@ public class HopperEvents implements Listener {
         Block block = e.getBlock();
         if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
 
-        var data = hopper.getPersistentDataContainer();
+        PersistentDataContainer data = hopper.getPersistentDataContainer();
         if (!data.has(HopperItemFactory.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
 
         HopperDisplayUtil.removeDisplayIfExists(data);

@@ -1,5 +1,6 @@
 package de.clickism.clickvillagers.hopper.ticking;
 
+import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.hopper.util.HopperItemFactory;
 import de.clickism.clickvillagers.util.SpigotAdapter;
 import org.bukkit.Chunk;
@@ -7,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Hopper;
+import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.BlockVector;
@@ -87,13 +89,28 @@ public class HopperStorage {
     }
 
     /**
-     * Gets all villager hoppers tracked in a specific chunk.
+     * Gets the number of villager hoppers tracked in the given chunk.
      *
-     * @param chunk the chunk to query
-     * @return a set of hopper block vectors in the chunk, or an empty set if none exist
+     * @param chunk the chunk to check
+     * @return the number of villager hoppers in the chunk
      */
-    public Set<BlockVector> getInChunk(Chunk chunk) {
-        return loadedHoppers.getOrDefault(chunk, Collections.emptySet());
+    public int getHopperCount(Chunk chunk) {
+        Set<BlockVector> set = loadedHoppers.get(chunk);
+        return set == null ? 0 : set.size();
+    }
+
+    /**
+     * Checks whether the specified chunk has reached or exceeded
+     * the given hopper limit.
+     *
+     * @param chunk the chunk to check
+     * @param limit the maximum allowed number of hoppers
+     * @return true if the limit is reached and the player doesn't have the bypass permission, false otherwise
+     */
+    public boolean isHopperLimitReached(Chunk chunk, int limit, Player player) {
+        if (limit < 0) return false;
+
+        return getHopperCount(chunk) >= limit && Permission.BYPASS_LIMITS.lacks(player);
     }
 
     /**
