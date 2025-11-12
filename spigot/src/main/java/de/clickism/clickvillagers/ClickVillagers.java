@@ -90,7 +90,7 @@ public final class ClickVillagers extends JavaPlugin {
             new JoinListener(this, () -> newerVersion);
         }
         // Legacy conversions
-        var hopperCompatibility = new LegacyHopperCompatibility(hopperManager); // TODO: Check if the order is correct here
+        LegacyHopperCompatibility hopperCompatibility = new LegacyHopperCompatibility(hopperManager); // TODO: Check if the order is correct here
         hopperCompatibility.startConversionIfLegacy(this);
         LegacyMessagesCompatibility.removeLegacyMessageFile(this);
         // Metrics
@@ -115,8 +115,10 @@ public final class ClickVillagers extends JavaPlugin {
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SingleLineChart("active_villager_hoppers",
                 hopperManager::getActiveHopperCount));
-        metrics.addCustomChart(new SimplePie("hopper_tick_rate", () ->
-                String.valueOf(CONFIG.get(HOPPER_TICK_RATE))));
+        if (hopperManager.getHopperConfig().tickingEnabled) {
+            metrics.addCustomChart(new SimplePie("hopper_tick_rate", () ->
+                    String.valueOf(hopperManager.getHopperConfig().tickRate)));
+        }
         metrics.addCustomChart(new SimplePie("language", () ->
                 String.valueOf(CONFIG.get(LANGUAGE))));
     }

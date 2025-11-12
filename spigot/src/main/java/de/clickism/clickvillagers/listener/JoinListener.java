@@ -39,8 +39,7 @@ public class JoinListener implements Listener {
         if (!player.isOp()) return;
         String newerVersion = newerVersionSupplier.get();
         if (newerVersion == null) return;
-        if (notifiedPlayers.contains(player.getUniqueId())) return;
-        notifiedPlayers.add(player.getUniqueId());
+        if (!notifiedPlayers.add(player.getUniqueId())) return;
         // Delay the message
         Bukkit.getScheduler().runTaskLater(plugin,
                 () -> Message.UPDATE.send(player, newerVersion), 10L);
