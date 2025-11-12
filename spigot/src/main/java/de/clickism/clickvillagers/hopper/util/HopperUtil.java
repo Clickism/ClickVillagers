@@ -17,13 +17,6 @@ import java.util.*;
 public final class HopperUtil {
     private HopperUtil() {}
 
-    public static boolean hasSpace(Inventory inv) {
-        for (ItemStack i : inv) {
-            if (i == null || i.getType() == Material.AIR) return true;
-        }
-        return false;
-    }
-
     public static List<LivingEntity> getEligibleVillagers(Location hopperLoc, HopperConfig config, ClaimManager claimManager) {
         List<LivingEntity> list = new ArrayList<>();
         for (Entity e : getVillagersAboveHopper(hopperLoc)) {

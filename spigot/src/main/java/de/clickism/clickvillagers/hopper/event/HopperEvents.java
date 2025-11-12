@@ -19,7 +19,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 
 public class HopperEvents implements Listener {
@@ -35,10 +34,11 @@ public class HopperEvents implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlace(BlockPlaceEvent e) {
         Player player = e.getPlayer();
-        ItemStack item = e.getItemInHand();
 
-        if (!HopperUtil.isVillagerHopperItem(item)) return;
+        // Only process custom villager hopper items
+        if (!HopperUtil.isVillagerHopperItem(e.getItemInHand())) return;
 
+        // Deny placement if the player lacks the permission
         if (Permission.HOPPER.lacksAndNotify(player)) {
             e.setCancelled(true);
             return;
@@ -46,17 +46,23 @@ public class HopperEvents implements Listener {
 
         Block block = e.getBlockPlaced();
 
-        // Check limit
+        // Enforce per-chunk villager hopper limits (unless bypass permission)
         if (storage.isHopperLimitReached(block.getChunk(), config.limitPerChunk, player)) {
             Message.HOPPER_LIMIT_REACHED.send(player, config.limitPerChunk);
             e.setCancelled(true);
             return;
         }
 
+        // Get the placed hopper state safely and check again if it's a hopper
         if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
 
+        // Set the PDC and add a DisplayEntity if enabled
         HopperDisplayUtil.applyMark(hopper, config);
+
+        // Add hopper to storage
         storage.add(block.getChunk(), block);
+
+        // Play feedback sound to confirm placement
         HopperUtil.playPlaceSound(block, player);
     }
 
@@ -65,26 +71,38 @@ public class HopperEvents implements Listener {
         Block block = e.getBlock();
         if (block.getType() != Material.HOPPER) return;
 
+        // Safely retrieve the hopper tile entity
         if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
         PersistentDataContainer data = hopper.getPersistentDataContainer();
 
+        // Ignore normal hoppers, only handle custom ones
         if (!HopperUtil.isVillagerHopper(data)) return;
 
+        // Remove any custom visual mark or display data
         HopperDisplayUtil.removeDisplayIfExists(data);
 
+        // Prevent default drop (normal hopper item)
         e.setDropItems(false);
+
         World world = block.getWorld();
         Location loc = block.getLocation();
-
         Player player = e.getPlayer();
+
+        // Drop the custom villager hopper item if not in creative
         if (player.getGameMode() != GameMode.CREATIVE) {
             world.dropItemNaturally(loc, HopperItemFactory.getHopperItem());
         }
 
-        hopper.getInventory().forEach(i -> {
-            if (i != null) world.dropItemNaturally(loc, i);
+        // Drop any items contained within the hopper's inventory
+        // TODO: check if this can be improved
+        hopper.getInventory().forEach(item -> {
+            if (item != null) world.dropItemNaturally(loc, item);
         });
+
+        // Remove from storage
         storage.remove(block.getChunk(), block);
+
+        // Play a breaking sound effect
         HopperUtil.playBreakSound(block, player);
     }
 

@@ -113,8 +113,7 @@ public class HopperStorage {
     }
 
     /**
-     * Returns an immutable view of all tracked villager hoppers
-     * across all loaded chunks.
+     * Returns the internal Map with all tracked hoppers across all loaded chunks.
      *
      * @return a map of chunks to their hopper locations
      */

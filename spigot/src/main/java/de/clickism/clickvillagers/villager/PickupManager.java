@@ -94,12 +94,18 @@ public class PickupManager implements Listener {
     }
 
     @NotNull
-    public ItemStack toItemStack(LivingEntity entity) throws IllegalArgumentException {
+    public ItemStack createVillagerItem(LivingEntity entity) throws IllegalArgumentException {
         if (!(entity instanceof Villager) && !(entity instanceof ZombieVillager)) {
             throw new IllegalArgumentException("Entity is not a villager");
         }
         ItemStack item = createItem(entity);
         writeData(entity, item);
+        return item;
+    }
+
+    @NotNull
+    public ItemStack toItemStack(LivingEntity entity) throws IllegalArgumentException {
+        ItemStack item = createItem(entity);
         entity.remove();
         return item;
     }
