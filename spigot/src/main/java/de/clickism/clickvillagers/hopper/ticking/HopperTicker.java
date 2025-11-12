@@ -2,7 +2,7 @@ package de.clickism.clickvillagers.hopper.ticking;
 
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.hopper.config.HopperConfig;
-import de.clickism.clickvillagers.hopper.util.HopperItemFactory;
+import de.clickism.clickvillagers.hopper.util.HopperUtil;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PickupManager;
 import io.papermc.lib.PaperLib;
@@ -12,7 +12,6 @@ import org.bukkit.block.Hopper;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.BlockVector;
 
 import java.util.*;
@@ -55,8 +54,7 @@ public class HopperTicker {
 
         for (LivingEntity entity : villagers) {
             if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) continue;
-            if (!hopper.getPersistentDataContainer().has(HopperItemFactory.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN))
-                continue;
+            if (!HopperUtil.isVillagerHopper(hopper.getPersistentDataContainer())) return;
 
             Inventory inv = hopper.getInventory();
             if (!hasSpace(inv)) continue;

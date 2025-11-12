@@ -13,15 +13,14 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 public class HopperEvents implements Listener {
 
@@ -33,17 +32,12 @@ public class HopperEvents implements Listener {
         this.config = config;
     }
 
-    // TODO: Improve this
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlace(BlockPlaceEvent e) {
         Player player = e.getPlayer();
         ItemStack item = e.getItemInHand();
 
-        if (item.getType() != Material.HOPPER) return;
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) return;
-        if (!meta.getPersistentDataContainer().has(HopperItemFactory.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN))
-            return;
+        if (!HopperUtil.isVillagerHopperItem(item)) return;
 
         if (Permission.HOPPER.lacksAndNotify(player)) {
             e.setCancelled(true);
@@ -51,7 +45,6 @@ public class HopperEvents implements Listener {
         }
 
         Block block = e.getBlockPlaced();
-        if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
 
         // Check limit
         if (storage.isHopperLimitReached(block.getChunk(), config.limitPerChunk, player)) {
@@ -60,19 +53,22 @@ public class HopperEvents implements Listener {
             return;
         }
 
+        if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
+
         HopperDisplayUtil.applyMark(hopper, config);
         storage.add(block.getChunk(), block);
         HopperUtil.playPlaceSound(block, player);
     }
 
-    // TODO: Improve this
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBreak(BlockBreakEvent e) {
         Block block = e.getBlock();
-        if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
+        if (block.getType() != Material.HOPPER) return;
 
+        if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
         PersistentDataContainer data = hopper.getPersistentDataContainer();
-        if (!data.has(HopperItemFactory.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) return;
+
+        if (!HopperUtil.isVillagerHopper(data)) return;
 
         HopperDisplayUtil.removeDisplayIfExists(data);
 

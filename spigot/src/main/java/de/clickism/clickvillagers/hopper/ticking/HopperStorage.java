@@ -1,7 +1,7 @@
 package de.clickism.clickvillagers.hopper.ticking;
 
 import de.clickism.clickvillagers.command.Permission;
-import de.clickism.clickvillagers.hopper.util.HopperItemFactory;
+import de.clickism.clickvillagers.hopper.util.HopperUtil;
 import de.clickism.clickvillagers.util.SpigotAdapter;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -10,7 +10,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.BlockVector;
 
 import java.util.*;
@@ -69,7 +68,7 @@ public class HopperStorage {
         for (BlockState state : SpigotAdapter.getTileEntities(chunk, block -> block.getType() == Material.HOPPER, false)) {
             if (!(state instanceof Hopper hopper)) continue;
             PersistentDataContainer data = hopper.getPersistentDataContainer();
-            if (!data.has(HopperItemFactory.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN)) continue;
+            if (!HopperUtil.isVillagerHopper(data)) continue;
             set.add(hopper.getLocation().toVector().toBlockVector());
         }
 

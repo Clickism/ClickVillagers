@@ -66,7 +66,7 @@ public class LegacyHopperCompatibility {
     private void convertHopper(Location location, UUID displayUUID) {
         try {
             Hopper hopper = (Hopper) PaperLib.getBlockState(location.getBlock(), false).getState();
-            HopperDisplayUtil.applyMark(hopper, this.hopperManager.getHopperConfig());
+            HopperDisplayUtil.applyMark(hopper, hopperManager.getHopperConfig());
             ClickVillagers.LOGGER.info(LOG_PREFIX + "Converted legacy villager hopper at: " + formatLocation(location));
         } catch (Exception exception) {
             ClickVillagers.LOGGER.warning(LOG_PREFIX + "Failed to convert legacy villager hopper at: " + formatLocation(location));

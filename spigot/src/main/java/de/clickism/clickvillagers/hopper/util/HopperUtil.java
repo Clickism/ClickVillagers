@@ -8,6 +8,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
@@ -40,6 +43,19 @@ public final class HopperUtil {
 
     public static Collection<Entity> getVillagersAboveHopper(Location loc) {
         return loc.toCenterLocation().getNearbyEntities(0.5, 1.0, 0.5);
+    }
+
+    public static boolean isVillagerHopperItem(ItemStack item) {
+        if (item == null || item.getType() != Material.HOPPER) return false;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        return isVillagerHopper(data);
+    }
+
+    public static boolean isVillagerHopper(PersistentDataContainer data) {
+        return data.has(HopperItemFactory.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN);
     }
 
     public static void playPlaceSound(Block block, Player player) {
