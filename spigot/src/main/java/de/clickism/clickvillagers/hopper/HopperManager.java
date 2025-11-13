@@ -8,6 +8,7 @@ package de.clickism.clickvillagers.hopper;
 
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.hopper.config.HopperConfig;
+import de.clickism.clickvillagers.hopper.event.ChunkListener;
 import de.clickism.clickvillagers.hopper.event.HopperEvents;
 import de.clickism.clickvillagers.hopper.ticking.HopperStorage;
 import de.clickism.clickvillagers.hopper.ticking.HopperTicker;
@@ -16,6 +17,7 @@ import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PickupManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
+import org.bukkit.scheduler.BukkitTask;
 
 public class HopperManager {
 
@@ -25,8 +27,9 @@ public class HopperManager {
     private final HopperStorage storage;
     private final HopperTicker ticker;
     private final HopperEvents events;
+    private final ChunkListener chunkListener;
 
-    private int tickerTaskId = -1;
+    private BukkitTask tickerTask;
     private boolean eventsRegistered = false;
 
     public HopperManager(ClickVillagers plugin, PickupManager pickupManager, ClaimManager claimManager) {
@@ -37,6 +40,16 @@ public class HopperManager {
         this.storage = new HopperStorage();
         this.ticker = new HopperTicker(pickupManager, hopperConfig, claimManager, storage);
         this.events = new HopperEvents(storage, hopperConfig);
+        this.chunkListener = new ChunkListener(storage);
+
+        // Register recipe once
+        if (hopperConfig.recipeEnabled) {
+            HopperItemFactory.registerRecipe();
+        }
+
+        // Always register onPlace and onBreak in case the hopper feature was disabled after
+        // Hoppers were already placed
+        Bukkit.getPluginManager().registerEvents(events, plugin);
 
         // Apply initial configuration
         reloadConfig();
@@ -46,33 +59,23 @@ public class HopperManager {
         disableTasks();
         unregisterEvents();
 
-        // Always refresh recipe to avoid duplicates or stale data
-        // TODO: Only unregister if the recipe has changed
-        HopperItemFactory.unregisterRecipe();
-        if (hopperConfig.recipeEnabled) {
-            HopperItemFactory.registerRecipe();
-        }
-
         // Enable ticking logic and events only if configured
         if (hopperConfig.tickingEnabled) {
-            tickerTaskId = Bukkit.getScheduler().runTaskTimer(
+            tickerTask = Bukkit.getScheduler().runTaskTimer(
                     plugin, ticker::tickAll, hopperConfig.tickRate, hopperConfig.tickRate
-            ).getTaskId();
-            Bukkit.getPluginManager().registerEvents(events, plugin);
+            );
+            Bukkit.getPluginManager().registerEvents(chunkListener, plugin);
             eventsRegistered = true;
         }
     }
 
     private void disableTasks() {
-        if (tickerTaskId != -1) {
-            Bukkit.getScheduler().cancelTask(tickerTaskId);
-            tickerTaskId = -1;
-        }
+        tickerTask.cancel();
     }
 
     private void unregisterEvents() {
         if (eventsRegistered) {
-            HandlerList.unregisterAll(events);
+            HandlerList.unregisterAll(chunkListener);
             eventsRegistered = false;
         }
     }

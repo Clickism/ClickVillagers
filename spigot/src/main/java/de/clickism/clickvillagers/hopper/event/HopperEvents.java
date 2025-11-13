@@ -17,8 +17,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 
 public class HopperEvents implements Listener {
@@ -104,15 +102,5 @@ public class HopperEvents implements Listener {
 
         // Play a breaking sound effect
         HopperUtil.playBreakSound(block, player);
-    }
-
-    @EventHandler
-    private void onChunkLoad(ChunkLoadEvent event) {
-        storage.loadHoppersInChunk(event.getChunk());
-    }
-
-    @EventHandler
-    private void onChunkUnload(ChunkUnloadEvent event) {
-        storage.unloadHoppersInChunk(event.getChunk());
     }
 }
