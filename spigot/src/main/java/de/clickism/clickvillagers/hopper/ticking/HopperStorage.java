@@ -52,7 +52,7 @@ public class HopperStorage {
         Set<BlockVector> set = loadedHoppers.get(chunk);
         if (set == null) return;
         set.remove(block.getLocation().toVector().toBlockVector());
-        if (set.isEmpty()) loadedHoppers.remove(chunk);
+        remove(chunk);
     }
 
     /**
