@@ -105,7 +105,7 @@ public class PickupManager implements Listener {
 
     @NotNull
     public ItemStack toItemStack(LivingEntity entity) throws IllegalArgumentException {
-        ItemStack item = createItem(entity);
+        ItemStack item = createVillagerItem(entity);
         entity.remove();
         return item;
     }
