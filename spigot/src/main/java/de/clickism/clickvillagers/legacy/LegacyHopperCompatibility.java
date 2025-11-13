@@ -8,7 +8,9 @@ package de.clickism.clickvillagers.legacy;
 
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.hopper.HopperManager;
+import de.clickism.clickvillagers.hopper.util.HopperUtil;
 import de.clickism.clickvillagers.serialization.YAMLDataManager;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Hopper;
@@ -63,8 +65,8 @@ public class LegacyHopperCompatibility {
 
     private void convertHopper(Location location, UUID displayUUID) {
         try {
-            Hopper hopper = (Hopper) location.getBlock().getState();
-            hopperManager.markHopper(hopper, displayUUID);
+            Hopper hopper = (Hopper) PaperLib.getBlockState(location.getBlock(), false).getState();
+            HopperUtil.markHopper(hopper, hopperManager.getHopperConfig());
             ClickVillagers.LOGGER.info(LOG_PREFIX + "Converted legacy villager hopper at: " + formatLocation(location));
         } catch (Exception exception) {
             ClickVillagers.LOGGER.warning(LOG_PREFIX + "Failed to convert legacy villager hopper at: " + formatLocation(location));

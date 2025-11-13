@@ -10,7 +10,6 @@ import de.clickism.clickvillagers.command.ReloadCommand;
 import de.clickism.clickvillagers.entity.EntitySaver;
 import de.clickism.clickvillagers.entity.EntitySaverFactory;
 import de.clickism.clickvillagers.gui.ChatInputListener;
-import de.clickism.clickvillagers.hopper.ChunkListener;
 import de.clickism.clickvillagers.hopper.HopperManager;
 import de.clickism.clickvillagers.legacy.LegacyHopperCompatibility;
 import de.clickism.clickvillagers.legacy.LegacyMessagesCompatibility;
@@ -73,7 +72,6 @@ public final class ClickVillagers extends JavaPlugin {
         EntitySaver entitySaver = EntitySaverFactory.create();
         PickupManager pickupManager = new PickupManager(this, entitySaver, claimManager, anchorHandler);
         HopperManager hopperManager = new HopperManager(this, pickupManager, claimManager);
-        new ChunkListener(this, hopperManager); // Register chunk listener for hopper loading/unloading
         ChatInputListener chatInputListener = new ChatInputListener(this);
 
         CooldownManager cooldownManager = new CooldownManager(() -> CONFIG.get(COOLDOWN) * 1000L);
@@ -84,7 +82,7 @@ public final class ClickVillagers extends JavaPlugin {
         // Register commands
         PluginCommand command = Bukkit.getPluginCommand("clickvillagers");
         if (command != null) {
-            command.setExecutor(new ReloadCommand());
+            command.setExecutor(new ReloadCommand(hopperManager));
         }
         // Check updates
         if (CONFIG.get(CHECK_UPDATES)) {
@@ -92,11 +90,11 @@ public final class ClickVillagers extends JavaPlugin {
             new JoinListener(this, () -> newerVersion);
         }
         // Legacy conversions
-        var hopperCompatibility = new LegacyHopperCompatibility(hopperManager);
+        LegacyHopperCompatibility hopperCompatibility = new LegacyHopperCompatibility(hopperManager);
         hopperCompatibility.startConversionIfLegacy(this);
         LegacyMessagesCompatibility.removeLegacyMessageFile(this);
         // Metrics
-        setupBStats();
+        setupBStats(hopperManager);
     }
 
     private void checkUpdates() {
@@ -112,13 +110,15 @@ public final class ClickVillagers extends JavaPlugin {
         });
     }
 
-    private void setupBStats() {
+    private void setupBStats(HopperManager hopperManager) {
         int pluginId = 27919;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SingleLineChart("active_villager_hoppers",
-                HopperManager.ALL_HOPPERS_STATS::size));
-        metrics.addCustomChart(new SimplePie("hopper_tick_rate", () ->
-                String.valueOf(CONFIG.get(HOPPER_TICK_RATE))));
+                hopperManager::getActiveHopperCount));
+        if (hopperManager.getHopperConfig().tickingEnabled) {
+            metrics.addCustomChart(new SimplePie("hopper_tick_rate", () ->
+                    String.valueOf(hopperManager.getHopperConfig().tickRate)));
+        }
         metrics.addCustomChart(new SimplePie("language", () ->
                 String.valueOf(CONFIG.get(LANGUAGE))));
     }
