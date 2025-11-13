@@ -32,8 +32,18 @@ public class HopperTicker {
     }
 
     public void tickAll() {
-        storage.getAll().forEach(this::tickChunk);
+        List<Chunk> toRemove = new ArrayList<>();
+
+        storage.getAll().forEach((chunk, set) -> {
+            tickChunk(chunk, set);
+            if (set.isEmpty()) {
+                toRemove.add(chunk);
+            }
+        });
+
+        toRemove.forEach(storage::remove);
     }
+
 
     private void tickChunk(Chunk chunk, Set<BlockVector> vectors) {
         if (!chunk.isLoaded()) return; // Should never happen
@@ -45,11 +55,6 @@ public class HopperTicker {
 
             hopperLoc.set(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
             tickHopper(setIterator, hopperLoc);
-        }
-
-        // Handle empty sets if an invalid hopper was removed in tickHopper
-        if (vectors.isEmpty()) {
-            storage.remove(chunk);
         }
     }
 
