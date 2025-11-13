@@ -7,7 +7,6 @@
 package de.clickism.clickvillagers.legacy;
 
 import de.clickism.clickvillagers.ClickVillagers;
-import de.clickism.clickvillagers.hopper.util.HopperDisplayUtil;
 import de.clickism.clickvillagers.hopper.HopperManager;
 import de.clickism.clickvillagers.hopper.util.HopperUtil;
 import de.clickism.clickvillagers.serialization.YAMLDataManager;

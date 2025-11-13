@@ -64,8 +64,15 @@ public class HopperTicker {
         // Hopper doesn't exist anymore for some reason, remove it
         // This should never happen
         if (hopper == null) {
-            ClickVillagers.LOGGER.warning("Removed invalid hopper at " + hopperLoc);
+            Location center = hopperLoc.add(0.5, 1, 0.5);
+
+            if (hopperConfig.blockDisplay) {
+                for (Display display : center.getNearbyEntitiesByType(BlockDisplay.class, 0.2, 0.2, 0.2)) {
+                    display.remove();
+                }
+            }
             setIterator.remove();
+            ClickVillagers.LOGGER.warning("Removed invalid hopper at " + hopperLoc.toCenterLocation());
             return;
         }
 

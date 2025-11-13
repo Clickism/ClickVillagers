@@ -1,7 +1,6 @@
 package de.clickism.clickvillagers.hopper.util;
 
 import de.clickism.clickvillagers.ClickVillagers;
-import de.clickism.clickvillagers.hopper.config.HopperConfig;
 import de.clickism.clickvillagers.message.Message;
 import org.bukkit.*;
 import org.bukkit.block.Block;
