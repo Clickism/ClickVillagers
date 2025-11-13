@@ -70,7 +70,9 @@ public class HopperManager {
     }
 
     private void disableTasks() {
-        tickerTask.cancel();
+        if (tickerTask != null) {
+            tickerTask.cancel();
+        }
     }
 
     private void unregisterEvents() {
