@@ -53,7 +53,9 @@ public class HopperTicker {
         for (Iterator<BlockVector> setIterator = vectors.iterator(); setIterator.hasNext(); ) {
             BlockVector vector = setIterator.next();
 
-            hopperLoc.set(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
+            hopperLoc.setX(vector.getX());
+            hopperLoc.setY(vector.getY());
+            hopperLoc.setZ(vector.getZ());
             tickHopper(setIterator, hopperLoc);
         }
     }
@@ -65,14 +67,17 @@ public class HopperTicker {
         // This should never happen
         if (hopper == null) {
             Location center = hopperLoc.add(0.5, 1, 0.5);
+            World world = center.getWorld();
+            if (world == null) return;
 
             if (hopperConfig.blockDisplay) {
-                for (Display display : center.getNearbyEntitiesByType(BlockDisplay.class, 0.2, 0.2, 0.2)) {
-                    display.remove();
+                for (Entity entity : world.getNearbyEntities(center, 0.2, 0.2, 0.2)) {
+                    if (!(entity instanceof BlockDisplay block)) continue;
+                    block.remove();
                 }
             }
             setIterator.remove();
-            ClickVillagers.LOGGER.warning("Removed invalid hopper at " + hopperLoc.toCenterLocation());
+            ClickVillagers.LOGGER.warning("Removed invalid hopper at " + hopperLoc);
             return;
         }
 

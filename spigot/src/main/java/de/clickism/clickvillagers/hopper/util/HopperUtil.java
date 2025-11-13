@@ -1,6 +1,7 @@
 package de.clickism.clickvillagers.hopper.util;
 
 import de.clickism.clickvillagers.hopper.config.HopperConfig;
+import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -35,7 +36,10 @@ public final class HopperUtil {
     }
 
     public static Collection<Entity> getVillagersAboveHopper(Location loc) {
-        return loc.toCenterLocation().getNearbyEntities(0.5, 1.0, 0.5);
+        World world = loc.getWorld();
+        if (world == null) return Collections.emptyList();
+
+        return loc.getWorld().getNearbyEntities(loc, 0.5, 1.0, 0.5);
     }
 
     public static boolean isVillagerHopperItem(ItemStack item) {
@@ -66,7 +70,7 @@ public final class HopperUtil {
         Location l = block.getLocation();
         w.playSound(l, Sound.BLOCK_METAL_PLACE, 1, .5f);
         w.playSound(l, Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1, .5f);
-        player.sendActionBar(ChatColor.GRAY + "Villager Hopper placed!");
+        Message.VILLAGER_HOPPER_PLACE.sendActionbarSilently(player);
     }
 
     public static void playBreakSound(Block block, Player player) {
@@ -74,6 +78,6 @@ public final class HopperUtil {
         Location l = block.getLocation();
         w.playSound(l, Sound.BLOCK_METAL_BREAK, 1, .5f);
         w.playSound(l, Sound.BLOCK_IRON_TRAPDOOR_CLOSE, 1, .5f);
-        player.sendActionBar(ChatColor.RED + "Villager Hopper removed!");
+        Message.VILLAGER_HOPPER_BREAK.sendActionbarSilently(player);
     }
 }
