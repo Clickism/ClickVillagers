@@ -5,6 +5,7 @@ import de.clickism.clickvillagers.villager.ClaimManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Hopper;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -48,6 +49,16 @@ public final class HopperUtil {
 
     public static boolean isVillagerHopper(PersistentDataContainer data) {
         return data.has(HopperItemFactory.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN);
+    }
+
+    public static void markHopper(Hopper hopper, HopperConfig config) {
+        if (config.blockDisplay) {
+            Block block = hopper.getBlock();
+            BlockDisplay display = HopperDisplayUtil.createBlockDisplay(block, config.displayViewRange);
+            HopperDisplayUtil.addBlockDisplay(hopper, display.getUniqueId());
+        } else {
+            HopperDisplayUtil.addBlockDisplay(hopper, null);
+        }
     }
 
     public static void playPlaceSound(Block block, Player player) {

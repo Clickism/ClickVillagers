@@ -55,7 +55,7 @@ public class HopperEvents implements Listener {
         if (!(PaperLib.getBlockState(block, false).getState() instanceof Hopper hopper)) return;
 
         // Set the PDC and add a DisplayEntity if enabled
-        HopperDisplayUtil.applyMark(hopper, config);
+        HopperUtil.markHopper(hopper, config);
 
         // Add hopper to storage
         storage.add(block.getChunk(), block);

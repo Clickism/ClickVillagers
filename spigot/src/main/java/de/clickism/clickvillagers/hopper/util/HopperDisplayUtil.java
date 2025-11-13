@@ -2,6 +2,7 @@ package de.clickism.clickvillagers.hopper.util;
 
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.hopper.config.HopperConfig;
+import de.clickism.clickvillagers.message.Message;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Hopper;
@@ -26,17 +27,7 @@ public final class HopperDisplayUtil {
             new AxisAngle4f()
     );
 
-    public static void applyMark(Hopper hopper, HopperConfig config) {
-        if (config.blockDisplay) {
-            Block block = hopper.getBlock();
-            BlockDisplay display = createBlockDisplay(block, config.displayViewRange);
-            mark(hopper, display.getUniqueId());
-        } else {
-            mark(hopper, null);
-        }
-    }
-
-    private static void mark(Hopper hopper, UUID displayUUID) {
+    public static void addBlockDisplay(Hopper hopper, UUID displayUUID) {
         PersistentDataContainer data = hopper.getPersistentDataContainer();
         data.set(HopperItemFactory.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN, true);
         if (displayUUID != null) {
@@ -44,11 +35,11 @@ public final class HopperDisplayUtil {
         } else {
             data.remove(DISPLAY_UUID_KEY);
         }
-        hopper.setCustomName(ChatColor.DARK_GRAY + "📥 Villager Hopper");
+        hopper.setCustomName(ChatColor.DARK_GRAY + "📥 " + ChatColor.BOLD + Message.VILLAGER_HOPPER);
         hopper.update();
     }
 
-    private static BlockDisplay createBlockDisplay(Block block, double range) {
+    public static BlockDisplay createBlockDisplay(Block block, double range) {
         Location loc = block.getLocation().clone().add(0.5, 1, 0.5);
         return block.getWorld().spawn(loc, BlockDisplay.class, display -> {
             display.setTransformation(FRAME_TRANSFORMATION);
