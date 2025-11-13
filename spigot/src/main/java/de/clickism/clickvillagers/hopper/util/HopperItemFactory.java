@@ -34,16 +34,11 @@ public final class HopperItemFactory {
         recipe.addIngredient(Material.HOPPER);
         recipe.addIngredient(Material.EMERALD);
 
-        // TODO: check this
         boolean registered = Bukkit.addRecipe(recipe);
         if (registered) {
             ClickVillagers.LOGGER.info("Successfully registered Hopper Villager recipe");
         } else {
             ClickVillagers.LOGGER.warning("Failed to register Hopper Villager recipe");
         }
-    }
-
-    public static void unregisterRecipe() {
-        Bukkit.removeRecipe(VILLAGER_HOPPER_KEY);
     }
 }

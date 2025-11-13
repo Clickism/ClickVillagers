@@ -31,6 +31,7 @@ public class HopperManager {
 
     private BukkitTask tickerTask;
     private boolean eventsRegistered = false;
+    private boolean recipeRegistered = false;
 
     public HopperManager(ClickVillagers plugin, PickupManager pickupManager, ClaimManager claimManager) {
         this.plugin = plugin;
@@ -41,6 +42,11 @@ public class HopperManager {
         this.ticker = new HopperTicker(pickupManager, hopperConfig, claimManager, storage);
         this.events = new HopperEvents(storage, hopperConfig);
         this.chunkListener = new ChunkListener(storage);
+
+        // Register recipe once, a server restart is needed to reload this option
+        if (hopperConfig.recipeEnabled) {
+            HopperItemFactory.registerRecipe();
+        }
 
         // Always register onPlace and onBreak in case the hopper feature was disabled after
         // Hoppers were already placed
@@ -55,13 +61,6 @@ public class HopperManager {
 
         disableTasks();
         unregisterEvents();
-
-        // Toggle recipe
-        if (hopperConfig.recipeEnabled) {
-            HopperItemFactory.registerRecipe();
-        } else {
-            HopperItemFactory.unregisterRecipe();
-        }
 
         // Enable ticking logic and events only if configured
         if (hopperConfig.tickingEnabled) {
