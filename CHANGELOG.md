@@ -1,6 +1,1 @@
-- Optimized villager hopper performance.
-- Added new config option `enable_dispensers` that controls whether dispensers can dispense mobs.
-- Overhauled dispenser logic.
-    - Dispensers now dispense villagers on all versions.
-    - Fixed: Villager item was not being removed after being dispensed.
-    - Fixed: Villager only gets dispensed if a player/mob is in front of the dispenser.
+- Fixed glitched names for villagers with a profession on 1.21.10.
