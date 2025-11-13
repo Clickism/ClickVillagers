@@ -3,8 +3,10 @@ package de.clickism.clickvillagers.hopper.ticking;
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.hopper.util.HopperUtil;
 import de.clickism.clickvillagers.util.SpigotAdapter;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Hopper;
@@ -27,6 +29,14 @@ public class HopperStorage {
 
     /** A map of loaded chunks to their corresponding villager hopper positions. */
     private final Map<Chunk, Set<BlockVector>> loadedHoppers = new HashMap<>();
+
+    public HopperStorage() {
+        for (World world : Bukkit.getWorlds()) {
+            for (Chunk chunk : world.getLoadedChunks()) {
+                loadHoppersInChunk(chunk);
+            }
+        }
+    }
 
     /**
      * Registers a villager hopper in the specified chunk.
