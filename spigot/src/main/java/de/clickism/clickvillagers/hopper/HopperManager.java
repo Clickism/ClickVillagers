@@ -42,11 +42,6 @@ public class HopperManager {
         this.events = new HopperEvents(storage, hopperConfig);
         this.chunkListener = new ChunkListener(storage);
 
-        // Register recipe once
-        if (hopperConfig.recipeEnabled) {
-            HopperItemFactory.registerRecipe();
-        }
-
         // Always register onPlace and onBreak in case the hopper feature was disabled after
         // Hoppers were already placed
         Bukkit.getPluginManager().registerEvents(events, plugin);
@@ -56,8 +51,17 @@ public class HopperManager {
     }
 
     public void reloadConfig() {
+        this.hopperConfig.reloadConfig();
+
         disableTasks();
         unregisterEvents();
+
+        // Toggle recipe
+        if (hopperConfig.recipeEnabled) {
+            HopperItemFactory.registerRecipe();
+        } else {
+            HopperItemFactory.unregisterRecipe();
+        }
 
         // Enable ticking logic and events only if configured
         if (hopperConfig.tickingEnabled) {
