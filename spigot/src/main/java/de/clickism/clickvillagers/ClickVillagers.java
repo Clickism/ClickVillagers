@@ -82,7 +82,7 @@ public final class ClickVillagers extends JavaPlugin {
         // Register commands
         PluginCommand command = Bukkit.getPluginCommand("clickvillagers");
         if (command != null) {
-            command.setExecutor(new ReloadCommand(hopperManager.getHopperConfig()));
+            command.setExecutor(new ReloadCommand(hopperManager));
         }
         // Check updates
         if (CONFIG.get(CHECK_UPDATES)) {
