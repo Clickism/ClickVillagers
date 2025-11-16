@@ -121,7 +121,6 @@ public class VillagerEditMenu extends Menu {
         PARTNER_ADD.send(player, input);
     }
 
-    @SuppressWarnings("deprecation")
     protected boolean isValidPartner(Player player, String input) {
         if (input.equals(player.getName())) {
             return false;
