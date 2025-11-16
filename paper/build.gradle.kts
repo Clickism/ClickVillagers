@@ -22,14 +22,15 @@ repositories {
     maven("https://libraries.minecraft.net/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
     maven("https://repo.bstats.org/content/repositories/releases/")
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 val configuredVersion = "0.2.4"
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
-    compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT:remapped-mojang")
-    compileOnly("org.jetbrains:annotations:22.0.0")
+    // Paper
+    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    // GUI
     implementation("me.clickism:ClickGUI:1.0")
     // Configuration & Localization
     implementation("de.clickism:configured-core:$configuredVersion")
@@ -40,6 +41,8 @@ dependencies {
     implementation("de.clickism:modrinth-update-checker:1.0")
     // Metrics
     implementation("org.bstats:bstats-bukkit:3.1.0")
+    // Other
+    compileOnly("org.jetbrains:annotations:22.0.0")
 }
 
 tasks.runServer {
