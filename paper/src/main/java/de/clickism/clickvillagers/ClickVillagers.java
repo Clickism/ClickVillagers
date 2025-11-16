@@ -11,8 +11,6 @@ import de.clickism.clickvillagers.entity.SnapshotSaver;
 import de.clickism.clickvillagers.gui.ChatInputListener;
 import de.clickism.clickvillagers.hopper.ChunkListener;
 import de.clickism.clickvillagers.hopper.HopperManager;
-import de.clickism.clickvillagers.legacy.LegacyHopperCompatibility;
-import de.clickism.clickvillagers.legacy.LegacyMessagesCompatibility;
 import de.clickism.clickvillagers.listener.*;
 import de.clickism.clickvillagers.villager.AnchorManager;
 import de.clickism.clickvillagers.villager.ClaimManager;
@@ -87,10 +85,6 @@ public final class ClickVillagers extends JavaPlugin {
             checkUpdates();
             new JoinListener(this, () -> newerVersion);
         }
-        // Legacy conversions
-        var hopperCompatibility = new LegacyHopperCompatibility(hopperManager);
-        hopperCompatibility.startConversionIfLegacy(this);
-        LegacyMessagesCompatibility.removeLegacyMessageFile(this);
         // Metrics
         setupBStats();
     }
