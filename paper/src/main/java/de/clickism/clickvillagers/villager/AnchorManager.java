@@ -42,16 +42,16 @@ public class AnchorManager implements Listener {
     }
 
     public void addAnchorEffect(LivingEntity entity) {
-        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE,
+        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, Integer.MAX_VALUE,
                 255, true, false, false));
     }
 
     public void removeAnchorEffect(LivingEntity entity) {
-        entity.removePotionEffect(PotionEffectType.SLOW);
+        entity.removePotionEffect(PotionEffectType.SLOWNESS);
     }
 
     protected boolean isAnchorEffect(PotionEffect effect) {
-        return effect.getType().equals(PotionEffectType.SLOW)
+        return effect.getType().equals(PotionEffectType.SLOWNESS)
                && effect.getDuration() > ANCHOR_DURATION_THRESHOLD;
     }
 }

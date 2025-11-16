@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ public class TradeInfoProviders {
             .build();
 
     public static final TradeInfoProvider LEATHERWORKER = TradeInfoProvider.builder()
-            .acceptIngredients(Material.LEATHER, Material.FLINT, Material.RABBIT_HIDE, Material.SCUTE)
+            .acceptIngredients(Material.LEATHER, Material.FLINT, Material.RABBIT_HIDE, Material.TURTLE_SCUTE)
             .acceptResults(Material.LEATHER_HORSE_ARMOR, Material.SADDLE)
             .singleFormatter(ITEM_FORMATTER)
             .build();
@@ -131,7 +132,7 @@ public class TradeInfoProviders {
             .resultFormatter(item -> {
                 Material material = item.getType();
                 if (material == Material.BRICK || material == Material.QUARTZ_PILLAR
-                        || material == Material.QUARTZ_BLOCK || material == Material.EMERALD) {
+                    || material == Material.QUARTZ_BLOCK || material == Material.EMERALD) {
                     return ITEM_FORMATTER.apply(item);
                 }
                 return "&6🪨 " + Utils.formatItem(item);
@@ -145,23 +146,28 @@ public class TradeInfoProviders {
             .singleFormatter(ITEM_FORMATTER)
             .build();
 
+    private static final Map<Villager.Profession, TradeInfoProvider> PROVIDERS = Map.ofEntries(
+            Map.entry(Villager.Profession.LIBRARIAN, LIBRARIAN),
+            Map.entry(Villager.Profession.FARMER, FARMER),
+            Map.entry(Villager.Profession.TOOLSMITH, SMITH),
+            Map.entry(Villager.Profession.WEAPONSMITH, SMITH),
+            Map.entry(Villager.Profession.ARMORER, SMITH),
+            Map.entry(Villager.Profession.BUTCHER, BUTCHER),
+            Map.entry(Villager.Profession.FISHERMAN, FISHERMAN),
+            Map.entry(Villager.Profession.LEATHERWORKER, LEATHERWORKER),
+            Map.entry(Villager.Profession.CLERIC, CLERIC),
+            Map.entry(Villager.Profession.CARTOGRAPHER, CARTOGRAPHER),
+            Map.entry(Villager.Profession.FLETCHER, FLETCHER),
+            Map.entry(Villager.Profession.MASON, MASON),
+            Map.entry(Villager.Profession.SHEPHERD, SHEPHERD)
+    );
+
     public static TradeInfoProvider getProvider(Villager.Profession profession) {
-        return switch (profession) {
-            case LIBRARIAN -> LIBRARIAN;
-            case FARMER -> FARMER;
-            case TOOLSMITH,
-                 WEAPONSMITH,
-                 ARMORER -> SMITH;
-            case BUTCHER -> BUTCHER;
-            case FISHERMAN -> FISHERMAN;
-            case LEATHERWORKER -> LEATHERWORKER;
-            case CLERIC -> CLERIC;
-            case CARTOGRAPHER -> CARTOGRAPHER;
-            case FLETCHER -> FLETCHER;
-            case MASON -> MASON;
-            case SHEPHERD -> SHEPHERD;
-            default -> ALL_TRADES;
-        };
+        var provider = PROVIDERS.get(profession);
+        if (provider != null) {
+            return provider;
+        }
+        return ALL_TRADES;
     }
 
     @Nullable
@@ -208,7 +214,7 @@ public class TradeInfoProviders {
 
             case LEATHER -> "&6🐄";
             case RABBIT_HIDE -> "&e🐇";
-            case SCUTE -> "&a🐢";
+            case TURTLE_SCUTE -> "&a🐢";
             case SADDLE -> "&6🐴";
 
             case REDSTONE -> "&c💎";

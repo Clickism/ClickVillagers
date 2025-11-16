@@ -7,8 +7,7 @@
 package de.clickism.clickvillagers;
 
 import de.clickism.clickvillagers.command.ReloadCommand;
-import de.clickism.clickvillagers.entity.EntitySaver;
-import de.clickism.clickvillagers.entity.EntitySaverFactory;
+import de.clickism.clickvillagers.entity.SnapshotSaver;
 import de.clickism.clickvillagers.gui.ChatInputListener;
 import de.clickism.clickvillagers.hopper.ChunkListener;
 import de.clickism.clickvillagers.hopper.HopperManager;
@@ -70,8 +69,7 @@ public final class ClickVillagers extends JavaPlugin {
         MenuManager menuManager = new MenuManager(this);
         ClaimManager claimManager = new ClaimManager(this);
         AnchorManager anchorHandler = new AnchorManager(this);
-        EntitySaver entitySaver = EntitySaverFactory.create();
-        PickupManager pickupManager = new PickupManager(this, entitySaver, claimManager, anchorHandler);
+        PickupManager pickupManager = new PickupManager(this, new SnapshotSaver(), claimManager, anchorHandler);
         HopperManager hopperManager = new HopperManager(this, pickupManager, claimManager);
         new ChunkListener(this, hopperManager); // Register chunk listener for hopper loading/unloading
         ChatInputListener chatInputListener = new ChatInputListener(this);
@@ -99,10 +97,11 @@ public final class ClickVillagers extends JavaPlugin {
         setupBStats();
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     private void checkUpdates() {
         LOGGER.info("Checking for updates...");
-        new ModrinthUpdateChecker(PROJECT_ID, "spigot", null).checkVersion(version -> {
-            if (getDescription().getVersion().equals(version)) return;
+        new ModrinthUpdateChecker(PROJECT_ID, "paper", null).checkVersion(version -> {
+            if (getPluginMeta().getVersion().equals(version)) return;
             newerVersion = version;
             LOGGER.info("New version available: " + version);
             Bukkit.getOnlinePlayers().forEach(player -> {

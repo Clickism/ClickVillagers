@@ -9,49 +9,26 @@ package de.clickism.clickvillagers.entity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.entity.EntityType;
 
-import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("UnstableApiUsage")
 public class SnapshotSaver implements EntitySaver {
-    // Reflection classes and methods
-    private static final Class<?> ENTITY_SNAPSHOT_CLASS;
-    private static final Class<?> ENTITY_FACTORY_CLASS;
-    private static final Method CREATE_SNAPSHOT_METHOD;
-    private static final Method GET_AS_STRING_METHOD;
-
-    private static final Method GET_FACTORY_METHOD;
-    private static final Method CREATE_ENTITY_SNAPSHOT_METHOD;
-    private static final Method CREATE_ENTITY_METHOD;
-
     // Pattern to fix the NBT string
     private static final Pattern LEVEL_FIX_PATTERN = Pattern.compile("levels:\\{(.*?)}");
     private static final Matcher MATCHER = LEVEL_FIX_PATTERN.matcher("");
 
-    static {
-        try {
-            ENTITY_SNAPSHOT_CLASS = Class.forName("org.bukkit.entity.EntitySnapshot");
-            GET_AS_STRING_METHOD = ENTITY_SNAPSHOT_CLASS.getMethod("getAsString");
-            CREATE_SNAPSHOT_METHOD = Entity.class.getMethod("createSnapshot");
-            GET_FACTORY_METHOD = Bukkit.class.getMethod("getEntityFactory");
-            ENTITY_FACTORY_CLASS = Class.forName("org.bukkit.entity.EntityFactory");
-            CREATE_ENTITY_SNAPSHOT_METHOD = ENTITY_FACTORY_CLASS.getMethod("createEntitySnapshot", String.class);
-            CREATE_ENTITY_METHOD = ENTITY_SNAPSHOT_CLASS.getMethod("createEntity", Location.class);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            throw new RuntimeException("Failed to initialize SnapshotSaver", e);
-        }
-    }
-
     @Override
     public String writeToString(Entity entity) throws IllegalArgumentException {
         try {
-            Object snapshot = CREATE_SNAPSHOT_METHOD.invoke(entity);
+            var snapshot = entity.createSnapshot();
             if (snapshot == null) {
                 throw new IllegalArgumentException("Failed to create snapshot for entity: " + entity);
             }
-            return (String) GET_AS_STRING_METHOD.invoke(snapshot);
+            return snapshot.getAsString();
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to create snapshot: " + entity, e);
         }
@@ -62,9 +39,9 @@ public class SnapshotSaver implements EntitySaver {
         string = getNBTFixedString(string);
         string = appendEntityTypeIfAbsent(string, type);
         try {
-            Object factory = GET_FACTORY_METHOD.invoke(null);
-            Object snapshot = CREATE_ENTITY_SNAPSHOT_METHOD.invoke(factory, string);
-            return (Entity) CREATE_ENTITY_METHOD.invoke(snapshot, location);
+
+            EntitySnapshot snapshot = Bukkit.getEntityFactory().createEntitySnapshot(string);
+            return snapshot.createEntity(location);
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to read NBT: " + string, e);
         }

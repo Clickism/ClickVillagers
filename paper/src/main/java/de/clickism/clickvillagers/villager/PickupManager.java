@@ -86,7 +86,7 @@ public class PickupManager implements Listener {
             World world = player.getWorld();
             world.playSound(location, Sound.ENTITY_PLAYER_ATTACK_WEAK, 1, .5f);
             Block blockBelow = block.getRelative(BlockFace.DOWN);
-            world.spawnParticle(Particle.BLOCK_CRACK, location, 30, blockBelow.getBlockData());
+            world.spawnParticle(Particle.BLOCK, location, 30, blockBelow.getBlockData());
         } catch (IllegalArgumentException exception) {
             Message.READ_ERROR.send(player);
             ClickVillagers.LOGGER.severe("Failed to read villager data: " + exception.getMessage());
@@ -167,6 +167,7 @@ public class PickupManager implements Listener {
                 || LegacyVillagerCompatibility.isLegacyVillager(item);
     }
 
+    @SuppressWarnings("deprecation")
     private ItemStack createItem(LivingEntity entity) {
         String customName = entity.getCustomName();
         Villager.Profession profession = Utils.getVillagerProfession(entity);
@@ -210,7 +211,7 @@ public class PickupManager implements Listener {
         if (profession == Villager.Profession.NONE) {
             return Message.VILLAGER.toString();
         }
-        String professionName = localize("profession." + profession.name().toLowerCase());
+        String professionName = localize("profession." + profession.key().asMinimalString().toLowerCase());
         return VILLAGER_WITH_PROFESSION.localized(professionName);
     }
 

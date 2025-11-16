@@ -1,7 +1,6 @@
 plugins {
     id("java")
     id("com.gradleup.shadow") version "8.3.5"
-    id("io.github.patrick.remapper") version "1.4.2"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
@@ -50,27 +49,16 @@ tasks.runServer {
     minecraftVersion("1.21.10")
 }
 
-tasks.remap {
-    version.set("1.20.1")
-}
-
 tasks.jar {
     enabled = false
 }
 
 tasks.build {
-    dependsOn(tasks.remap)
     dependsOn(tasks.shadowJar)
 }
 
-val targetJavaVersion = 17
 java {
-    val javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
-    }
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 tasks.shadowJar {
@@ -90,10 +78,7 @@ tasks.shadowJar {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
-        options.release.set(targetJavaVersion)
-    }
+    options.release.set(21)
 }
 
 tasks.processResources {

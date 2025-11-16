@@ -173,7 +173,7 @@ public class InteractListener implements Listener {
             world.playSound(player, Sound.BLOCK_CHAIN_PLACE, 1, .5f);
             world.spawnParticle(Particle.WAX_ON, location, 10, .2, 0, .2, 2);
             Block blockBelow = location.getBlock().getRelative(BlockFace.DOWN);
-            world.spawnParticle(Particle.BLOCK_CRACK, location, 30, blockBelow.getBlockData());
+            world.spawnParticle(Particle.BLOCK, location, 30, blockBelow.getBlockData());
         }
     }
 
