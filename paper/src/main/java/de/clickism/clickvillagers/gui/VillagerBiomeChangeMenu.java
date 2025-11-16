@@ -6,7 +6,7 @@
 
 package de.clickism.clickvillagers.gui;
 
-import me.clickism.clickgui.menu.*;
+import de.clickism.clickgui.menu.*;
 import de.clickism.clickvillagers.message.Message;
 import org.bukkit.Material;
 import org.bukkit.Sound;

@@ -6,7 +6,7 @@
 
 package de.clickism.clickvillagers.villager;
 
-import me.clickism.clickgui.menu.Icon;
+import de.clickism.clickgui.menu.Icon;
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.entity.EntitySaver;

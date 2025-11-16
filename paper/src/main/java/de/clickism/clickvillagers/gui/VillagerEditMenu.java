@@ -6,10 +6,10 @@
 
 package de.clickism.clickvillagers.gui;
 
-import me.clickism.clickgui.menu.Button;
-import me.clickism.clickgui.menu.Icon;
-import me.clickism.clickgui.menu.Menu;
-import me.clickism.clickgui.menu.MenuType;
+import de.clickism.clickgui.menu.Button;
+import de.clickism.clickgui.menu.Icon;
+import de.clickism.clickgui.menu.Menu;
+import de.clickism.clickgui.menu.MenuType;
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.message.MessageType;

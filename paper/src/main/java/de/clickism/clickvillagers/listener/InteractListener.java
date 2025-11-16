@@ -6,7 +6,7 @@
 
 package de.clickism.clickvillagers.listener;
 
-import me.clickism.clickgui.menu.MenuManager;
+import de.clickism.clickgui.menu.MenuManager;
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.gui.ChatInputListener;

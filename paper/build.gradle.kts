@@ -20,7 +20,7 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://libraries.minecraft.net/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
-    maven("https://repo.bstats.org/content/repositories/releases/")
+//    maven("https://repo.bstats.org/content/repositories/releases/")
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
@@ -30,7 +30,7 @@ dependencies {
     // Paper
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     // GUI
-    implementation("me.clickism:ClickGUI:1.0")
+    implementation("de.clickism:click-gui:1.1")
     // Configuration & Localization
     implementation("de.clickism:configured-core:$configuredVersion")
     implementation("de.clickism:configured-yaml:$configuredVersion")
@@ -65,7 +65,7 @@ tasks.shadowJar {
     archiveClassifier.set("")
     mergeServiceFiles()
     isEnableRelocation = true
-    relocationPrefix = "de.clickism.clickvillagers.shadow"
+    relocationPrefix = "shadow.de.clickism.clickvillagers"
     // Exclude Gson and Snakeyaml since it is already provided in Spigot
     dependencies {
         exclude(dependency("com.google.code.gson:gson"))

@@ -9,7 +9,7 @@ package de.clickism.clickvillagers.message;
 import de.clickism.configured.localization.Localization;
 import de.clickism.configured.localization.LocalizationKey;
 import de.clickism.configured.localization.Parameters;
-import me.clickism.clickgui.menu.Icon;
+import de.clickism.clickgui.menu.Icon;
 import de.clickism.clickvillagers.ClickVillagers;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;

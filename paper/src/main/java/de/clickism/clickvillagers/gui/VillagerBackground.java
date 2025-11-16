@@ -6,8 +6,8 @@
 
 package de.clickism.clickvillagers.gui;
 
-import me.clickism.clickgui.menu.Button;
-import me.clickism.clickgui.menu.MenuBackground;
+import de.clickism.clickgui.menu.Button;
+import de.clickism.clickgui.menu.MenuBackground;
 import de.clickism.clickvillagers.message.MessageType;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;

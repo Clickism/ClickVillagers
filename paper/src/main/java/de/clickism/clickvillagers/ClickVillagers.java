@@ -22,7 +22,7 @@ import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PartnerManager;
 import de.clickism.clickvillagers.villager.PickupManager;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
-import me.clickism.clickgui.menu.MenuManager;
+import de.clickism.clickgui.menu.MenuManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;

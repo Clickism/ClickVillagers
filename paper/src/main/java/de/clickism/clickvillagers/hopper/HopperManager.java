@@ -11,7 +11,7 @@ import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PickupManager;
-import me.clickism.clickgui.menu.Icon;
+import de.clickism.clickgui.menu.Icon;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
