@@ -1,0 +1,8 @@
+- Switched to Paper API for better performance and ease of development.
+- Dropped `Spigot` and `1.20` support
+  - From now on, new releases will only support 1.21+.
+  - There might be bugfix releases for 1.20 and Spigot if necessary.
+- New Feature: **Resetting Trades**
+  - You can now reset trades of villagers directly in the trading menu!
+  - Click on the `Reset Trades` recipe to reset the trades of the villager.
+- Rewrote dispenser logic to use Paper's BlockPreDispenseEvent.

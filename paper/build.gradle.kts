@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("com.gradleup.shadow") version "8.3.5"
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
 val pluginVersion = property("plugin_version").toString()
@@ -87,5 +88,35 @@ tasks.processResources {
     filteringCharset = "UTF-8"
     filesMatching("plugin.yml") {
         expand(props)
+    }
+}
+
+publishMods {
+    displayName.set("ClickVillagers $pluginVersion for Paper")
+    file.set(tasks.shadowJar.get().archiveFile)
+    version.set(project.version.toString())
+    changelog.set(rootProject.file("$name/CHANGELOG.md").readText())
+    type.set(STABLE)
+    modLoaders.add("paper")
+    modLoaders.add("purpur")
+    val mcVersionStart = "1.21"
+    val mcVersionEnd = "1.21.10"
+    modrinth {
+        accessToken.set(System.getenv("MODRINTH_TOKEN"))
+        projectId.set("BITzwT7B")
+        minecraftVersionRange {
+            start = mcVersionStart
+            end = mcVersionEnd
+        }
+    }
+    curseforge {
+        accessToken.set(System.getenv("CURSEFORGE_TOKEN"))
+        projectId.set("1162587")
+        clientRequired.set(false)
+        serverRequired.set(true)
+        minecraftVersionRange {
+            start = mcVersionStart
+            end = mcVersionEnd
+        }
     }
 }

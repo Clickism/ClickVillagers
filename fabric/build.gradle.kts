@@ -67,7 +67,7 @@ publishMods {
 	displayName.set("ClickVillagers ${property("mod.version")} for Fabric")
 	file.set(tasks.remapJar.get().archiveFile)
 	version.set(project.version.toString())
-	changelog.set(rootProject.file("CHANGELOG.md").readText())
+	changelog.set(rootProject.file("$name/CHANGELOG.md").readText())
 	type.set(STABLE)
 	modLoaders.add("fabric")
 	val mcVersions = property("mod.target_mc_versions").toString().split(',')
