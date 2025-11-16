@@ -1,7 +1,7 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.5"
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("com.gradleup.shadow") version "9.2.2"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
 }
 
 val pluginVersion = property("plugin_version").toString()
@@ -64,7 +64,7 @@ java {
 tasks.shadowJar {
     archiveClassifier.set("")
     mergeServiceFiles()
-    isEnableRelocation = true
+    enableAutoRelocation = true
     relocationPrefix = "shadow.de.clickism.clickvillagers"
     // Exclude Gson and Snakeyaml since it is already provided in Spigot
     dependencies {
