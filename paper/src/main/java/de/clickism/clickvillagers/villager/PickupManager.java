@@ -10,7 +10,6 @@ import de.clickism.clickgui.menu.Icon;
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.entity.EntitySaver;
-import de.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import de.clickism.clickvillagers.listener.AutoRegistered;
 import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.util.DataVersionUtil;
@@ -140,9 +139,6 @@ public class PickupManager implements Listener {
 
     @NotNull
     public LivingEntity spawnFromItemStack(ItemStack item, Location location) throws IllegalArgumentException {
-        if (LegacyVillagerCompatibility.isLegacyVillager(item)) {
-            return LegacyVillagerCompatibility.spawnFromItemStack(item, location);
-        }
         ItemMeta meta = item.getItemMeta();
         if (meta == null) throw new IllegalArgumentException("ItemMeta is null");
         PersistentDataContainer data = meta.getPersistentDataContainer();
@@ -163,8 +159,7 @@ public class PickupManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
         PersistentDataContainer data = meta.getPersistentDataContainer();
-        return data.has(VILLAGER_KEY, PersistentDataType.BOOLEAN)
-                || LegacyVillagerCompatibility.isLegacyVillager(item);
+        return data.has(VILLAGER_KEY, PersistentDataType.BOOLEAN);
     }
 
     @SuppressWarnings("deprecation")

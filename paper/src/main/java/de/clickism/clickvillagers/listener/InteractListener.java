@@ -12,7 +12,6 @@ import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.gui.ChatInputListener;
 import de.clickism.clickvillagers.gui.VillagerClaimMenu;
 import de.clickism.clickvillagers.gui.VillagerEditMenu;
-import de.clickism.clickvillagers.legacy.LegacyVillagerCompatibility;
 import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.util.Utils;
 import de.clickism.clickvillagers.villager.AnchorManager;
@@ -72,7 +71,6 @@ public class InteractListener implements Listener {
         if (villager instanceof ZombieVillager && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) {
             return;
         }
-        LegacyVillagerCompatibility.convertDataIfLegacy(villager);
         Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.SPECTATOR) return;
         if (!player.isSneaking()) {
