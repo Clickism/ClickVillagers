@@ -17,7 +17,7 @@ import java.util.Map;
 public class ClickVillagersConfig {
     public static final Config CONFIG =
             Config.of("plugins/ClickVillagers/config.yml")
-                    .version(6)
+                    .version(7)
                     .oldKeyGenerator(key -> key.replace('_', '-'))
                     .header("""
                             ---------------------------------------------------------
@@ -59,7 +59,7 @@ public class ClickVillagersConfig {
                     .appendDefaultValue();
 
     public static final ConfigOption<Boolean> ALLOW_RESETTING_TRADES =
-            CONFIG.optionOf("allow_resetting_trades", true)
+            CONFIG.optionOf("allow_resetting_trades", false)
                     .description("""
                             Whether players can reset trades of villagers inside
                             the trading menu.
