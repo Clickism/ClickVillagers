@@ -6,3 +6,6 @@
   - You can now reset trades of villagers directly in the trading menu!
   - Click on the `Reset Trades` recipe to reset the trades of the villager.
 - Rewrote dispenser logic to use Paper's BlockPreDispenseEvent.
+- Removed legacy compatibility.
+  - If you are upgrading from a version before `1.1`, upgrade first to `1.4.4`
+  before upgrading to `1.5` or later.

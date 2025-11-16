@@ -95,7 +95,7 @@ publishMods {
     displayName.set("ClickVillagers $pluginVersion for Paper")
     file.set(tasks.shadowJar.get().archiveFile)
     version.set(project.version.toString())
-    changelog.set(rootProject.file("$name/CHANGELOG.md").readText())
+    changelog.set(rootProject.file("paper/CHANGELOG.md").readText())
     type.set(STABLE)
     modLoaders.add("paper")
     modLoaders.add("purpur")
