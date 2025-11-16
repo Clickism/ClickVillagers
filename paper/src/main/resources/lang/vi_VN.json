@@ -24,6 +24,7 @@
   "biome_changed": "Đã chỉnh biome của dân làng sang \u0026l{biome}.",
   "write_error": "Không thể thay đổi data của dân làng.",
   "read_error": "Không thể đọc được data của dân làng",
+  "trades_reset": "Bạn đã đặt lại giao dịch của dân làng này",
   "info_owner": "Chủ nhân",
   "info_anchored": "Giữ vị trí",
   "info_trade_closed": "Đã khoá trao đổi",
@@ -81,6 +82,11 @@
   "button_back": "\u0026f◀ \u0026lBACK",
   "button_back.lore": [
     "\u00267Quay về trang trước."
+  ],
+  "button_reset_trades": "&4♻ &lĐẶT LẠI GIAO DỊCH",
+  "button_reset_trades.lore": [
+    "&cNhấp vào công thức này để đặt lại giao dịch.",
+    "&c&lHành động này không thể hoàn tác."
   ],
   "biome.desert": "SA MẠC",
   "biome.jungle": "RỪNG",

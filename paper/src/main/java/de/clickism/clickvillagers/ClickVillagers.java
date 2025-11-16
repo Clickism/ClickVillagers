@@ -13,10 +13,7 @@ import de.clickism.clickvillagers.hopper.ChunkListener;
 import de.clickism.clickvillagers.hopper.HopperManager;
 import de.clickism.clickvillagers.legacy.LegacyHopperCompatibility;
 import de.clickism.clickvillagers.legacy.LegacyMessagesCompatibility;
-import de.clickism.clickvillagers.listener.CooldownManager;
-import de.clickism.clickvillagers.listener.DispenserListener;
-import de.clickism.clickvillagers.listener.InteractListener;
-import de.clickism.clickvillagers.listener.JoinListener;
+import de.clickism.clickvillagers.listener.*;
 import de.clickism.clickvillagers.villager.AnchorManager;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PartnerManager;
@@ -79,6 +76,7 @@ public final class ClickVillagers extends JavaPlugin {
         new InteractListener(this, claimManager, pickupManager,
                 anchorHandler, partnerManager, chatInputListener, menuManager, cooldownManager);
         new DispenserListener(this, pickupManager);
+        new TradeListener(this);
         // Register commands
         PluginCommand command = Bukkit.getPluginCommand("clickvillagers");
         if (command != null) {

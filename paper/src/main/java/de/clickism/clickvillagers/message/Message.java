@@ -52,6 +52,8 @@ public enum Message implements LocalizationKey {
     WRITE_ERROR(MessageType.FAIL),
     READ_ERROR(MessageType.FAIL),
 
+    TRADES_RESET(MessageType.WARN),
+
     INFO_OWNER,
     INFO_ANCHORED,
     INFO_TRADE_CLOSED,
@@ -80,6 +82,8 @@ public enum Message implements LocalizationKey {
     BUTTON_REDIRECT_CHANGE_BIOME_MENU,
     BUTTON_CHANGE_BIOME,
     BUTTON_BACK,
+
+    BUTTON_RESET_TRADES,
 
     // COMMANDS
     @Parameters("usage")

@@ -23,6 +23,7 @@
   "biome_changed": "Changed the biome of this villager to &l{biome}.",
   "write_error": "Failed to write villager data.",
   "read_error": "Failed to read villager data.",
+  "trades_reset": "You reset this villager's trades",
   "info_owner": "Owner",
   "info_anchored": "Anchored",
   "info_trade_closed": "Trading Closed",
@@ -81,6 +82,11 @@
   "button_back": "&f◀ &lBACK",
   "button_back.lore": [
     "&7Go back to the previous menu."
+  ],
+  "button_reset_trades": "&4♻ &lRESET TRADES",
+  "button_reset_trades.lore": [
+    "&cClick on this recipe to reset trades.",
+    "&c&lThis cannot be undone."
   ],
   "biome.desert": "DESERT",
   "biome.jungle": "JUNGLE",

@@ -23,6 +23,7 @@
   "biome_changed": "Das Biom dieses Dorfbewohners wurde zu &l{biome} geändert.",
   "write_error": "Schreiben der Dorfbewohnerdaten fehlgeschlagen.",
   "read_error": "Lesen der Dorfbewohnerdaten fehlgeschlagen.",
+  "trades_reset": "Du hast die Angebote dieses Dorfbewohners zurückgesetzt",
   "info_owner": "Besitzer",
   "info_anchored": "Verankert",
   "info_trade_closed": "Handel Begrenzt",
@@ -83,6 +84,11 @@
   "button_back": "&f◀ &lZURÜCK",
   "button_back.lore": [
     "&7Kehre zurück zum vorherigen Menü."
+  ],
+  "button_reset_trades": "&4♻ &lANGEBOTE ZURÜCKSETZEN",
+  "button_reset_trades.lore": [
+    "&cKlicke auf dieses Rezept, um die Angebote zurückzusetzen.",
+    "&c&lDies kann nicht rückgängig gemacht werden."
   ],
   "biome.desert": "WÜSTE",
   "biome.jungle": "DSCHUNGEL",

@@ -58,6 +58,14 @@ public class ClickVillagersConfig {
                             """)
                     .appendDefaultValue();
 
+    public static final ConfigOption<Boolean> ALLOW_RESETTING_TRADES =
+            CONFIG.optionOf("allow_resetting_trades", true)
+                    .description("""
+                            Whether players can reset trades of villagers inside
+                            the trading menu.
+                            """)
+                    .appendDefaultValue();
+
     public static final ConfigOption<Boolean> TICK_HOPPERS =
             CONFIG.optionOf("tick_hoppers", true)
                     .header("""
