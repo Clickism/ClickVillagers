@@ -8,7 +8,9 @@ package de.clickism.clickvillagers.command;
 
 import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.ClickVillagersConfig;
+import de.clickism.clickvillagers.hopper.HopperManager;
 import de.clickism.clickvillagers.message.Message;
+import org.bukkit.block.Hopper;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,6 +22,11 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class ReloadCommand implements CommandExecutor, TabCompleter {
+    private final HopperManager hopperManager;
+
+    public ReloadCommand(HopperManager hopperManager) {
+        this.hopperManager = hopperManager;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -35,6 +42,7 @@ public class ReloadCommand implements CommandExecutor, TabCompleter {
         if (Permission.RELOAD.lacksAndNotify(sender)) return false;
         try {
             ClickVillagersConfig.CONFIG.load();
+            hopperManager.reloadConfig();
             Message.RELOAD_SUCCESS.send(sender);
         } catch (Exception exception) {
             ClickVillagers.LOGGER.log(Level.SEVERE, "Failed to reload config/messages: ", exception);
