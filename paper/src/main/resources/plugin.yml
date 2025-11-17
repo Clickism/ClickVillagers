@@ -1,0 +1,42 @@
+name: ClickVillagers
+version: '${version}'
+main: de.clickism.clickvillagers.ClickVillagers
+api-version: '1.21'
+authors: [Clickism]
+description: A simple plugin that makes handling villagers a lot easier
+commands:
+  clickvillagers:
+    description: Main command for ClickVillagers.
+    permission: clickvillagers.reload
+    aliases: [ cv ]
+permissions:
+  clickvillagers.pickup:
+    description: Allows players to pick up villagers.
+    default: true
+  clickvillagers.place:
+    description: Allows players to place villagers.
+    default: true
+  clickvillagers.hopper:
+    description: Allows players to place villager hoppers, they are however always able to break them.
+    default: true
+  clickvillagers.anchor:
+    description: Allows players to anchor villagers.
+    default: true
+  clickvillagers.claim:
+    description: Allows players to claim villagers.
+    default: true
+  clickvillagers.partner:
+    description: Allows players to add trading partners.
+    default: true
+  clickvillagers.bypass-claims:
+    description: Allows players to access claimed villagers.
+    default: op
+  clickvillagers.bypass-limits:
+    description: Allows players to bypass limits defined in the config.
+    default: op
+  clickvillagers.reload:
+    description: Allows players to reload the plugin.
+    default: op
+  clickvillagers.bypass-cooldowns:
+    description: Allows players to bypass pick up and claim cooldowns.
+    default: false
