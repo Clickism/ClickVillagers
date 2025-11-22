@@ -109,14 +109,14 @@ publishMods {
             end = mcVersionEnd
         }
     }
-    curseforge {
-        accessToken.set(System.getenv("CURSEFORGE_TOKEN"))
-        projectId.set("1162587")
-        clientRequired.set(false)
-        serverRequired.set(true)
-        minecraftVersionRange {
-            start = mcVersionStart
-            end = mcVersionEnd
-        }
-    }
+//    curseforge {
+//        accessToken.set(System.getenv("CURSEFORGE_TOKEN"))
+//        projectId.set("1162587")
+//        clientRequired.set(false)
+//        serverRequired.set(true)
+//        minecraftVersionRange {
+//            start = mcVersionStart
+//            end = mcVersionEnd
+//        }
+//    }
 }
