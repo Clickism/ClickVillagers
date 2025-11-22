@@ -65,6 +65,15 @@ public final class ClickVillagers extends JavaPlugin {
         AnchorManager anchorHandler = new AnchorManager(this);
         PickupManager pickupManager = new PickupManager(this, new SnapshotSaver(), claimManager, anchorHandler);
         HopperManager hopperManager = new HopperManager(this, pickupManager, claimManager);
+        // Set up config listeners
+        HOPPER_TICK_RATE.onLoad(ticks -> hopperManager.restartTasks());
+        HOPPER_RECIPE.onLoad(enabled -> {
+            if (enabled) {
+                hopperManager.registerHopperRecipe();
+            } else {
+                hopperManager.unregisterHopperRecipe();
+            }
+        });
         ChatInputListener chatInputListener = new ChatInputListener(this);
 
         CooldownManager cooldownManager = new CooldownManager(() -> CONFIG.get(COOLDOWN) * 1000L);
@@ -76,7 +85,7 @@ public final class ClickVillagers extends JavaPlugin {
         // Register commands
         PluginCommand command = Bukkit.getPluginCommand("clickvillagers");
         if (command != null) {
-            command.setExecutor(new ReloadCommand(hopperManager));
+            command.setExecutor(new ReloadCommand());
         }
         // Check updates
         if (CONFIG.get(CHECK_UPDATES)) {
@@ -106,10 +115,9 @@ public final class ClickVillagers extends JavaPlugin {
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SingleLineChart("active_villager_hoppers",
                 hopperManager::getActiveHopperCount));
-        if (hopperManager.getHopperConfig().tickingEnabled) {
-            metrics.addCustomChart(new SimplePie("hopper_tick_rate", () ->
-                    String.valueOf(hopperManager.getHopperConfig().tickRate)));
-        }
+        int hopperTickRate = CONFIG.get(TICK_HOPPERS) ? CONFIG.get(HOPPER_TICK_RATE) : 0;
+        metrics.addCustomChart(new SimplePie("hopper_tick_rate", () ->
+                String.valueOf(hopperTickRate)));
         metrics.addCustomChart(new SimplePie("language", () ->
                 String.valueOf(CONFIG.get(LANGUAGE))));
     }

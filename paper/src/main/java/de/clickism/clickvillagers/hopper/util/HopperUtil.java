@@ -1,6 +1,6 @@
 package de.clickism.clickvillagers.hopper.util;
 
-import de.clickism.clickvillagers.hopper.config.HopperConfig;
+import de.clickism.clickvillagers.hopper.HopperManager;
 import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import org.bukkit.*;
@@ -13,26 +13,39 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Queue;
+
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public final class HopperUtil {
     private HopperUtil() {}
 
-    public static List<LivingEntity> getEligibleVillagers(Location hopperLoc, HopperConfig config, ClaimManager claimManager) {
-        List<LivingEntity> list = new ArrayList<>();
-        for (Entity e : getVillagersAboveHopper(hopperLoc)) {
-            if (!(e instanceof LivingEntity living)) continue;
-            EntityType type = living.getType();
+    public static Collection<LivingEntity> getEligibleVillagers(
+            Location hopperLoc,
+            ClaimManager claimManager,
+            boolean ignoreBabies,
+            boolean ignoreClaimed
+    ) {
+        Queue<LivingEntity> entities = new ArrayDeque<>();
+        for (Entity entity : getVillagersAboveHopper(hopperLoc)) {
+            EntityType type = entity.getType();
+            // Check if entity is a villager
             if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) continue;
-            if (type == EntityType.ZOMBIE_VILLAGER && !config.allowZombieVillagers) continue;
-            if (config.ignoreBabies && living instanceof Villager v && !v.isAdult()) continue;
-            if (config.ignoreClaimed && claimManager.hasOwner(living)) continue;
-
-            Block block = living.getLocation().getBlock();
-            if (block.getType() == Material.HOPPER || block.getRelative(BlockFace.DOWN).getType() == Material.HOPPER)
-                list.add(living);
+            if (type == EntityType.ZOMBIE_VILLAGER && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) continue;
+            Block block = entity.getLocation().getBlock();
+            // Check if entity is a baby villager
+            if (ignoreBabies && entity instanceof Villager && !((Ageable) entity).isAdult()) continue;
+            // Check if entity is a claimed villager
+            if (ignoreClaimed && claimManager.hasOwner((LivingEntity) entity)) continue;
+            // Check if entity is in a hopper
+            if (block.getType() != Material.HOPPER &&
+                block.getRelative(BlockFace.DOWN).getType() != Material.HOPPER) continue;
+            entities.add((LivingEntity) entity);
         }
-        return list;
+        return entities;
     }
 
     public static Collection<Entity> getVillagersAboveHopper(Location loc) {
@@ -48,36 +61,45 @@ public final class HopperUtil {
         if (meta == null) return false;
 
         PersistentDataContainer data = meta.getPersistentDataContainer();
-        return isVillagerHopper(data);
+        return hasVillagerHopperData(data);
     }
 
-    public static boolean isVillagerHopper(PersistentDataContainer data) {
-        return data.has(HopperItemFactory.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN);
+    public static boolean hasVillagerHopperData(PersistentDataContainer data) {
+        return data.has(HopperManager.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN);
     }
 
-    public static void markHopper(Hopper hopper, HopperConfig config) {
-        if (config.blockDisplay) {
+    /**
+     * Mark the given hopper as a villager hopper.
+     *
+     * @param hopper The hopper to mark.
+     */
+    public static void markHopper(Hopper hopper) {
+        PersistentDataContainer data = hopper.getPersistentDataContainer();
+        data.set(HopperManager.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN, true);
+        if (CONFIG.get(HOPPER_BLOCK_DISPLAY)) {
             Block block = hopper.getBlock();
-            BlockDisplay display = HopperDisplayUtil.createBlockDisplay(block, config.displayViewRange);
-            HopperDisplayUtil.addBlockDisplay(hopper, display.getUniqueId());
+            BlockDisplay display = HopperDisplayUtil.createBlockDisplay(block);
+            HopperDisplayUtil.addBlockDisplayData(data, display.getUniqueId());
         } else {
-            HopperDisplayUtil.addBlockDisplay(hopper, null);
+            HopperDisplayUtil.addBlockDisplayData(data, null);
         }
+        hopper.setCustomName(ChatColor.DARK_GRAY + "📥 " + ChatColor.BOLD + Message.VILLAGER_HOPPER);
+        hopper.update();
     }
 
-    public static void playPlaceSound(Block block, Player player) {
-        World w = block.getWorld();
-        Location l = block.getLocation();
-        w.playSound(l, Sound.BLOCK_METAL_PLACE, 1, .5f);
-        w.playSound(l, Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1, .5f);
+    public static void sendHopperPlaceMessage(Player player, Block block) {
         Message.VILLAGER_HOPPER_PLACE.sendActionbarSilently(player);
+        Location location = block.getLocation();
+        World world = player.getWorld();
+        world.playSound(location, Sound.BLOCK_METAL_PLACE, 1, .5f);
+        world.playSound(location, Sound.BLOCK_IRON_TRAPDOOR_OPEN, 1, .5f);
     }
 
-    public static void playBreakSound(Block block, Player player) {
-        World w = block.getWorld();
-        Location l = block.getLocation();
-        w.playSound(l, Sound.BLOCK_METAL_BREAK, 1, .5f);
-        w.playSound(l, Sound.BLOCK_IRON_TRAPDOOR_CLOSE, 1, .5f);
+    public static void sendHopperBreakMessage(Player player, Block block) {
         Message.VILLAGER_HOPPER_BREAK.sendActionbarSilently(player);
+        Location location = block.getLocation();
+        World world = player.getWorld();
+        world.playSound(location, Sound.BLOCK_METAL_BREAK, 1, .5f);
+        world.playSound(location, Sound.BLOCK_IRON_TRAPDOOR_CLOSE, 1, .5f);
     }
 }

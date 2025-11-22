@@ -6,82 +6,73 @@
 
 package de.clickism.clickvillagers.hopper;
 
+import de.clickism.clickgui.menu.Icon;
 import de.clickism.clickvillagers.ClickVillagers;
-import de.clickism.clickvillagers.hopper.config.HopperConfig;
-import de.clickism.clickvillagers.hopper.event.ChunkListener;
-import de.clickism.clickvillagers.hopper.event.HopperEvents;
-import de.clickism.clickvillagers.hopper.ticking.HopperStorage;
-import de.clickism.clickvillagers.hopper.ticking.HopperTicker;
-import de.clickism.clickvillagers.hopper.util.HopperItemFactory;
+import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PickupManager;
 import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public class HopperManager {
 
-    private final ClickVillagers plugin;
+    public static final NamespacedKey VILLAGER_HOPPER_KEY =
+            new NamespacedKey(ClickVillagers.INSTANCE, "villager_hopper");
+    public static final ItemStack HOPPER_ITEM =
+            Icon.of(Material.HOPPER)
+                    .setName(ChatColor.GREEN + Message.VILLAGER_HOPPER.toString())
+                    .setLore(Message.VILLAGER_HOPPER.getLore())
+                    .addEnchantmentGlint()
+                    .applyToMeta(meta ->
+                            meta.getPersistentDataContainer().set(VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN, true)
+                    ).get();
+    private static final NamespacedKey HOPPER_ITEM_RECIPE_KEY =
+            new NamespacedKey(ClickVillagers.INSTANCE, "villager_hopper");
 
-    private final HopperConfig hopperConfig;
-    private final HopperStorage storage;
+    private final Plugin plugin;
+
+    private final HopperStorage storage = new HopperStorage();
     private final HopperTicker ticker;
-    private final HopperEvents events;
-    private final ChunkListener chunkListener;
-
     private BukkitTask tickerTask;
-    private boolean eventsRegistered = false;
-    private boolean recipeRegistered = false;
 
-    public HopperManager(ClickVillagers plugin, PickupManager pickupManager, ClaimManager claimManager) {
+    public HopperManager(Plugin plugin, PickupManager pickupManager, ClaimManager claimManager) {
         this.plugin = plugin;
-
-        // Initialize once
-        this.hopperConfig = new HopperConfig();
-        this.storage = new HopperStorage();
-        this.ticker = new HopperTicker(pickupManager, hopperConfig, claimManager, storage);
-        this.events = new HopperEvents(storage, hopperConfig);
-        this.chunkListener = new ChunkListener(storage);
-
-        // Register recipe once, a server restart is needed to reload this option
-        if (hopperConfig.recipeEnabled) {
-            HopperItemFactory.registerRecipe();
+        this.ticker = new HopperTicker(pickupManager, claimManager, storage);
+        new BlockListener(plugin, storage);
+        new ChunkListener(plugin, storage);
+        if (CONFIG.get(TICK_HOPPERS)) {
+            restartTasks();
         }
-
-        // Always register onPlace and onBreak in case the hopper feature was disabled after
-        // Hoppers were already placed
-        Bukkit.getPluginManager().registerEvents(events, plugin);
-
-        // Apply initial configuration
-        reloadConfig();
-    }
-
-    public void reloadConfig() {
-        this.hopperConfig.reloadConfig();
-
-        disableTasks();
-        unregisterEvents();
-
-        // Enable ticking logic and events only if configured
-        if (hopperConfig.tickingEnabled) {
-            tickerTask = Bukkit.getScheduler().runTaskTimer(
-                    plugin, ticker::tickAll, hopperConfig.tickRate, hopperConfig.tickRate
-            );
-            Bukkit.getPluginManager().registerEvents(chunkListener, plugin);
-            eventsRegistered = true;
+        if (CONFIG.get(HOPPER_RECIPE)) {
+            registerHopperRecipe();
         }
     }
 
-    private void disableTasks() {
+    private void startTasks() {
+        int tickRate = CONFIG.get(HOPPER_TICK_RATE);
+        tickerTask = Bukkit.getScheduler()
+                .runTaskTimer(plugin, ticker::tickAll, tickRate, tickRate);
+    }
+
+    private void stopTasks() {
         if (tickerTask != null) {
             tickerTask.cancel();
         }
     }
 
-    private void unregisterEvents() {
-        if (eventsRegistered) {
-            HandlerList.unregisterAll(chunkListener);
-            eventsRegistered = false;
+    public void restartTasks() {
+        stopTasks();
+        if (CONFIG.get(TICK_HOPPERS)) {
+            startTasks();
         }
     }
 
@@ -89,7 +80,14 @@ public class HopperManager {
         return this.storage.getTotalCount();
     }
 
-    public HopperConfig getHopperConfig() {
-        return hopperConfig;
+    public void registerHopperRecipe() {
+        ShapelessRecipe hopperRecipe = new ShapelessRecipe(HOPPER_ITEM_RECIPE_KEY, HOPPER_ITEM);
+        hopperRecipe.addIngredient(Material.HOPPER);
+        hopperRecipe.addIngredient(Material.EMERALD);
+        Bukkit.addRecipe(hopperRecipe);
+    }
+
+    public void unregisterHopperRecipe() {
+        Bukkit.removeRecipe(HOPPER_ITEM_RECIPE_KEY);
     }
 }

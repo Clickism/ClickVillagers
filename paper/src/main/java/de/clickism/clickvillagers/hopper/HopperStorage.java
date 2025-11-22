@@ -1,4 +1,10 @@
-package de.clickism.clickvillagers.hopper.ticking;
+/*
+ * Copyright 2025 Clickism
+ * Released under the GNU General Public License 3.0.
+ * See LICENSE.md for details.
+ */
+
+package de.clickism.clickvillagers.hopper;
 
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.hopper.util.HopperUtil;
@@ -12,8 +18,13 @@ import org.bukkit.block.Hopper;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.BlockVector;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
 
 /**
  * Manages the storage and tracking of all loaded custom villager hoppers
@@ -26,7 +37,9 @@ import java.util.*;
  */
 public class HopperStorage {
 
-    /** A map of loaded chunks to their corresponding villager hopper positions. */
+    /**
+     * A map of loaded chunks to their corresponding villager hopper positions.
+     */
     private final Map<Chunk, Set<BlockVector>> loadedHoppers = new HashMap<>();
 
     public HopperStorage() {
@@ -57,11 +70,11 @@ public class HopperStorage {
      * @param chunk the chunk the hopper resides in
      * @param block the hopper block to remove
      */
-    public void remove(Chunk chunk, Block block) {
+    public void removeHopper(Chunk chunk, Block block) {
         Set<BlockVector> set = loadedHoppers.get(chunk);
         if (set == null) return;
         set.remove(block.getLocation().toVector().toBlockVector());
-        remove(chunk);
+        removeChunkIfEmpty(chunk);
     }
 
     /**
@@ -69,9 +82,11 @@ public class HopperStorage {
      *
      * @param chunk the chunk the hopper resides in
      */
-    public void remove(Chunk chunk) {
+    public void removeChunkIfEmpty(Chunk chunk) {
         Set<BlockVector> set = loadedHoppers.get(chunk);
-        if (set == null || set.isEmpty()) loadedHoppers.remove(chunk);
+        if (set == null || set.isEmpty()) {
+            loadedHoppers.remove(chunk);
+        }
     }
 
     /**
@@ -87,7 +102,7 @@ public class HopperStorage {
         for (BlockState state : chunk.getTileEntities(block -> block.getType() == Material.HOPPER, false)) {
             if (!(state instanceof Hopper hopper)) continue;
             PersistentDataContainer data = hopper.getPersistentDataContainer();
-            if (!HopperUtil.isVillagerHopper(data)) continue;
+            if (!HopperUtil.hasVillagerHopperData(data)) continue;
             set.add(hopper.getLocation().toVector().toBlockVector());
         }
 
@@ -119,25 +134,14 @@ public class HopperStorage {
 
     /**
      * Checks whether the specified chunk has reached or exceeded
-     * the given hopper limit.
+     * the hopper limit in the config.
      *
      * @param chunk the chunk to check
-     * @param limit the maximum allowed number of hoppers
      * @return true if the limit is reached and the player doesn't have the bypass permission, false otherwise
      */
-    public boolean isHopperLimitReached(Chunk chunk, int limit, Player player) {
+    public boolean isHopperLimitReachedOrBypassed(Chunk chunk, Player player, int limit) {
         if (limit < 0) return false;
-
         return getHopperCount(chunk) >= limit && Permission.BYPASS_LIMITS.lacks(player);
-    }
-
-    /**
-     * Returns the internal Map with all tracked hoppers across all loaded chunks.
-     *
-     * @return a map of chunks to their hopper locations
-     */
-    public Map<Chunk, Set<BlockVector>> getAll() {
-        return loadedHoppers;
     }
 
     /**
@@ -147,5 +151,15 @@ public class HopperStorage {
      */
     public int getTotalCount() {
         return loadedHoppers.values().stream().mapToInt(Set::size).sum();
+    }
+
+    /**
+     * Iterates over each loaded chunk and its associated villager hopper positions,
+     * applying the given consumer function.
+     *
+     * @param consumer the function to apply for each chunk and its hopper positions
+     */
+    public void forEachChunk(@NotNull BiConsumer<Chunk, Set<BlockVector>> consumer) {
+        loadedHoppers.forEach(consumer);
     }
 }
