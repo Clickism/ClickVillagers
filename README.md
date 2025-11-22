@@ -20,6 +20,8 @@ to pick villagers up into your inventory, claim and protect them, change their b
 - Place them back by placing the villager head.
   - You can place villagers directly into boats, minecarts, etc.
   - Use dispensers to place villagers back automatically. *(On Paper/Spigot 1.21+)*
+- **Reset Villager trades** directly in the trading menu! *(Disabled by default, enable in config)*
+  - Click on the `Reset Trades` recipe to reset the trades of the villager.
 - Clean messages, sound effects and particle effects.
 - **Language support:** German & English *(Paper/Spigot only)*
 

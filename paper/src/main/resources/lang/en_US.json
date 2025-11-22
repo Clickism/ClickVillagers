@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "credit": [
+    "Clickism"
+  ],
+  "update": "ClickVillagers: &a&lNew version available: &f{version}",
+  "no_permission": "You don't have permission to do this.",
+  "anchor_add": "You anchored this villager",
+  "anchor_remove": "You removed this villager's anchor",
+  "villager_hopper_place": "You placed a villager hopper",
+  "villager_hopper_break": "You broke a villager hopper",
+  "pick_up_villager": "You picked up a villager",
+  "enter_partner": "You have &l10 seconds&e to type the name of the trading partner you want to add/remove &l&nin the chat:",
+  "enter_partner_timeout": "Trading partner selection cancelled.",
+  "claim_villager": "You claimed this villager. &f&nShift + Right Click&a on the villager to edit it.",
+  "unclaim_villager": "You unclaimed this villager.",
+  "invalid_partner": "Please input a valid player.",
+  "partner_add": "Added &l{partner}&a to your trading partners.",
+  "partner_remove": "Removed &l{partner}&e from your trading partners.",
+  "partner_limit_reached": "Trading partner limit reached: &6&l{limit}",
+  "hopper_limit_reached": "Villager Hopper limit in this chunk reached: &6&l{limit}",
+  "belongs_to": "This villager belongs to: &6🔑 {owner}",
+  "biome_changed": "Changed the biome of this villager to &l{biome}.",
+  "write_error": "Failed to write villager data.",
+  "read_error": "Failed to read villager data.",
+  "trades_reset": "You reset this villager's trades",
+  "info_owner": "Owner",
+  "info_anchored": "Anchored",
+  "info_trade_closed": "Trading Closed",
+  "info_trades": "Trades",
+  "villager": "Villager",
+  "baby_villager": "Baby Villager",
+  "villager_with_profession": "{profession} Villager",
+  "villager.lore": [
+    "&8Right click to place the villager back."
+  ],
+  "villager_hopper": "Villager Hopper",
+  "villager_hopper.lore": [
+    "&8Use this to automatically pick up villagers."
+  ],
+  "title_claim_villager": "Claim Villager",
+  "title_edit": "&l{owner}&2's Villager",
+  "title_change_biome": "Choose Villager's Biome",
+  "button_claim_villager": "&6🔒 &lCLAIM VILLAGER",
+  "button_claim_villager.lore": [
+    "&e&lClick to claim this villager.",
+    "&eClaimed villagers can only be picked up",
+    "&eby its owner."
+  ],
+  "button_unclaim_villager": "&4🔓 &lUNCLAIM VILLAGER",
+  "button_unclaim_villager.lore": [
+    "&c&lClick to unclaim this villager.",
+    "&cUnclaimed villagers can be picked up",
+    "&cby anyone."
+  ],
+  "button_pick_up_villager": "&6&l↑ &lPICK UP VILLAGER &6&l↑",
+  "button_pick_up_villager.lore": [
+    "&eClick to pick up this villager."
+  ],
+  "button_partner": "&6✍ &f&lADD TRADING PARTNER",
+  "button_partner.lore": [
+    "&7Click to add/remove a trading partner.",
+    "&7Trading partners can trade with all",
+    "&7of your villagers."
+  ],
+  "button_trade_open": "&2$ &lTRADING OPEN",
+  "button_trade_open.lore": [
+    "&aEveryone can trade with this villager."
+  ],
+  "button_trade_closed": "&4❌ &lTRADING CLOSED",
+  "button_trade_closed.lore": [
+    "&cOnly you and your trading partners",
+    "&ccan trade with this villager."
+  ],
+  "button_redirect_change_biome_menu": "&6🌲 &lCHANGE BIOME",
+  "button_redirect_change_biome_menu.lore": [
+    "&eClick to change this villager's biome."
+  ],
+  "button_change_biome.lore": [
+    "&aClick to change this villager's biome."
+  ],
+  "button_back": "&f◀ &lBACK",
+  "button_back.lore": [
+    "&7Go back to the previous menu."
+  ],
+  "button_reset_trades": "&4♻ &lRESET TRADES",
+  "button_reset_trades.lore": [
+    "&cClick on this recipe to reset trades.",
+    "&c&lThis cannot be undone."
+  ],
+  "biome.desert": "DESERT",
+  "biome.jungle": "JUNGLE",
+  "biome.plains": "PLAINS",
+  "biome.savanna": "SAVANNA",
+  "biome.snow": "SNOW",
+  "biome.swamp": "SWAMP",
+  "biome.taiga": "TAIGA",
+  "profession.armorer": "Armorer",
+  "profession.butcher": "Butcher",
+  "profession.cartographer": "Cartographer",
+  "profession.cleric": "Cleric",
+  "profession.farmer": "Farmer",
+  "profession.fisherman": "Fisherman",
+  "profession.fletcher": "Fletcher",
+  "profession.leatherworker": "Leatherworker",
+  "profession.librarian": "Librarian",
+  "profession.mason": "Mason",
+  "profession.nitwit": "Nitwit",
+  "profession.shepherd": "Shepherd",
+  "profession.toolsmith": "Toolsmith",
+  "profession.weaponsmith": "Weaponsmith",
+  "usage": "&cUsage: {usage}",
+  "reload_success": "Reloaded &lClickVillagers &aconfig.",
+  "reload_fail": "Failed to reload &lClickVillagers &cconfig.",
+  "pick_up_cooldown": "Please wait &l{seconds} seconds &cto pick up this villager",
+  "claim_cooldown": "Please wait &l{seconds} seconds &cto claim this villager"
+}
