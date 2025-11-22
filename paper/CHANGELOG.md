@@ -1,14 +1,17 @@
 - Switched to Paper API for better performance and ease of development.
 - Dropped `Spigot` and `1.20` support
-  - From now on, new releases will only support 1.21+.
-  - There might be bugfix releases for 1.20 and Spigot if necessary.
+    - From now on, new releases will only support 1.21+.
+    - There might be bugfix releases for 1.20 and Spigot if necessary.
 - New Feature: **Resetting Trades**
-  - You can now reset trades of villagers directly in the trading menu!
-  - Click on the `Reset Trades` recipe to reset the trades of the villager.
+    - You can now reset trades of villagers directly in the trading menu!
+    - Click on the `Reset Trades` recipe to reset the trades of the villager.
+    - **This feature is disabled by default!**: As it might be too overpowered,
+      you need to enable it in the config first (`plugins/ClickVillagers/config.yml`)
+      by setting `allow_resetting_trades: true`.
 - Rewrote dispenser logic to use Paper's `BlockPreDispenseEvent`.
 - Rewrote Villager Hopper logic. ([RVSkeLe](https://github.com/RVSkeLe))
-  - Improved performance. (Using Paper API features)
-  - Reloading the config will now also reload villager hopper settings.
+    - Improved performance. (Using Paper API features)
+    - Reloading the config will now also reload villager hopper settings.
 - Removed legacy compatibility.
-  - If you are upgrading from a version before `1.1`, upgrade first to `1.4.4`
-  before upgrading to `1.5` or later.
+    - If you are upgrading from a version before `1.1`, upgrade first to `1.4.4`
+      before upgrading to `1.5` or later.
