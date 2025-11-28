@@ -99,7 +99,7 @@ public enum Message implements LocalizationKey {
             Localization.of(lang -> "plugins/ClickVillagers/lang/" + lang + ".json")
                     .resourceProvider(ClickVillagers.class, lang -> "/lang/" + lang + ".json")
                     .fallbackLanguage("en_US")
-                    .version(1);
+                    .version(4);
 
     private final @Nullable MessageType type;
 

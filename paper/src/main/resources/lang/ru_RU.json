@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "credit": [
     "MadokaStudio"
   ],
@@ -23,7 +23,7 @@
   "biome_changed": "Биом для жителя изменен на \u0026l{biome}.",
   "write_error": "Ошибка записи данных.",
   "read_error": "Ошибка чтения данных.",
-  "trades_reset": "Вы сбросили трейды этого жителя",
+  "trades_reset": "Вы сбросили трейды этого жителя.",
   "info_owner": "Владелец",
   "info_anchored": "Прикреплен",
   "info_trade_closed": "Трейды закрыты",
