@@ -24,7 +24,7 @@
   "biome_changed": "Đã chỉnh biome của dân làng sang \u0026l{biome}.",
   "write_error": "Không thể thay đổi data của dân làng.",
   "read_error": "Không thể đọc được data của dân làng",
-  "trades_reset": "Bạn đã đặt lại giao dịch của dân làng này",
+  "trades_reset": "Bạn đã đặt lại giao dịch của dân làng này.",
   "info_owner": "Chủ nhân",
   "info_anchored": "Giữ vị trí",
   "info_trade_closed": "Đã khoá trao đổi",

@@ -12,7 +12,7 @@ import de.clickism.configured.ConfigOption;
 public class ClickVillagersConfig {
     public static final Config CONFIG =
             Config.of("config/ClickVillagers/config.yml")
-                    .version(4)
+                    .version(5)
                     .header("""
                             ---------------------------------------------------------
                             ClickVillagers Config
@@ -40,6 +40,15 @@ public class ClickVillagersConfig {
                             Won't do anything if "claimed-villagers-take-damage" is enabled.
                             """)
                     .appendDefaultValue();
+
+    public static final ConfigOption<Boolean> ALLOW_RESETTING_TRADES =
+            CONFIG.optionOf("allow_resetting_trades", false)
+                    .description("""
+                            Whether players can reset trades of villagers inside
+                            the trading menu.
+                            """)
+                    .appendDefaultValue();
+
 
     public static final ConfigOption<Boolean> ENABLE_HOPPERS =
             CONFIG.optionOf("enable_hoppers", true)

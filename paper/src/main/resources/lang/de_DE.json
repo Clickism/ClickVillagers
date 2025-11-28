@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "credit": [
     "Clickism"
   ],
@@ -23,7 +23,7 @@
   "biome_changed": "Das Biom dieses Dorfbewohners wurde zu &l{biome} geändert.",
   "write_error": "Schreiben der Dorfbewohnerdaten fehlgeschlagen.",
   "read_error": "Lesen der Dorfbewohnerdaten fehlgeschlagen.",
-  "trades_reset": "Du hast die Angebote dieses Dorfbewohners zurückgesetzt",
+  "trades_reset": "Du hast die Angebote dieses Dorfbewohners zurückgesetzt.",
   "info_owner": "Besitzer",
   "info_anchored": "Verankert",
   "info_trade_closed": "Handel Begrenzt",

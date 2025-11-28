@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "credit": [
     "Clickism"
   ],
@@ -23,7 +23,7 @@
   "biome_changed": "Changed the biome of this villager to &l{biome}.",
   "write_error": "Failed to write villager data.",
   "read_error": "Failed to read villager data.",
-  "trades_reset": "You reset this villager's trades",
+  "trades_reset": "You reset this villager's trades.",
   "info_owner": "Owner",
   "info_anchored": "Anchored",
   "info_trade_closed": "Trading Closed",

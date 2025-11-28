@@ -12,6 +12,8 @@ import de.clickism.clickvillagers.message.Message;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -77,13 +79,14 @@ public class TradeListener implements Listener {
         event.setCancelled(true);
         if (!(merchant instanceof Villager villager)) return;
         // Reset trades
-        var player = event.getWhoClicked();
+        var player = (Player) event.getWhoClicked();
         if (areTradesLocked(villager)) {
             // Trades are locked, close inventory
             player.closeInventory();
         }
         villager.resetOffers();
-        Message.TRADES_RESET.sendActionbar(player);
+        Message.TRADES_RESET.sendActionbarSilently(player);
+        player.playSound(player, Sound.BLOCK_SMITHING_TABLE_USE, 1f, .5f);
         player.closeInventory();
     }
 

@@ -88,6 +88,7 @@ publishMods {
 }
 
 loom {
+	accessWidenerPath.set(rootProject.file("fabric/src/main/resources/clickvillagers.accesswidener"))
 	runConfigs.all {
 		ideConfigGenerated(true)
 		runDir = "../../run"
