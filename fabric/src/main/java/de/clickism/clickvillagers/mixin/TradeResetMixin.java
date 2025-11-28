@@ -20,6 +20,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static de.clickism.clickvillagers.ClickVillagersConfig.ALLOW_RESETTING_TRADES;
+import static de.clickism.clickvillagers.ClickVillagersConfig.CONFIG;
+
 @Mixin(VillagerEntity.class)
 public abstract class TradeResetMixin extends MerchantEntity implements InteractionObserver, VillagerDataContainer {
 
@@ -34,6 +37,7 @@ public abstract class TradeResetMixin extends MerchantEntity implements Interact
     private void injectPrepareOffersFor(PlayerEntity player, CallbackInfo ci) {
         if (VersionHelper.getWorld(player).isClient()) return;
         this.getOffers().removeIf(TradeResetHelper::isResetOffer);
+        if (!CONFIG.get(ALLOW_RESETTING_TRADES)) return;
         if (this.getExperience() <= 0) {
             this.getOffers().add(TradeResetHelper.getResetOffer());
         }

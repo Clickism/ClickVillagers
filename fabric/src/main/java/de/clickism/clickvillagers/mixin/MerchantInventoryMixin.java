@@ -26,6 +26,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static de.clickism.clickvillagers.ClickVillagersConfig.ALLOW_RESETTING_TRADES;
+import static de.clickism.clickvillagers.ClickVillagersConfig.CONFIG;
+
 @Mixin(MerchantInventory.class)
 public abstract class MerchantInventoryMixin implements Inventory {
     @Shadow
@@ -35,6 +38,7 @@ public abstract class MerchantInventoryMixin implements Inventory {
     @Inject(method = "setOfferIndex", at = @At("HEAD"), cancellable = true)
     private void onSetOfferIndex(int index, CallbackInfo ci) {
         if (this.merchant.isClient()) return;
+        if (!CONFIG.get(ALLOW_RESETTING_TRADES)) return;
         TradeOfferList offers = this.merchant.getOffers();
         if (offers.isEmpty() || offers.size() <= index) return;
         TradeOffer offer = offers.get(index);
