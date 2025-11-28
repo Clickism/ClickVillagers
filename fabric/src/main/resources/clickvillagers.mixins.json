@@ -6,6 +6,8 @@
     "DispenserBlockMixin",
     "HopperBlockMixin",
     "LivingEntityMixin",
+    "MerchantInventoryMixin",
+    "TradeResetMixin",
     "VillagerDataMixin"
   ],
   "injectors": {
