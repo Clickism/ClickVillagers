@@ -8,6 +8,7 @@ package de.clickism.clickvillagers.mixin;
 
 import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.TradeResetHelper;
+import de.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -44,7 +45,7 @@ public abstract class MerchantInventoryMixin implements Inventory {
                 var customer = (ServerPlayerEntity) villager.getCustomer();
                 if (customer != null) {
                     customer.closeHandledScreen();
-                    customer.playSoundToPlayer(SoundEvents.BLOCK_SMITHING_TABLE_USE, SoundCategory.NEUTRAL, 1, .5f);
+                    VersionHelper.playSound(customer, SoundEvents.BLOCK_SMITHING_TABLE_USE, SoundCategory.NEUTRAL, 1, .5f);
                     MessageType.WARN.sendActionbarSilently(customer, Text.literal("You reset this villager's trades."));
                 }
                 ci.cancel();

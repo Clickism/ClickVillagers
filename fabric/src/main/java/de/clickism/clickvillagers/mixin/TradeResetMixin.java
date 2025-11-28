@@ -7,6 +7,7 @@
 package de.clickism.clickvillagers.mixin;
 
 import de.clickism.clickvillagers.util.TradeResetHelper;
+import de.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.InteractionObserver;
 import net.minecraft.entity.passive.MerchantEntity;
@@ -31,7 +32,7 @@ public abstract class TradeResetMixin extends MerchantEntity implements Interact
             at = @At("TAIL")
     )
     private void injectPrepareOffersFor(PlayerEntity player, CallbackInfo ci) {
-        if (this.getEntityWorld().isClient()) return;
+        if (VersionHelper.getWorld(player).isClient()) return;
         this.getOffers().removeIf(TradeResetHelper::isResetOffer);
         if (this.getExperience() <= 0) {
             this.getOffers().add(TradeResetHelper.getResetOffer());
@@ -43,7 +44,7 @@ public abstract class TradeResetMixin extends MerchantEntity implements Interact
             at = @At("TAIL")
     )
     private void injectSetExperience(int experience, CallbackInfo ci) {
-        if (this.getEntityWorld().isClient()) return;
+        if (VersionHelper.getWorld(this).isClient()) return;
         if (experience <= 0) return;
         this.getOffers().removeIf(TradeResetHelper::isResetOffer);
     }
