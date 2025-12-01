@@ -6,7 +6,7 @@
 
 package de.clickism.clickvillagers;
 
-import de.clickism.clickvillagers.command.ReloadCommand;
+import de.clickism.clickvillagers.command.ClickVillagersCommand;
 import de.clickism.clickvillagers.entity.SnapshotSaver;
 import de.clickism.clickvillagers.gui.ChatInputListener;
 import de.clickism.clickvillagers.hopper.HopperManager;
@@ -85,7 +85,7 @@ public final class ClickVillagers extends JavaPlugin {
         // Register commands
         PluginCommand command = Bukkit.getPluginCommand("clickvillagers");
         if (command != null) {
-            command.setExecutor(new ReloadCommand());
+            command.setExecutor(new ClickVillagersCommand());
         }
         // Check updates
         if (CONFIG.get(CHECK_UPDATES)) {
