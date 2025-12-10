@@ -12,6 +12,7 @@ import de.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -45,7 +46,10 @@ public abstract class MerchantInventoryMixin implements Inventory {
         if (TradeResetHelper.isResetOffer(offer)) {
             if (this.merchant instanceof VillagerEntity villager) {
                 villager.setOffers(new TradeOfferList());
-                villager.fillRecipes();
+                villager.fillRecipes(
+                        //? if >=1.21.11
+                        (ServerWorld) villager.getEntityWorld()
+                );
                 var customer = (ServerPlayerEntity) villager.getCustomer();
                 if (customer != null) {
                     customer.closeHandledScreen();

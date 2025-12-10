@@ -1,10 +1,16 @@
 plugins {
-	id("fabric-loom") version "1.11-SNAPSHOT"
+	id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT"
 	id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
 version = "${parent?.name}-${property("mod.version")}+${stonecutter.current.project}"
 group = project.property("maven_group").toString()
+
+val accessWidener = if (stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
+	"1.21.11.clickvillagers.accesswidener"
+} else {
+	"1.21.10.clickvillagers.accesswidener"
+}
 
 base {
 	archivesName.set(property("archives_base_name").toString())
@@ -38,7 +44,8 @@ tasks.processResources {
 		"version" to version,
 		"targetVersion" to project.property("mod.mc_version"),
 		"minecraftVersion" to stonecutter.current.version,
-		"fabricVersion" to project.property("deps.fabric_loader")
+		"fabricVersion" to project.property("deps.fabric_loader"),
+		"accessWidenerPath" to accessWidener
 	)
 
 	filesMatching("fabric.mod.json") {
@@ -88,7 +95,7 @@ publishMods {
 }
 
 loom {
-	accessWidenerPath.set(rootProject.file("fabric/src/main/resources/clickvillagers.accesswidener"))
+    accessWidenerPath.set(rootProject.file("fabric/src/main/resources/${accessWidener}"))
 	runConfigs.all {
 		ideConfigGenerated(true)
 		runDir = "../../run"

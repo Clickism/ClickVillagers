@@ -9,6 +9,10 @@ package de.clickism.clickvillagers.util;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.enchantment.Enchantment;
+//? if >=1.21.11 {
+import net.minecraft.command.DefaultPermissions;
+import net.minecraft.command.permission.PermissionPredicate;
+//?}
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -30,37 +34,39 @@ import java.util.UUID;
 
 public class VersionHelper {
     public static void playSound(PlayerEntity player, SoundEvent soundEvent, SoundCategory category, float volume, float pitch) {
-        //? if >=1.20.5 {
-        player.playSoundToPlayer(soundEvent, category, volume, pitch);
-        //?} else
+        //? if >=1.21.11 {
+        player.playSound(soundEvent, volume, pitch);
+        //?} elif >=1.20.5 {
+        /*player.playSoundToPlayer(soundEvent, category, volume, pitch);
+         *///?} else
         /*player.playSound(soundEvent, category, volume, pitch);*/
     }
 
     public static ItemStack getFirstBuyItem(TradeOffer offer) {
         //? if <1.20.5 {
         /*return offer.getAdjustedFirstBuyItem();
-        *///?} else
+         *///?} else
         return offer.getDisplayedFirstBuyItem();
     }
 
     public static ItemStack getSecondBuyItem(TradeOffer offer) {
         //? if <1.20.5 {
         /*return offer.getSecondBuyItem();
-        *///?} else
+         *///?} else
         return offer.getDisplayedSecondBuyItem();
     }
 
     public static ItemStack getSelectedStack(PlayerInventory inventory) {
         //? if >=1.21.5 {
         return inventory.getSelectedStack();
-         //?} else
+        //?} else
         /*return inventory.getMainHandStack();*/
     }
 
     public static int getSelectedSlot(PlayerInventory inventory) {
         //? if >=1.21.5 {
         return inventory.getSelectedSlot();
-         //?} else
+        //?} else
         /*return inventory.selectedSlot;*/
     }
 
@@ -87,5 +93,14 @@ public class VersionHelper {
         if (userCache == null) return Optional.empty();
         return userCache.getByUuid(uuid).map(GameProfile::getName);
         *///?}
+    }
+
+    public static boolean isOp(PlayerEntity player) {
+        //? if >=1.21.11 {
+        var perms = player.getPermissions();
+        return perms.hasPermission(DefaultPermissions.ADMINS)
+               || perms.hasPermission(DefaultPermissions.OWNERS);
+        //?} else
+        /*return player.hasPermissionLevel(3);*/
     }
 }

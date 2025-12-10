@@ -76,7 +76,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
             handleClaim(player, villagerHandler);
             return ActionResult.CONSUME;
         }
-        if (villagerHandler.isOwner(player.getUuid()) || (villagerHandler.hasOwner() && player.hasPermissionLevel(4))) {
+        if (villagerHandler.isOwner(player.getUuid()) || (villagerHandler.hasOwner() && VersionHelper.isOp(player))) {
             handleEdit(player, villagerHandler);
             return ActionResult.CONSUME;
         }

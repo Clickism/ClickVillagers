@@ -22,6 +22,7 @@
 	"mixins": [
 		"clickvillagers.mixins.json"
 	],
+	"accessWidener": "${accessWidenerPath}",
 	"depends": {
 		"fabricloader": ">=${fabricVersion}",
 		"minecraft": "${targetVersion}",
