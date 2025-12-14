@@ -23,9 +23,10 @@ repositories {
 }
 
 val configuredVersion = "0.2.4"
+val mcVersion = stonecutter.current.version.substringBeforeLast("-")
 
 dependencies {
-	minecraft("com.mojang:minecraft:${stonecutter.current.project}")
+	minecraft("com.mojang:minecraft:${mcVersion}")
 	mappings("net.fabricmc:yarn:${property("deps.yarn_mappings")}:v2")
 	modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
