@@ -1,3 +1,3 @@
-- For 1.21.11: Downgraded Fabric loader dependency to 18.0.
+- For 1.21.11: Downgraded Fabric loader dependency to `0.18.0`.
 - You can now place duplicated picked up villager items. (Matches behavior of the Paper version)
   - Duplicated villagers will be assigned new UUIDs.
