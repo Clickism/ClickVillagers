@@ -86,7 +86,7 @@ public class HopperManager {
         hopperRecipe.addIngredient(Material.EMERALD);
         try {
             Bukkit.addRecipe(hopperRecipe);
-        } catch (IllegalArgumentException ignored) {
+        } catch (Exception ignored) {
             // Recipe already registered
         }
     }
