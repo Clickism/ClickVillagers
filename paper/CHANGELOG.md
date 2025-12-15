@@ -1,1 +1,3 @@
 - Fixed exception thrown when registering the hopper recipe more than once, i.E. via the reload command.
+- Not mentioned in the previous changelog:
+  - Added new command `/clickvillagers config_path`: shows the path of the config file.
