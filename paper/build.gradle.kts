@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.5"
+    id("com.gradleup.shadow") version "9.3.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
     id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
@@ -50,10 +50,6 @@ tasks.runServer {
     minecraftVersion("1.21.10")
 }
 
-tasks.jar {
-    enabled = false
-}
-
 tasks.build {
     dependsOn(tasks.shadowJar)
 }
@@ -64,8 +60,9 @@ java {
 
 tasks.shadowJar {
     archiveClassifier.set("")
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     mergeServiceFiles()
-    isEnableRelocation = true
+    enableAutoRelocation = true
     relocationPrefix = "shadow.de.clickism.clickvillagers"
     // Exclude Gson and Snakeyaml since it is already provided in Spigot
     dependencies {
@@ -109,14 +106,4 @@ publishMods {
             end = mcVersionEnd
         }
     }
-//    curseforge {
-//        accessToken.set(System.getenv("CURSEFORGE_TOKEN"))
-//        projectId.set("1162587")
-//        clientRequired.set(false)
-//        serverRequired.set(true)
-//        minecraftVersionRange {
-//            start = mcVersionStart
-//            end = mcVersionEnd
-//        }
-//    }
 }
