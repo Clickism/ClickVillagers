@@ -33,6 +33,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Uuids;
 import net.minecraft.village.Merchant;
 import net.minecraft.village.VillagerDataContainer;
 import net.minecraft.village.VillagerProfession;
@@ -215,6 +216,7 @@ public class PickupHandler {
         try {
             NbtCompound nbt = readCustomData(itemStack);
             if (nbt == null) return null;
+            removeUuidIfDuplicate(nbt, world);
             MinecraftServer server = world.getServer();
             if (server == null) return null;
             //? if >=1.21.5
@@ -241,6 +243,22 @@ public class PickupHandler {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private static void removeUuidIfDuplicate(NbtCompound nbt, World world) {
+        if (!nbt.contains("UUID")) return;
+        //? if >=1.21.5 {
+        nbt.get("UUID", Uuids.INT_STREAM_CODEC).ifPresent(uuid -> {
+            if (world.getEntity(uuid) != null) {
+                nbt.remove("UUID");
+            }
+        });
+        //?} else {
+        /*UUID uuid = nbt.getUuid("UUID");
+        if (((ServerWorld) world).getEntity(uuid) != null) {
+            nbt.remove("UUID");
+        }
+        *///?}
     }
 
     private static MutableText getDisplayName(Entity entity) {
