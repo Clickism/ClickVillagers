@@ -84,7 +84,11 @@ public class HopperManager {
         ShapelessRecipe hopperRecipe = new ShapelessRecipe(HOPPER_ITEM_RECIPE_KEY, HOPPER_ITEM);
         hopperRecipe.addIngredient(Material.HOPPER);
         hopperRecipe.addIngredient(Material.EMERALD);
-        Bukkit.addRecipe(hopperRecipe);
+        try {
+            Bukkit.addRecipe(hopperRecipe);
+        } catch (IllegalArgumentException ignored) {
+            // Recipe already registered
+        }
     }
 
     public void unregisterHopperRecipe() {
