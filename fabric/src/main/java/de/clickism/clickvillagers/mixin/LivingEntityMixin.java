@@ -36,10 +36,10 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
             ServerWorld world,
             DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (!(this instanceof VillagerDataContainer container)) return;
-        if (CONFIG.get(CLAIMED_IMMUNE_KILL_COMMAND) && source.isOf(DamageTypes.GENERIC_KILL)) {
+        if (CLAIMED_IMMUNE_KILL_COMMAND.get() && source.isOf(DamageTypes.GENERIC_KILL)) {
             return;
         }
-        if (CONFIG.get(CLAIMED_DAMAGE)) {
+        if (CLAIMED_DAMAGE.get()) {
             return;
         }
         VillagerHandler<?> handler = new VillagerHandler<>((LivingEntity & VillagerDataContainer) container);

@@ -18,7 +18,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Queue;
 
-import static de.clickism.clickvillagers.ClickVillagersConfig.*;
+import static de.clickism.clickvillagers.ClickVillagersConfig.ALLOW_ZOMBIE_VILLAGERS;
+import static de.clickism.clickvillagers.ClickVillagersConfig.HOPPER_BLOCK_DISPLAY;
 
 public final class HopperUtil {
     private HopperUtil() {}
@@ -34,7 +35,7 @@ public final class HopperUtil {
             EntityType type = entity.getType();
             // Check if entity is a villager
             if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) continue;
-            if (type == EntityType.ZOMBIE_VILLAGER && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) continue;
+            if (type == EntityType.ZOMBIE_VILLAGER && !ALLOW_ZOMBIE_VILLAGERS.get()) continue;
             Block block = entity.getLocation().getBlock();
             // Check if entity is a baby villager
             if (ignoreBabies && entity instanceof Villager && !((Ageable) entity).isAdult()) continue;
@@ -76,7 +77,7 @@ public final class HopperUtil {
     public static void markHopper(Hopper hopper) {
         PersistentDataContainer data = hopper.getPersistentDataContainer();
         data.set(HopperManager.VILLAGER_HOPPER_KEY, PersistentDataType.BOOLEAN, true);
-        if (CONFIG.get(HOPPER_BLOCK_DISPLAY)) {
+        if (HOPPER_BLOCK_DISPLAY.get()) {
             Block block = hopper.getBlock();
             BlockDisplay display = HopperDisplayUtil.createBlockDisplay(block);
             HopperDisplayUtil.addBlockDisplayData(data, display.getUniqueId());

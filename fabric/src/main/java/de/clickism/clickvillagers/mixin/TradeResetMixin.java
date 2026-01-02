@@ -37,7 +37,7 @@ public abstract class TradeResetMixin extends MerchantEntity implements Interact
     private void injectPrepareOffersFor(PlayerEntity player, CallbackInfo ci) {
         if (VersionHelper.getWorld(player).isClient()) return;
         this.getOffers().removeIf(TradeResetHelper::isResetOffer);
-        if (!CONFIG.get(ALLOW_RESETTING_TRADES)) return;
+        if (!ALLOW_RESETTING_TRADES.get()) return;
         if (this.getExperience() <= 0) {
             this.getOffers().add(TradeResetHelper.getResetOffer());
         }

@@ -34,7 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
-import static de.clickism.clickvillagers.ClickVillagersConfig.*;
+import static de.clickism.clickvillagers.ClickVillagersConfig.ALLOW_ZOMBIE_VILLAGERS;
 
 public class InteractListener implements Listener {
 
@@ -62,13 +62,17 @@ public class InteractListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    public static void playOpenSound(Player player, LivingEntity villager) {
+        player.playSound(villager, Sound.BLOCK_CHEST_OPEN, 1, .8f);
+    }
+
     @EventHandler(ignoreCancelled = true)
     private void onVillagerInteract(PlayerInteractEntityEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         Entity entity = event.getRightClicked();
         if (!(entity instanceof Villager) && !(entity instanceof ZombieVillager)) return;
         LivingEntity villager = (LivingEntity) entity;
-        if (villager instanceof ZombieVillager && !CONFIG.get(ALLOW_ZOMBIE_VILLAGERS)) {
+        if (villager instanceof ZombieVillager && !ALLOW_ZOMBIE_VILLAGERS.get()) {
             return;
         }
         Player player = event.getPlayer();
@@ -152,7 +156,7 @@ public class InteractListener implements Listener {
     private void handleAnchor(Player player, LivingEntity villager) {
         if (Permission.ANCHOR.lacksAndNotify(player)) return;
         if (claimManager.hasOwner(villager) && !claimManager.isOwner(villager, player)
-                && Permission.BYPASS_CLAIMS.lacks(player)) {
+            && Permission.BYPASS_CLAIMS.lacks(player)) {
             Message.BELONGS_TO.send(player, claimManager.getOwnerName(villager));
             return;
         }
@@ -218,9 +222,5 @@ public class InteractListener implements Listener {
         Message.PICK_UP_VILLAGER.sendActionbarSilently(player);
         pickupManager.sendPickupEffect(villager);
         cooldownManager.giveCooldown(player);
-    }
-
-    public static void playOpenSound(Player player, LivingEntity villager) {
-        player.playSound(villager, Sound.BLOCK_CHEST_OPEN, 1, .8f);
     }
 }

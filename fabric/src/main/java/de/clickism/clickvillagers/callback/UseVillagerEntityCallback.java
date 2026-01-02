@@ -58,7 +58,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
         if (player.isSpectator()) return ActionResult.PASS;
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return ActionResult.PASS;
         // Don't allow zombie villagers if setting is disabled
-        if (!CONFIG.get(ALLOW_ZOMBIE_VILLAGERS) && entity instanceof ZombieVillagerEntity) return ActionResult.PASS;
+        if (!ALLOW_ZOMBIE_VILLAGERS.get() && entity instanceof ZombieVillagerEntity) return ActionResult.PASS;
         var villager = (LivingEntity & VillagerDataContainer) entity;
         VillagerHandler<?> villagerHandler = new VillagerHandler<>(villager);
         if (hitResult != null) return ActionResult.CONSUME;
@@ -80,7 +80,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
             handleEdit(player, villagerHandler);
             return ActionResult.CONSUME;
         }
-        if (!CONFIG.get(ENABLE_PICKUP)) {
+        if (!ENABLE_PICKUP.get()) {
             return ActionResult.PASS; // Pickup is disabled
         }
         handlePickup(player, villagerHandler);
@@ -92,7 +92,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
         if (owner == null) {
             // Allow claim
-            if (!CONFIG.get(ENABLE_CLAIMS)) {
+            if (!ENABLE_CLAIMS.get()) {
                 MessageType.FAIL.send(player, Text.literal("Claiming villagers is disabled."));
                 return;
             }
@@ -168,7 +168,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
                     10, .2, 0, .2, 2
             );
         } else {
-            if (!CONFIG.get(ENABLE_ANCHORS)) {
+            if (!ENABLE_ANCHORS.get()) {
                 MessageType.FAIL.send(player, Text.literal("Anchoring villagers is disabled."));
                 return;
             }

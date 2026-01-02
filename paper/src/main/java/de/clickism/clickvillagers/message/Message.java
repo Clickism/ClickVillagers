@@ -6,11 +6,11 @@
 
 package de.clickism.clickvillagers.message;
 
+import de.clickism.clickgui.menu.Icon;
+import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.configured.localization.Localization;
 import de.clickism.configured.localization.LocalizationKey;
 import de.clickism.configured.localization.Parameters;
-import de.clickism.clickgui.menu.Icon;
-import de.clickism.clickvillagers.ClickVillagers;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
@@ -111,12 +111,12 @@ public enum Message implements LocalizationKey {
         this.type = type;
     }
 
-    public String localized(Object... params) {
-        return LOCALIZATION.get(this, params);
-    }
-
     public static String localize(String key, Object... params) {
         return LOCALIZATION.get(LocalizationKey.of(key), params);
+    }
+
+    public String localized(Object... params) {
+        return LOCALIZATION.get(this, params);
     }
 
     public void send(CommandSender sender, Object... params) {

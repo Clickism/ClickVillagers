@@ -28,11 +28,11 @@ public class ClickVillagers implements ModInitializer {
     @Override
     public void onInitialize() {
         CONFIG.load();
-        CooldownManager cooldownManager = new CooldownManager(() -> CONFIG.get(COOLDOWN));
+        CooldownManager cooldownManager = new CooldownManager(() -> COOLDOWN.get());
         UseEntityCallback.EVENT.register(new UseVillagerEntityCallback(cooldownManager));
         UseEntityCallback.EVENT.register(new UseVehicleEntityCallback());
         UseBlockCallback.EVENT.register(new UseVillagerBlockCallback());
-        if (CONFIG.get(CHECK_UPDATES)) {
+        if (CHECK_UPDATES.get()) {
             checkUpdates();
             ServerPlayConnectionEvents.JOIN.register(new UpdateNotifier(() -> newerVersion));
         }

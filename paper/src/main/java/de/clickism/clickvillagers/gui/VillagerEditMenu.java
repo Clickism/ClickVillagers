@@ -27,8 +27,8 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import static de.clickism.clickvillagers.message.Message.*;
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
+import static de.clickism.clickvillagers.message.Message.*;
 
 public class VillagerEditMenu extends Menu {
     public VillagerEditMenu(Player viewer, LivingEntity villager, ClaimManager claimManager,
@@ -44,7 +44,7 @@ public class VillagerEditMenu extends Menu {
                 .setOnClick((player, view, slot) -> {
                     view.close();
                     if (!hasPermission(player, villager, claimManager)) return;
-                    if (!CONFIG.get(CLAIMED_VILLAGERS_BYPASS_PERMISSIONS)) {
+                    if (!CLAIMED_VILLAGERS_BYPASS_PERMISSIONS.get()) {
                         if (Permission.PICKUP.lacksAndNotify(player)) return;
                     }
                     Utils.setHandOrGive(player, pickupManager.toItemStack(villager));
@@ -84,6 +84,10 @@ public class VillagerEditMenu extends Menu {
                 }));
     }
 
+    protected static boolean hasPermission(Player player, LivingEntity villager, ClaimManager claimManager) {
+        return claimManager.isOwner(villager, player) || Permission.BYPASS_CLAIMS.has(player);
+    }
+
     protected Button getTradeButton(LivingEntity entity, ClaimManager claimManager) {
         Supplier<Icon> iconSupplier = () -> claimManager.isTradeOpen(entity)
                 ? BUTTON_TRADE_OPEN.toIcon(Material.EMERALD)
@@ -112,7 +116,7 @@ public class VillagerEditMenu extends Menu {
             Message.ENTER_PARTNER_TIMEOUT.sendSilently(player);
             return;
         }
-        if (partnerManager.getPartners(uuid).size() > CONFIG.get(PARTNER_LIMIT_PER_PLAYER)
+        if (partnerManager.getPartners(uuid).size() > PARTNER_LIMIT_PER_PLAYER.get()
             && Permission.BYPASS_LIMITS.lacks(player)) {
             Message.PARTNER_LIMIT_REACHED.send(player);
             return;
@@ -125,7 +129,7 @@ public class VillagerEditMenu extends Menu {
         if (input.equals(player.getName())) {
             return false;
         }
-        if (!CONFIG.get(VALIDATE_PARTNER_NAMES)) {
+        if (!VALIDATE_PARTNER_NAMES.get()) {
             return input.length() >= 3 && !input.contains(" ");
         }
         return Bukkit.getOfflinePlayer(input).hasPlayedBefore();
@@ -136,9 +140,5 @@ public class VillagerEditMenu extends Menu {
             button.addLoreLine("&7→ &e" + partner);
         }
         return button;
-    }
-
-    protected static boolean hasPermission(Player player, LivingEntity villager, ClaimManager claimManager) {
-        return claimManager.isOwner(villager, player) || Permission.BYPASS_CLAIMS.has(player);
     }
 }

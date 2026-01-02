@@ -58,7 +58,7 @@ public class VillagerPartnerGui extends AnvilInputGui {
                         partnerState.removePartner(uuid, input);
                         MessageType.WARN.send(player, Text.literal("Removed " + input + " from your trading partners."));
                     } else {
-                        int limit = CONFIG.get(PARTNER_LIMIT_PER_PLAYER);
+                        int limit = PARTNER_LIMIT_PER_PLAYER.get();
                         if (partnerState.getPartners(uuid).size() >= limit) {
                             MessageType.FAIL.send(player, Text.literal("You have reached the partner limit: ")
                                     .append(Text.literal(String.valueOf(limit)).formatted(Formatting.BOLD)));

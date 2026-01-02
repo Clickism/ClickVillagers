@@ -22,13 +22,12 @@ import java.util.function.Consumer;
 public class ChatInputListener implements Listener {
 
     private final JavaPlugin plugin;
+    private final Map<Player, Consumer<String>> callbackMap = new ConcurrentHashMap<>();
 
     public ChatInputListener(JavaPlugin plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-
-    private final Map<Player, Consumer<String>> callbackMap = new ConcurrentHashMap<>();
 
     public void addChatCallback(Player player, Consumer<String> onInput, Runnable onCancel, long timeoutTicks) {
         callbackMap.put(player, onInput);

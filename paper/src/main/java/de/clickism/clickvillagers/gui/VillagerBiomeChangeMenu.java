@@ -14,14 +14,12 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.ZombieVillager;
+
 import java.util.List;
 
 import static de.clickism.clickvillagers.message.Message.localize;
 
 public class VillagerBiomeChangeMenu extends Menu {
-
-    private record VillagerBiome(Villager.Type type, Material icon) {
-    }
 
     private static final List<VillagerBiome> BIOMES = List.of(
             new VillagerBiome(Villager.Type.PLAINS, Material.OAK_SAPLING),
@@ -75,5 +73,8 @@ public class VillagerBiomeChangeMenu extends Menu {
             return villager.getVillagerType();
         }
         throw new IllegalArgumentException("Entity is not a villager");
+    }
+
+    private record VillagerBiome(Villager.Type type, Material icon) {
     }
 }

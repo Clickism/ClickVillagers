@@ -26,7 +26,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import static de.clickism.clickvillagers.ClickVillagersConfig.CONFIG;
 import static de.clickism.clickvillagers.ClickVillagersConfig.HOPPER_LIMIT_PER_CHUNK;
 
 public class BlockListener implements Listener {
@@ -51,7 +50,7 @@ public class BlockListener implements Listener {
         // Villager hopper placed
         Block block = event.getBlockPlaced();
         // Enforce per-chunk villager hopper limits
-        int limit = CONFIG.get(HOPPER_LIMIT_PER_CHUNK);
+        int limit = HOPPER_LIMIT_PER_CHUNK.get();
         if (storage.isHopperLimitReachedOrBypassed(block.getChunk(), player, limit)) {
             Message.HOPPER_LIMIT_REACHED.send(player, limit);
             event.setCancelled(true);

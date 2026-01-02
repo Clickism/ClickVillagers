@@ -136,13 +136,13 @@ public class PickupHandler {
                     .formatted(Formatting.RED));
         }
         if (entity instanceof Merchant merchant && entity instanceof VillagerDataContainer container
-                && !merchant.getOffers().isEmpty() && CONFIG.get(SHOW_TRADES)) {
+                && !merchant.getOffers().isEmpty() && SHOW_TRADES.get()) {
             //? if >=1.21.5 {
             RegistryKey<VillagerProfession> profession = container.getVillagerData().profession()
                     .getKey().orElseThrow();
             //?} else
             /*VillagerProfession profession = container.getVillagerData().getProfession();*/
-            TradeInfoProvider provider = (CONFIG.get(FORMAT_TRADES))
+            TradeInfoProvider provider = (FORMAT_TRADES.get())
                     ? TradeInfoProviders.getProvider(profession)
                     : TradeInfoProviders.ALL_TRADES;
             List<String> tradeInfoLines = provider.getTradeInfoLines(merchant.getOffers());

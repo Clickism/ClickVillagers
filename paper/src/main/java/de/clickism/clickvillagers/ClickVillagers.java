@@ -6,6 +6,7 @@
 
 package de.clickism.clickvillagers;
 
+import de.clickism.clickgui.menu.MenuManager;
 import de.clickism.clickvillagers.command.ClickVillagersCommand;
 import de.clickism.clickvillagers.entity.SnapshotSaver;
 import de.clickism.clickvillagers.gui.ChatInputListener;
@@ -16,7 +17,6 @@ import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PartnerManager;
 import de.clickism.clickvillagers.villager.PickupManager;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
-import de.clickism.clickgui.menu.MenuManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
@@ -76,7 +76,7 @@ public final class ClickVillagers extends JavaPlugin {
         });
         ChatInputListener chatInputListener = new ChatInputListener(this);
 
-        CooldownManager cooldownManager = new CooldownManager(() -> CONFIG.get(COOLDOWN) * 1000L);
+        CooldownManager cooldownManager = new CooldownManager(() -> COOLDOWN.get() * 1000L);
 
         new InteractListener(this, claimManager, pickupManager,
                 anchorHandler, partnerManager, chatInputListener, menuManager, cooldownManager);
@@ -88,7 +88,7 @@ public final class ClickVillagers extends JavaPlugin {
             command.setExecutor(new ClickVillagersCommand());
         }
         // Check updates
-        if (CONFIG.get(CHECK_UPDATES)) {
+        if (CHECK_UPDATES.get()) {
             checkUpdates();
             new JoinListener(this, () -> newerVersion);
         }
@@ -115,10 +115,10 @@ public final class ClickVillagers extends JavaPlugin {
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SingleLineChart("active_villager_hoppers",
                 hopperManager::getActiveHopperCount));
-        int hopperTickRate = CONFIG.get(TICK_HOPPERS) ? CONFIG.get(HOPPER_TICK_RATE) : 0;
+        int hopperTickRate = TICK_HOPPERS.get() ? HOPPER_TICK_RATE.get() : 0;
         metrics.addCustomChart(new SimplePie("hopper_tick_rate", () ->
                 String.valueOf(hopperTickRate)));
         metrics.addCustomChart(new SimplePie("language", () ->
-                String.valueOf(CONFIG.get(LANGUAGE))));
+                String.valueOf(LANGUAGE.get())));
     }
 }

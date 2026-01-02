@@ -34,25 +34,25 @@ public abstract class HopperBlockMixin extends BlockWithEntity {
     @Override
     public void onSteppedOn(World world, BlockPos pos, BlockState state, Entity entity) {
         if (world.isClient()) return;
-        if (!CONFIG.get(ENABLE_HOPPERS)) return;
+        if (!ENABLE_HOPPERS.get()) return;
         if (!(entity instanceof LivingEntity && entity instanceof VillagerDataContainer)) return;
         if (!(world.getBlockEntity(pos) instanceof HopperBlockEntity hopper)) return;
         if (!world.getBlockState(pos.up()).isAir()) {
             // If the hopper has a block above it, don't pick up the villager.
             return;
         }
-        if (CONFIG.get(IGNORE_CLAIMED_VILLAGERS) &&
+        if (IGNORE_CLAIMED_VILLAGERS.get() &&
             new VillagerHandler<>((LivingEntity & VillagerDataContainer) entity).hasOwner()) {
             // Claimed villagers can't be picked up by hoppers.
             return;
         }
-        if (CONFIG.get(IGNORE_BABY_VILLAGERS)
+        if (IGNORE_BABY_VILLAGERS.get()
             && entity instanceof PassiveEntity passiveEntity
             && passiveEntity.isBaby()) {
             // Baby villagers can't be picked up by hoppers.
             return;
         }
-        if (!CONFIG.get(ALLOW_ZOMBIE_VILLAGERS) && entity instanceof ZombieVillagerEntity) {
+        if (!ALLOW_ZOMBIE_VILLAGERS.get() && entity instanceof ZombieVillagerEntity) {
             // Don't allow zombie villagers if setting is disabled
             return;
         }

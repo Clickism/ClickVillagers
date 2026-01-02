@@ -20,6 +20,18 @@ import java.util.stream.Collectors;
 
 public class TradeInfoProviders {
 
+    public static final TradeInfoProvider ALL_TRADES = TradeInfoProvider.builder()
+            .filterIngredients(item -> true)
+            .filterResults(item -> true)
+            .build();
+    public static final TradeInfoProvider LIBRARIAN = TradeInfoProvider.builder()
+            .acceptResults(Material.ENCHANTED_BOOK)
+            .ingredientFormatter(item -> {
+                if (item.getType() != Material.EMERALD) return null;
+                return item.getAmount() + " Emerald";
+            })
+            .resultFormatter(TradeInfoProviders::formatEnchantedBook)
+            .build();
     private static final Function<ItemStack, String> ITEM_FORMATTER = item -> {
         Material material = item.getType();
         String prefix = getPrefix(material);
@@ -30,21 +42,6 @@ public class TradeInfoProviders {
                 : Utils.formatItem(item);
         return prefix + name;
     };
-
-    public static final TradeInfoProvider ALL_TRADES = TradeInfoProvider.builder()
-            .filterIngredients(item -> true)
-            .filterResults(item -> true)
-            .build();
-
-    public static final TradeInfoProvider LIBRARIAN = TradeInfoProvider.builder()
-            .acceptResults(Material.ENCHANTED_BOOK)
-            .ingredientFormatter(item -> {
-                if (item.getType() != Material.EMERALD) return null;
-                return item.getAmount() + " Emerald";
-            })
-            .resultFormatter(TradeInfoProviders::formatEnchantedBook)
-            .build();
-
     public static final TradeInfoProvider FARMER = TradeInfoProvider.builder()
             .acceptIngredients(Material.WHEAT, Material.BEETROOT, Material.CARROT, Material.POTATO, Material.PUMPKIN, Material.MELON)
             .acceptResults(Material.GOLDEN_CARROT, Material.APPLE, Material.BREAD)

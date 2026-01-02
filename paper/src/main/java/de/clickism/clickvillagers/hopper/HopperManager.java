@@ -49,16 +49,16 @@ public class HopperManager {
         this.ticker = new HopperTicker(pickupManager, claimManager, storage);
         new BlockListener(plugin, storage);
         new ChunkListener(plugin, storage);
-        if (CONFIG.get(TICK_HOPPERS)) {
+        if (TICK_HOPPERS.get()) {
             restartTasks();
         }
-        if (CONFIG.get(HOPPER_RECIPE)) {
+        if (HOPPER_RECIPE.get()) {
             registerHopperRecipe();
         }
     }
 
     private void startTasks() {
-        int tickRate = CONFIG.get(HOPPER_TICK_RATE);
+        int tickRate = HOPPER_TICK_RATE.get();
         tickerTask = Bukkit.getScheduler()
                 .runTaskTimer(plugin, ticker::tickAll, tickRate, tickRate);
     }
@@ -71,7 +71,7 @@ public class HopperManager {
 
     public void restartTasks() {
         stopTasks();
-        if (CONFIG.get(TICK_HOPPERS)) {
+        if (TICK_HOPPERS.get()) {
             startTasks();
         }
     }

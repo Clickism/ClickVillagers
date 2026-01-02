@@ -34,36 +34,37 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
-import static de.clickism.clickvillagers.message.Message.*;
+import static de.clickism.clickvillagers.message.Message.VILLAGER_WITH_PROFESSION;
+import static de.clickism.clickvillagers.message.Message.localize;
 
 public class PickupManager implements Listener {
-    private enum VillagerType {
-        VILLAGER,
-        ZOMBIE;
-
-        EntityType toEntityType() {
-            return switch (this) {
-                case VILLAGER -> EntityType.VILLAGER;
-                case ZOMBIE -> EntityType.ZOMBIE_VILLAGER;
-            };
-        }
-    }
-
     public static final NamespacedKey VILLAGER_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "villager");
     public static final NamespacedKey TYPE_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "type");
     public static final NamespacedKey NBT_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "nbt");
     public static final NamespacedKey DATA_VERSION_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "data_version");
-
     private final EntitySaver entitySaver;
     private final ClaimManager claimManager;
     private final AnchorManager anchorManager;
-
     @AutoRegistered
     public PickupManager(JavaPlugin plugin, EntitySaver entitySaver, ClaimManager claimManager, AnchorManager anchorManager) {
         this.entitySaver = entitySaver;
         this.claimManager = claimManager;
         this.anchorManager = anchorManager;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    private static String getName(@Nullable String customName, Villager.Profession profession, boolean adult) {
+        if (customName != null) {
+            return "\"" + customName + "\"";
+        }
+        if (!adult) {
+            return Message.BABY_VILLAGER.toString();
+        }
+        if (profession == Villager.Profession.NONE) {
+            return Message.VILLAGER.toString();
+        }
+        String professionName = localize("profession." + profession.key().asMinimalString().toLowerCase());
+        return VILLAGER_WITH_PROFESSION.localized(professionName);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -168,7 +169,7 @@ public class PickupManager implements Listener {
         Villager.Profession profession = Utils.getVillagerProfession(entity);
         boolean adult = ((Ageable) entity).isAdult();
         String key = getCustomModelDataKey(profession, !adult, entity instanceof ZombieVillager);
-        int modelData = CONFIG.get(CUSTOM_MODEL_DATAS).getOrDefault(key, 0);
+        int modelData = CUSTOM_MODEL_DATAS.get().getOrDefault(key, 0);
         boolean hasTrades = entity instanceof Villager villager && !villager.getRecipes().isEmpty();
         Icon icon = Message.VILLAGER.toIcon(Material.PLAYER_HEAD)
                 .setName(ChatColor.YELLOW + getName(customName, profession, adult))
@@ -180,10 +181,10 @@ public class PickupManager implements Listener {
                         i -> i.addLoreLine("&3⚓ " + Message.INFO_ANCHORED))
                 .runIf(claimManager.hasOwner(entity) && !claimManager.isTradeOpen(entity),
                         i -> i.addLoreLine("&c👥 " + Message.INFO_TRADE_CLOSED))
-                .runIf(hasTrades && CONFIG.get(SHOW_TRADES),
+                .runIf(hasTrades && SHOW_TRADES.get(),
                         i -> {
                             if (!(entity instanceof Villager villager)) return;
-                            TradeInfoProvider provider = (CONFIG.get(FORMAT_TRADES))
+                            TradeInfoProvider provider = (FORMAT_TRADES.get())
                                     ? TradeInfoProviders.getProvider(villager.getProfession())
                                     : TradeInfoProviders.ALL_TRADES;
                             List<String> infoLines = provider.getTradeInfoLines(villager.getRecipes());
@@ -196,18 +197,16 @@ public class PickupManager implements Listener {
         return icon.get();
     }
 
-    private static String getName(@Nullable String customName, Villager.Profession profession, boolean adult) {
-        if (customName != null) {
-            return "\"" + customName + "\"";
+    private enum VillagerType {
+        VILLAGER,
+        ZOMBIE;
+
+        EntityType toEntityType() {
+            return switch (this) {
+                case VILLAGER -> EntityType.VILLAGER;
+                case ZOMBIE -> EntityType.ZOMBIE_VILLAGER;
+            };
         }
-        if (!adult) {
-            return Message.BABY_VILLAGER.toString();
-        }
-        if (profession == Villager.Profession.NONE) {
-            return Message.VILLAGER.toString();
-        }
-        String professionName = localize("profession." + profession.key().asMinimalString().toLowerCase());
-        return VILLAGER_WITH_PROFESSION.localized(professionName);
     }
 
     private record ItemResult(ItemStack item, EquipmentSlot slot) {

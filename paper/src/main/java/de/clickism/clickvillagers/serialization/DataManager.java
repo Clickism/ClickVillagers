@@ -44,11 +44,6 @@ public abstract class DataManager {
     }
 
     /**
-     * Loads the configuration from the file.
-     */
-    public abstract void load();
-
-    /**
      * Get the trimmed path of a file relative to the plugin's config folder.
      * i.E: "plugins/MyPlugin/config/config.yml" -> "config/config.yml"
      *
@@ -76,4 +71,9 @@ public abstract class DataManager {
             throw new IOException("Failed to create directory " + directory.getPath());
         }
     }
+
+    /**
+     * Loads the configuration from the file.
+     */
+    public abstract void load();
 }

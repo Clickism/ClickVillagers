@@ -61,8 +61,8 @@ public class HopperTicker {
      * Loads config settings before ticking.
      */
     public void tickAll() {
-        ignoreBabies = CONFIG.get(IGNORE_BABY_VILLAGERS);
-        ignoreClaimed = CONFIG.get(IGNORE_CLAIMED_VILLAGERS);
+        ignoreBabies = IGNORE_BABY_VILLAGERS.get();
+        ignoreClaimed = IGNORE_CLAIMED_VILLAGERS.get();
 
         Queue<Chunk> toRemove = new ArrayDeque<>();
 
@@ -99,7 +99,7 @@ public class HopperTicker {
             World world = center.getWorld();
             if (world == null) return;
             // Tick hopper
-            if (CONFIG.get(HOPPER_BLOCK_DISPLAY)) {
+            if (HOPPER_BLOCK_DISPLAY.get()) {
                 for (BlockDisplay display : center.getNearbyEntitiesByType(BlockDisplay.class, 0.2, 0.2, 0.2)) {
                     // Ignore non-emerald displays
                     if (display.getBlock().getMaterial() != Material.EMERALD_BLOCK) continue;

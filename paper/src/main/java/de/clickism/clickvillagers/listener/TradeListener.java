@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.clickism.clickvillagers.ClickVillagersConfig.ALLOW_RESETTING_TRADES;
-import static de.clickism.clickvillagers.ClickVillagersConfig.CONFIG;
 
 public class TradeListener implements Listener {
     public static final NamespacedKey BUTTON_RESET_TRADES_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "button_reset_trades");
@@ -54,7 +53,7 @@ public class TradeListener implements Listener {
         List<MerchantRecipe> recipes = new ArrayList<>(merchant.getRecipes());
         recipes.removeIf(this::isResetRecipe); // Remove existing reset recipes if any
         merchant.setRecipes(recipes); // Set recipes without reset recipe
-        if (!CONFIG.get(ALLOW_RESETTING_TRADES)) return;
+        if (!ALLOW_RESETTING_TRADES.get()) return;
         if (areTradesLocked(villager)) return; // Locked trades
         recipes.add(getResetRecipe());
         merchant.setRecipes(recipes);
@@ -72,7 +71,7 @@ public class TradeListener implements Listener {
 
     @EventHandler
     private void onTradeSelect(TradeSelectEvent event) {
-        if (!CONFIG.get(ALLOW_RESETTING_TRADES)) return;
+        if (!ALLOW_RESETTING_TRADES.get()) return;
         Merchant merchant = event.getInventory().getMerchant();
         MerchantRecipe selectedRecipe = merchant.getRecipes().get(event.getIndex());
         if (!isResetRecipe(selectedRecipe)) return;
@@ -92,7 +91,7 @@ public class TradeListener implements Listener {
 
     @EventHandler
     private void onTrade(PlayerTradeEvent event) {
-        if (!CONFIG.get(ALLOW_RESETTING_TRADES)) return;
+        if (!ALLOW_RESETTING_TRADES.get()) return;
         var recipe = event.getTrade();
         // Prevent taking the reset recipe
         if (isResetRecipe(recipe)) {

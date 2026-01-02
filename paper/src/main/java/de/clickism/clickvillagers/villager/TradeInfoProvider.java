@@ -24,13 +24,12 @@ public class TradeInfoProvider {
 
     private static final String LINE_FORMAT = "   &8→ &7%s &8→ &7%s";
     private static final Pattern LINE_BREAK_PATTERN = Pattern.compile("\n");
-
+    private static final String SINGLE_SPACING = " ".repeat(26);
+    private static final String DOUBLE_SPACING = " ".repeat(27);
     private final Predicate<ItemStack> ingredientsFilter;
     private final Predicate<ItemStack> resultsFilter;
-
     private final Function<ItemStack, String> ingredientFormatter;
     private final Function<ItemStack, String> resultFormatter;
-
     private final boolean formatEnchantments;
 
     public TradeInfoProvider(Predicate<ItemStack> ingredientsFilter,
@@ -45,36 +44,9 @@ public class TradeInfoProvider {
         this.formatEnchantments = formatEnchantments;
     }
 
-    public List<String> getTradeInfoLines(List<MerchantRecipe> recipes) {
-        return recipes.stream()
-                .filter(recipe -> recipe.getIngredients().stream().anyMatch(ingredientsFilter)
-                        || resultsFilter.test(recipe.getResult()))
-                .map(this::formatRecipe)
-                .flatMap(LINE_BREAK_PATTERN::splitAsStream)
-                .toList();
-    }
-
-    private String formatRecipe(MerchantRecipe recipe) {
-        String ingredients = recipe.getIngredients().stream()
-                .map(item -> (item.getType() == Material.AIR)
-                        ? null
-                        : ingredientFormatter.apply(item))
-                .filter(Objects::nonNull)
-                .collect(Collectors.joining(" + "));
-        String result = resultFormatter.apply(recipe.getResult());
-        String line = formatLine(ingredients, result);
-        if (formatEnchantments) {
-            line += formatEnchantments(recipe);
-        }
-        return line;
-    }
-
     private static String formatLine(String ingredients, String result) {
         return String.format(LINE_FORMAT, ingredients, result);
     }
-
-    private static final String SINGLE_SPACING = " ".repeat(26);
-    private static final String DOUBLE_SPACING = " ".repeat(27);
 
     private static String formatEnchantments(MerchantRecipe recipe) {
         String spacing = getSpacing(recipe);
@@ -100,6 +72,30 @@ public class TradeInfoProvider {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public List<String> getTradeInfoLines(List<MerchantRecipe> recipes) {
+        return recipes.stream()
+                .filter(recipe -> recipe.getIngredients().stream().anyMatch(ingredientsFilter)
+                                  || resultsFilter.test(recipe.getResult()))
+                .map(this::formatRecipe)
+                .flatMap(LINE_BREAK_PATTERN::splitAsStream)
+                .toList();
+    }
+
+    private String formatRecipe(MerchantRecipe recipe) {
+        String ingredients = recipe.getIngredients().stream()
+                .map(item -> (item.getType() == Material.AIR)
+                        ? null
+                        : ingredientFormatter.apply(item))
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(" + "));
+        String result = resultFormatter.apply(recipe.getResult());
+        String line = formatLine(ingredients, result);
+        if (formatEnchantments) {
+            line += formatEnchantments(recipe);
+        }
+        return line;
     }
 
     public static class Builder {

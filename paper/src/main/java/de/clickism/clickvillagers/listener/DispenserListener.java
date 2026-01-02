@@ -20,7 +20,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import static de.clickism.clickvillagers.ClickVillagersConfig.CONFIG;
 import static de.clickism.clickvillagers.ClickVillagersConfig.ENABLE_DISPENSERS;
 
 public class DispenserListener implements Listener {
@@ -35,7 +34,7 @@ public class DispenserListener implements Listener {
 
     @EventHandler
     private void onPreDispense(BlockPreDispenseEvent event) {
-        if (!CONFIG.get(ENABLE_DISPENSERS)) return;
+        if (!ENABLE_DISPENSERS.get()) return;
         ItemStack item = event.getItemStack();
         if (!pickupManager.isVillager(item)) return;
         Block block = event.getBlock();

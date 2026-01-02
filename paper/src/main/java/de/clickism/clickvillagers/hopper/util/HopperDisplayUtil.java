@@ -17,7 +17,6 @@ import org.joml.Vector3f;
 
 import java.util.UUID;
 
-import static de.clickism.clickvillagers.ClickVillagersConfig.CONFIG;
 import static de.clickism.clickvillagers.ClickVillagersConfig.HOPPER_BLOCK_DISPLAY_VIEW_RANGE;
 
 public final class HopperDisplayUtil {
@@ -44,7 +43,7 @@ public final class HopperDisplayUtil {
         return block.getWorld().spawn(loc, BlockDisplay.class, display -> {
             display.setTransformation(FRAME_TRANSFORMATION);
             display.setShadowRadius(0f);
-            display.setViewRange(CONFIG.get(HOPPER_BLOCK_DISPLAY_VIEW_RANGE));
+            display.setViewRange(HOPPER_BLOCK_DISPLAY_VIEW_RANGE.get());
             display.setBlock(Material.EMERALD_BLOCK.createBlockData());
         });
     }

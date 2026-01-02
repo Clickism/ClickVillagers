@@ -23,7 +23,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-import static de.clickism.clickvillagers.ClickVillagersConfig.*;
+import static de.clickism.clickvillagers.ClickVillagersConfig.CLAIMED_DAMAGE;
+import static de.clickism.clickvillagers.ClickVillagersConfig.CLAIMED_IMMUNE_KILL_COMMAND;
 
 public class ClaimManager implements Listener {
 
@@ -33,7 +34,7 @@ public class ClaimManager implements Listener {
 
     @AutoRegistered
     public ClaimManager(JavaPlugin plugin) {
-        if (!CONFIG.get(CLAIMED_DAMAGE)) {
+        if (!CLAIMED_DAMAGE.get()) {
             plugin.getServer().getPluginManager().registerEvents(this, plugin);
         }
     }
@@ -45,7 +46,7 @@ public class ClaimManager implements Listener {
         if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) return;
         LivingEntity villager = (LivingEntity) entity;
         if (!hasOwner(villager)) return;
-        if (!CONFIG.get(CLAIMED_IMMUNE_KILL_COMMAND)
+        if (!CLAIMED_IMMUNE_KILL_COMMAND.get()
             && event.getCause() == EntityDamageEvent.DamageCause.KILL) return;
         event.setCancelled(true);
     }

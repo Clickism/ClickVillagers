@@ -17,12 +17,11 @@ base {
 }
 
 repositories {
-	maven {
-		url = uri("https://maven.nucleoid.xyz")
-	}
+	maven("https://maven.nucleoid.xyz")
+	mavenLocal()
 }
 
-val configuredVersion = "0.2.4"
+val configuredVersion = "0.3"
 
 dependencies {
 	minecraft("com.mojang:minecraft:${stonecutter.current.project}")

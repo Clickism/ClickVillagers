@@ -26,9 +26,8 @@ public class JSONDataManager extends DataManager {
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();
-
-    private JsonObject root;
     private final boolean backupOnSave;
+    private JsonObject root;
 
     /**
      * Create a new JSONDataManager.
