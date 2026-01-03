@@ -50,9 +50,16 @@ public abstract class MessageType {
     public static final MessageType ANCHOR_REMOVE = silent("&2[⚓] &e", "&8< &6⚓ &e%s &8>");
     public static final MessageType HOPPER_PLACE = silent("&2[📥] &a", "&8< &2📥 &a%s &8>");
     public static final MessageType HOPPER_BREAK = silent("&2[📥] &a", "&8< &6📥 &e%s &8>");
+    public static final MessageType CONFIG = new MessageType("&6[⚒] &a", "&8< &6%s &8>") {
+        @Override
+        public void playSound(Player player) {
+            MessageType.CONFIRM.playSound(player);
+        }
+    };
     private final String prefix;
     private final String titleFormat;
     private final String subtitleFormat;
+
     /**
      * Create a new message type with the given prefix.
      *
