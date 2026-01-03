@@ -20,7 +20,7 @@ to pick villagers up into your inventory, claim and protect them, change their b
 - Place them back by placing the villager head.
   - You can place villagers directly into boats, minecarts, etc.
   - Use dispensers to place villagers back automatically. *(On Paper/Spigot 1.21+)*
-- **Reset Villager trades** directly in the trading menu! *(Disabled by default, enable in config)*
+- **Reset Villager trades** directly in the trading menu! *(Disabled by default, enable in config. Paper/Fabric Only!)*
   - Click on the `Reset Trades` recipe to reset the trades of the villager.
 - Clean messages, sound effects and particle effects.
 - **Language support:** German & English *(Paper/Spigot only)*
@@ -52,11 +52,20 @@ to pick villagers up into your inventory, claim and protect them, change their b
   - For Fabric, **regular hoppers** will pick up villagers instead, there is **no** custom item/recipe.
 - Especially useful for villager farms.
 
-### Configuration
+### Configuration Commands
+Since version 1.6, there is a command interface to manage configuration options as well!.
+- `/clickvillagers config set <option> <value>`: Sets a configuration option.
+- `/clickvillagers config get <option>`: Gets the value of a configuration option.
+- `/clickvillagers config path`: Prints the path to the **configuration file**.
+- `/clickvillagers config reload`: Reloads the configuration file.
+
+### Configuration (File)
+To find the configuration file, run the command `/clickvillagers config path`.
 - For Paper/Spigot, you will find the configuration file at **"plugins/ClickVillagers/config.yml"**.
 - For Fabric, you will find the configuration file at **".minecraft/config/clickvillagers.json"**.
-  - WARNING: If you are using another client (i.E. Modrinth App), the config file will be located at the installation 
+  - WARNING: If you are using another client (i.E. Modrinth App), the config file will be located at the installation
     directory instead.
+
 - Make sure you **save** the config file after making changes and do the following:
   - For Paper/Spigot, reload/restart your server or use the command *"/clickvillagers reload"*.
   - For Fabric, restart your game or server fully.
