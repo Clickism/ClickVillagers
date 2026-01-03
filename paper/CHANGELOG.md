@@ -1,8 +1,10 @@
 - Fixed: Placing a villager hopper sends a "hopper broken" message.
+- Fixed: Villagers needed to be *inside* a villager hopper to be picked up. 
+  - *They will now be picked up if they are standing on top of the hopper as well.*
 - Fixed: Some messages were not playing sounds.
 - **Updated to Configured 0.3**: Internal refactor and added command interface for configuration options!
-  - `/clickvillagers config set <option> <value>`: Sets a configuration option.
-  - `/clickvillagers config get <option>`: Gets the value of a configuration option.
-  - `/clickvillagers config path`: Prints the path to the **configuration file**.
-  - `/clickvillagers config reload`: Reloads the configuration file.
-  - Removed the old reload command `cv` alias.
+    - `/clickvillagers config set <option> <value>`: Sets a configuration option.
+    - `/clickvillagers config get <option>`: Gets the value of a configuration option.
+    - `/clickvillagers config path`: Prints the path to the **configuration file**.
+    - `/clickvillagers config reload`: Reloads the configuration file.
+    - Removed the old reload command `cv` alias.
