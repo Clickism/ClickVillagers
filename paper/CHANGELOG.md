@@ -1,3 +1,8 @@
-- Fixed exception thrown when registering the hopper recipe more than once, i.E. via the reload command.
-- Not mentioned in the previous changelog:
-  - Added new command `/clickvillagers config_path`: shows the path of the config file.
+- Fixed: Placing a villager hopper sends a "hopper broken" message.
+- Fixed: Some messages were not playing sounds.
+- **Updated to Configured 0.3**: Internal refactor and added command interface for configuration options!
+  - `/clickvillagers config set <option> <value>`: Sets a configuration option.
+  - `/clickvillagers config get <option>`: Gets the value of a configuration option.
+  - `/clickvillagers config path`: Prints the path to the **configuration file**.
+  - `/clickvillagers config reload`: Reloads the configuration file.
+  - Removed the old reload command `cv` alias.
