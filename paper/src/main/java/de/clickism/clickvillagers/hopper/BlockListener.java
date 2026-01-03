@@ -62,7 +62,7 @@ public class BlockListener implements Listener {
         HopperUtil.markHopper(hopper);
         storage.add(block.getChunk(), block);
         // Send message
-        HopperUtil.sendHopperBreakMessage(player, block);
+        HopperUtil.sendHopperPlaceMessage(player, block);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
