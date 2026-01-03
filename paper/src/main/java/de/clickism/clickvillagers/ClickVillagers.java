@@ -6,22 +6,31 @@
 
 package de.clickism.clickvillagers;
 
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.clickism.clickgui.menu.MenuManager;
-import de.clickism.clickvillagers.command.ClickVillagersCommand;
+import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.entity.SnapshotSaver;
 import de.clickism.clickvillagers.gui.ChatInputListener;
 import de.clickism.clickvillagers.hopper.HopperManager;
 import de.clickism.clickvillagers.listener.*;
+import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.villager.AnchorManager;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PartnerManager;
 import de.clickism.clickvillagers.villager.PickupManager;
+import de.clickism.configured.papercommandadapter.PaperCommandAdapter;
+import de.clickism.configured.papercommandadapter.command.GetCommand;
+import de.clickism.configured.papercommandadapter.command.PathCommand;
+import de.clickism.configured.papercommandadapter.command.ReloadCommand;
+import de.clickism.configured.papercommandadapter.command.SetCommand;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
@@ -32,6 +41,7 @@ import java.util.logging.Logger;
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 import static de.clickism.clickvillagers.message.Message.UPDATE;
 
+@SuppressWarnings("UnstableApiUsage")
 public final class ClickVillagers extends JavaPlugin {
 
     public static final String PROJECT_ID = "clickvillagers";
@@ -66,8 +76,8 @@ public final class ClickVillagers extends JavaPlugin {
         PickupManager pickupManager = new PickupManager(this, new SnapshotSaver(), claimManager, anchorHandler);
         HopperManager hopperManager = new HopperManager(this, pickupManager, claimManager);
         // Set up config listeners
-        HOPPER_TICK_RATE.onLoad(ticks -> hopperManager.restartTasks());
-        HOPPER_RECIPE.onLoad(enabled -> {
+        HOPPER_TICK_RATE.onChange(ticks -> hopperManager.restartTasks());
+        HOPPER_RECIPE.onChange(enabled -> {
             if (enabled) {
                 hopperManager.registerHopperRecipe();
             } else {
@@ -82,11 +92,20 @@ public final class ClickVillagers extends JavaPlugin {
                 anchorHandler, partnerManager, chatInputListener, menuManager, cooldownManager);
         new DispenserListener(this, pickupManager);
         new TradeListener(this);
-        // Register commands
-        PluginCommand command = Bukkit.getPluginCommand("clickvillagers");
-        if (command != null) {
-            command.setExecutor(new ClickVillagersCommand());
-        }
+
+        // Register Commands
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("clickvillagers");
+            root.then(PaperCommandAdapter.ofConfig(CONFIG)
+                    .requires(sender -> Permission.CONFIG.has(sender.getSender()))
+                    .add(new SetCommand(Message.CONFIG_SET::send))
+                    .add(new GetCommand(Message.CONFIG_GET::send))
+                    .add(new ReloadCommand(Message.CONFIG_RELOAD::send))
+                    .add(new PathCommand(Message.CONFIG_PATH::send))
+                    .buildRoot());
+            commands.registrar().register(root.build());
+        });
+
         // Check updates
         if (CHECK_UPDATES.get()) {
             checkUpdates();

@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "credit": [
     "MadokaStudio"
   ],
@@ -109,8 +109,11 @@
   "profession.toolsmith": "Инструментальщик",
   "profession.weaponsmith": "Оружейник",
   "usage": "\u0026cИспользование: {usage}",
-  "reload_success": "\u0026aПерезагружен конфиг \u0026lClickVillager.",
-  "reload_fail": "\u0026cОшибка закрузки конфига \u0026lClickVillagers.",
   "pick_up_cooldown": "Подождите \u0026l{seconds} секунд \u0026cперед тем, как подобрать жителя",
-  "claim_cooldown": "Подождите \u0026l{seconds} секунд \u0026cперед тем, как заприватить жителя"
+  "claim_cooldown": "Подождите \u0026l{seconds} секунд \u0026cперед тем, как заприватить жителя",
+
+  "config_set": "Опция конфигурации \"&l{option}\" &aустановлена на &l{value}.",
+  "config_get": "Опция конфигурации \"&l{option}\" &aимеет значение &l{value}.",
+  "config_path": "Файл конфигурации находится по пути: &f{path}",
+  "config_reload": "Файл конфигурации перезагружен."
 }

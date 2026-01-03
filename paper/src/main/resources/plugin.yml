@@ -7,8 +7,7 @@ description: A simple plugin that makes handling villagers a lot easier
 commands:
   clickvillagers:
     description: Main command for ClickVillagers.
-    permission: clickvillagers.reload
-    aliases: [ cv ]
+    permission: clickvillagers.config
 permissions:
   clickvillagers.pickup:
     description: Allows players to pick up villagers.
@@ -34,8 +33,8 @@ permissions:
   clickvillagers.bypass-limits:
     description: Allows players to bypass limits defined in the config.
     default: op
-  clickvillagers.reload:
-    description: Allows players to reload the plugin.
+  clickvillagers.config:
+    description: Allows players to configure and reload the plugin via commands.
     default: op
   clickvillagers.bypass-cooldowns:
     description: Allows players to bypass pick up and claim cooldowns.

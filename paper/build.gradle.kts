@@ -37,6 +37,7 @@ dependencies {
     implementation("de.clickism:configured-yaml:$configuredVersion")
     implementation("de.clickism:configured-json:$configuredVersion")
     implementation("de.clickism:configured-localization:$configuredVersion")
+    implementation("de.clickism:configured-paper-command-adapter:$configuredVersion")
     // Update Checker
     implementation("de.clickism:modrinth-update-checker:1.0")
     // Metrics

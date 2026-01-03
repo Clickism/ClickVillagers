@@ -19,7 +19,7 @@ public enum Permission {
     BYPASS_CLAIMS,
     BYPASS_LIMITS,
     BYPASS_COOLDOWNS,
-    RELOAD;
+    CONFIG;
 
     private static final String PLUGIN_PREFIX = "clickvillagers";
     private final String permission;
@@ -43,5 +43,9 @@ public enum Permission {
             return true;
         }
         return false;
+    }
+
+    public String key() {
+        return permission;
     }
 }

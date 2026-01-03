@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "credit": [
     "Clickism"
   ],
@@ -110,8 +110,11 @@
   "profession.toolsmith": "Toolsmith",
   "profession.weaponsmith": "Weaponsmith",
   "usage": "&cUsage: {usage}",
-  "reload_success": "Reloaded &lClickVillagers &aconfig.",
-  "reload_fail": "Failed to reload &lClickVillagers &cconfig.",
   "pick_up_cooldown": "Please wait &l{seconds} seconds &cto pick up this villager",
-  "claim_cooldown": "Please wait &l{seconds} seconds &cto claim this villager"
+  "claim_cooldown": "Please wait &l{seconds} seconds &cto claim this villager",
+
+  "config_set": "Config option \"&l{option}\" &aset to &l{value}.",
+  "config_get": "Config option \"&l{option}\" &ahas value &l{value}.",
+  "config_path": "The config file is located at: &f{path}",
+  "config_reload": "Reloaded the config file."
 }

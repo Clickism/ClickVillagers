@@ -88,18 +88,24 @@ public enum Message implements LocalizationKey {
     // COMMANDS
     @Parameters("usage")
     USAGE(MessageType.FAIL),
-    RELOAD_SUCCESS(MessageType.CONFIRM),
-    RELOAD_FAIL(MessageType.FAIL),
 
     @Parameters("seconds")
     PICK_UP_COOLDOWN(MessageType.FAIL),
-    CLAIM_COOLDOWN(MessageType.FAIL);
+    CLAIM_COOLDOWN(MessageType.FAIL),
+
+    @Parameters({"option", "value"})
+    CONFIG_SET(MessageType.CONFIG),
+    @Parameters({"option", "value"})
+    CONFIG_GET(MessageType.CONFIG),
+    @Parameters("path")
+    CONFIG_PATH(MessageType.CONFIG),
+    CONFIG_RELOAD(MessageType.CONFIG);
 
     public static final Localization LOCALIZATION =
             Localization.of(lang -> "plugins/ClickVillagers/lang/" + lang + ".json")
                     .resourceProvider(ClickVillagers.class, lang -> "/lang/" + lang + ".json")
                     .fallbackLanguage("en_US")
-                    .version(4);
+                    .version(5);
 
     private final @Nullable MessageType type;
 
@@ -120,7 +126,7 @@ public enum Message implements LocalizationKey {
     }
 
     public void send(CommandSender sender, Object... params) {
-        getTypeOrDefault().sendSilently(sender, localized(params));
+        getTypeOrDefault().send(sender, localized(params));
     }
 
     public void sendSilently(CommandSender sender, Object... params) {

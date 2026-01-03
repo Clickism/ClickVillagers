@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "credit": [
     "Clickism"
   ],
@@ -112,8 +112,11 @@
   "profession.toolsmith": "Werkzeugschmied",
   "profession.weaponsmith": "Waffenschmied",
   "usage": "&cAnwendung: {usage}",
-  "reload_success": "&lClickVillagers-&aKonfiguration wurde neu geladen.",
-  "reload_fail": "Neuladen der &lClickVillagers&c-Konfiguration fehlgeschlagen.",
   "pick_up_cooldown": "Warte bitte &l{seconds} Sekunden &c, um diesen Dorfbewohner aufzuheben",
-  "claim_cooldown": "Warte bitte &l{seconds} Sekunden &c, um diesen Dorfbewohner zu übernehmen"
+  "claim_cooldown": "Warte bitte &l{seconds} Sekunden &c, um diesen Dorfbewohner zu übernehmen",
+
+  "config_set": "Config-Option \"&l{option}\" &awurde auf &l{value} gesetzt.",
+  "config_get": "Config-Option \"&l{option}\" &ahat den Wert &l{value}.",
+  "config_path": "Die Konfigurationsdatei befindet sich unter: &f{path}",
+  "config_reload": "Konfiguration neu geladen."
 }

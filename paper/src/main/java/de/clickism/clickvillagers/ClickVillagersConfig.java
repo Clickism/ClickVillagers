@@ -33,7 +33,7 @@ public interface ClickVillagersConfig {
                             Language of the plugin.
                             Available languages: en_US, de_DE, ru_RU, vi_VN
                             """)
-                    .onLoad(lang -> Message.LOCALIZATION
+                    .onChange(lang -> Message.LOCALIZATION
                             .language(lang)
                             .load());
 

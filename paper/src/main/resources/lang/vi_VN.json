@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "credit": [
     "Clickism",
     "litsonhoang"
@@ -113,5 +113,10 @@
   "reload_success": "Đã reload config của \u0026lClickVillagers",
   "reload_fail": "Không thể reload config của\u0026lClickVillagers",
   "pick_up_cooldown": "Hãy đợi \u0026l{seconds} giây \u0026cđể nhặt được dân làng này",
-  "claim_cooldown": "Hãy đợi \u0026l{seconds} giây \u0026cđể sở hữu được dân làng này"
+  "claim_cooldown": "Hãy đợi \u0026l{seconds} giây \u0026cđể sở hữu được dân làng này",
+
+  "config_set": "Tùy chọn cấu hình \"&l{option}\" &ađã được đặt thành &l{value}.",
+  "config_get": "Tùy chọn cấu hình \"&l{option}\" &acó giá trị &l{value}.",
+  "config_path": "Tệp cấu hình nằm tại: &f{path}",
+  "config_reload": "Đã reload tệp cấu hình."
 }
