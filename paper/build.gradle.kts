@@ -98,7 +98,7 @@ publishMods {
     modLoaders.add("paper")
     modLoaders.add("purpur")
     val mcVersionStart = "1.21"
-    val mcVersionEnd = "1.21.10"
+    val mcVersionEnd = "1.21.11"
     modrinth {
         accessToken.set(System.getenv("MODRINTH_TOKEN"))
         projectId.set("BITzwT7B")
