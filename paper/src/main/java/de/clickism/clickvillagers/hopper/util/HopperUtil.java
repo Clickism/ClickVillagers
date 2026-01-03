@@ -53,7 +53,8 @@ public final class HopperUtil {
         World world = loc.getWorld();
         if (world == null) return Collections.emptyList();
 
-        return loc.getWorld().getNearbyEntities(loc, 0.5, 1.0, 0.5);
+        Location adjustedLoc = loc.clone().add(0.5, 1.0, 0.5);
+        return adjustedLoc.getWorld().getNearbyEntities(adjustedLoc, 0.5, 1.0, 0.5);
     }
 
     public static boolean isVillagerHopperItem(ItemStack item) {
