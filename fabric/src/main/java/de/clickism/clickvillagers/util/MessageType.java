@@ -7,6 +7,7 @@
 package de.clickism.clickvillagers.util;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
@@ -71,6 +72,16 @@ public abstract class MessageType {
             Style.EMPTY.withColor(Formatting.YELLOW)
     );
 
+    public static final MessageType CONFIG = new MessageType(
+            Text.literal("[⚒] ").formatted(Formatting.GOLD),
+            Style.EMPTY.withColor(Formatting.GREEN)
+    ) {
+        @Override
+        public void playSound(PlayerEntity player) {
+            MessageType.CONFIRM.playSound(player);
+        }
+    };
+
     private final Text prefix;
 
     private final Text actionbarPrefix;
@@ -93,6 +104,15 @@ public abstract class MessageType {
 
     public void send(PlayerEntity player, Text message) {
         send(player, message, false, false);
+    }
+
+    public void send(ServerCommandSource source, Text message) {
+        var player = source.getPlayer();
+        if (player != null) {
+            send(player, message, false, false);
+            return;
+        }
+        source.sendMessage(message);
     }
 
     public void sendSilently(PlayerEntity player, Text message) {

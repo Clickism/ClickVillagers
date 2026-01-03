@@ -21,7 +21,7 @@ repositories {
 	mavenLocal()
 }
 
-val configuredVersion = "0.3"
+val configuredVersion = "0.3.test"
 
 dependencies {
 	minecraft("com.mojang:minecraft:${stonecutter.current.project}")
@@ -34,6 +34,7 @@ dependencies {
 	implementation(include("de.clickism:configured-core:${configuredVersion}")!!)
 	implementation(include("de.clickism:configured-yaml:${configuredVersion}")!!)
 	implementation(include("de.clickism:configured-json:${configuredVersion}")!!)
+	modImplementation(include("de.clickism:configured-fabric-command-adapter:${configuredVersion}")!!)
 	// Configured Dependency
 	implementation(include("org.yaml:snakeyaml:2.0")!!)
 }
