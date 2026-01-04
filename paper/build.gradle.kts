@@ -21,7 +21,6 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://libraries.minecraft.net/")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
-//    maven("https://repo.bstats.org/content/repositories/releases/")
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
@@ -46,6 +45,10 @@ dependencies {
     compileOnly("org.jetbrains:annotations:22.0.0")
 }
 
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
+
 tasks.runServer {
     dependsOn(tasks.build)
     minecraftVersion("1.21.10")
@@ -53,10 +56,6 @@ tasks.runServer {
 
 tasks.build {
     dependsOn(tasks.shadowJar)
-}
-
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 tasks.shadowJar {
