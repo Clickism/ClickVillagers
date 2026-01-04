@@ -21,7 +21,7 @@ repositories {
 	mavenLocal()
 }
 
-val configuredVersion = "0.3.test"
+val configuredVersion = "0.3"
 
 dependencies {
 	minecraft("com.mojang:minecraft:${stonecutter.current.project}")
