@@ -6,14 +6,14 @@
 
 package de.clickism.clickvillagers.callback;
 
-import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.VersionHelper;
+import de.clickism.linen.core.Linen;
+import de.clickism.linen.core.message.MessageType;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +38,9 @@ public class UpdateNotifier implements ServerPlayConnectionEvents.Join {
         if (notifiedPlayers.contains(player.getUuid())) return;
         notifiedPlayers.add(player.getUuid());
         if (!VersionHelper.isOp(player)) return;
-        MessageType.WARN.send(player, Text.literal("ClickVillagers: Newer version available: ")
-                .append(Text.of(newerVersion)));
+        MessageType.WARN.send(
+                Linen.player(player),
+                "ClickVillagers: <green><bold>Newer version available: <white>" + newerVersion + "</white></bold></green>"
+        );
     }
 }

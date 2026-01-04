@@ -84,7 +84,7 @@ public class TradeListener implements Listener {
             player.closeInventory();
         }
         villager.resetOffers();
-        Message.TRADES_RESET.sendActionbarSilently(player);
+        Message.TRADES_RESET.sendOverlaySilently(player);
         player.playSound(player, Sound.BLOCK_SMITHING_TABLE_USE, 1f, .5f);
         player.closeInventory();
     }

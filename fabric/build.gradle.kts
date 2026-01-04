@@ -3,14 +3,9 @@ plugins {
 	id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
-version = "${parent?.name}-${property("mod.version")}+${stonecutter.current.project}"
+val minecraftVersion = stonecutter.current.project
+version = "${parent?.name}-${property("mod.version")}+$minecraftVersion"
 group = project.property("maven_group").toString()
-
-val accessWidener = if (stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
-	"1.21.11.clickvillagers.accesswidener"
-} else {
-	"1.21.10.clickvillagers.accesswidener"
-}
 
 base {
 	archivesName.set(property("archives_base_name").toString())
@@ -21,15 +16,22 @@ repositories {
 	mavenLocal()
 }
 
-val configuredVersion = "0.3.test"
+val configuredVersion = "0.3"
+val linenVersion = "0.1"
 
 dependencies {
-	minecraft("com.mojang:minecraft:${stonecutter.current.project}")
+	minecraft("com.mojang:minecraft:$minecraftVersion")
 	mappings("net.fabricmc:yarn:${property("deps.yarn_mappings")}:v2")
 	modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
 	modImplementation(include("eu.pb4:sgui:${property("deps.sgui")}")!!)
 	implementation(include("de.clickism:modrinth-update-checker:1.0")!!)
+	// Linen
+	implementation(include("de.clickism:linen-core:${linenVersion}")!!)
+	modImplementation(include("de.clickism:linen-core-fabric:${linenVersion}+$minecraftVersion")!!)
+	implementation(include("net.kyori:adventure-api:4.25.0")!!)
+	implementation(include("net.kyori:adventure-text-minimessage:4.25.0")!!)
+	implementation(include("net.kyori:adventure-text-serializer-legacy:4.25.0")!!)
 	// Configured
 	implementation(include("de.clickism:configured-core:${configuredVersion}")!!)
 	implementation(include("de.clickism:configured-yaml:${configuredVersion}")!!)
@@ -37,6 +39,12 @@ dependencies {
 	modImplementation(include("de.clickism:configured-fabric-command-adapter:${configuredVersion}")!!)
 	// Configured Dependency
 	implementation(include("org.yaml:snakeyaml:2.0")!!)
+}
+
+val accessWidener = if (stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
+	"1.21.11.clickvillagers.accesswidener"
+} else {
+	"1.21.10.clickvillagers.accesswidener"
 }
 
 tasks.processResources {
@@ -55,13 +63,9 @@ tasks.processResources {
 }
 
 java {
-	val j21 = stonecutter.eval(stonecutter.current.version, ">=1.20.5")
 	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(if (j21) 21 else 17))
+		languageVersion.set(JavaLanguageVersion.of(21))
 	}
-	val javaVersion = if (j21) JavaVersion.VERSION_17 else JavaVersion.VERSION_17
-	sourceCompatibility = javaVersion
-	targetCompatibility = javaVersion
 }
 
 tasks.jar {

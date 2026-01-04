@@ -90,7 +90,7 @@ public final class HopperUtil {
     }
 
     public static void sendHopperPlaceMessage(Player player, Block block) {
-        Message.VILLAGER_HOPPER_PLACE.sendActionbarSilently(player);
+        Message.VILLAGER_HOPPER_PLACE.sendOverlaySilently(player);
         Location location = block.getLocation();
         World world = player.getWorld();
         world.playSound(location, Sound.BLOCK_METAL_PLACE, 1, .5f);
@@ -98,7 +98,7 @@ public final class HopperUtil {
     }
 
     public static void sendHopperBreakMessage(Player player, Block block) {
-        Message.VILLAGER_HOPPER_BREAK.sendActionbarSilently(player);
+        Message.VILLAGER_HOPPER_BREAK.sendOverlaySilently(player);
         Location location = block.getLocation();
         World world = player.getWorld();
         world.playSound(location, Sound.BLOCK_METAL_BREAK, 1, .5f);

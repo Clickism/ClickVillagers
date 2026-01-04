@@ -9,12 +9,15 @@ package de.clickism.clickvillagers.callback;
 import de.clickism.clickvillagers.anchor.AnchorHandler;
 import de.clickism.clickvillagers.gui.VillagerClaimGui;
 import de.clickism.clickvillagers.gui.VillagerEditGui;
-import de.clickism.clickvillagers.util.MessageType;
+import de.clickism.clickvillagers.message.MessageTypes;
 import de.clickism.clickvillagers.util.Utils;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.PartnerState;
 import de.clickism.clickvillagers.villager.PickupHandler;
 import de.clickism.clickvillagers.villager.VillagerHandler;
+import de.clickism.linen.core.Linen;
+import de.clickism.linen.core.message.MessageType;
+import de.clickism.linen.core.player.LinenPlayer;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -42,6 +45,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public class UseVillagerEntityCallback implements UseEntityCallback {
@@ -90,16 +94,19 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
     private void handleClaim(PlayerEntity player, VillagerHandler<?> villagerHandler) {
         UUID owner = villagerHandler.getOwner();
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
+        LinenPlayer linenPlayer = Linen.player(player);
         if (owner == null) {
             // Allow claim
             if (!ENABLE_CLAIMS.get()) {
-                MessageType.FAIL.send(player, Text.literal("Claiming villagers is disabled."));
+                MessageType.ERROR.send(linenPlayer, "Claiming villagers is disabled.");
                 return;
             }
             if (cooldownManager.hasCooldown(player)) {
                 long seconds = cooldownManager.getRemainingCooldownSeconds(player);
-                MessageType.FAIL.send(player, Text.literal("Please wait §l" + seconds
-                        + " seconds §cto claim this villager."));
+                MessageType.ERROR.send(
+                        linenPlayer,
+                        "Please wait <bold>" + seconds + " seconds</bold> to claim this villager."
+                );
                 return;
             }
             new VillagerClaimGui(serverPlayer, villagerHandler, cooldownManager)
@@ -112,7 +119,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
             handleEdit(player, villagerHandler);
             return;
         }
-        MessageType.FAIL.send(player, Text.literal("This villager is already claimed."));
+        MessageType.ERROR.send(linenPlayer, "This villager is already claimed.");
     }
 
     private ActionResult handleTrade(PlayerEntity player, VillagerHandler<?> villagerHandler) {
@@ -125,7 +132,7 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
             // Player is a partner
             return ActionResult.PASS;
         }
-        MessageType.FAIL.send(player, Text.literal("This villager is closed for trading."));
+        MessageType.ERROR.send(Linen.player(player),"This villager is closed for trading.");
         return ActionResult.CONSUME;
     }
 
@@ -135,14 +142,17 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
     }
 
     private void handlePickup(PlayerEntity player, VillagerHandler<?> villagerHandler) {
+        LinenPlayer linenPlayer = Linen.player(player);
         if (villagerHandler.hasOwner() && !villagerHandler.isOwner(player.getUuid())) {
-            MessageType.FAIL.send(player, Text.literal("You can't pick up this villager."));
+            MessageType.ERROR.send(linenPlayer, "You can't pick up this villager.");
             return;
         }
         if (cooldownManager.hasCooldown(player)) {
             long seconds = cooldownManager.getRemainingCooldownSeconds(player);
-            MessageType.FAIL.send(player, Text.literal("Please wait §l" + seconds
-                    + " seconds §cto pick up this villager."));
+            MessageType.ERROR.send(
+                    linenPlayer,
+                    "Please wait <bold>" + seconds + " seconds </bold>to pick up this villager."
+            );
             return;
         }
         PickupHandler.notifyPickup(player, villagerHandler.getEntity());
@@ -152,15 +162,16 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
     }
 
     private void handleAnchor(PlayerEntity player, VillagerHandler<?> villagerHandler) {
+        LinenPlayer linenPlayer = Linen.player(player);
         if (villagerHandler.hasOwner() && !villagerHandler.isOwner(player.getUuid())) {
-            MessageType.FAIL.send(player, Text.literal("You can't anchor this villager."));
+            MessageType.ERROR.send(linenPlayer, "You can't anchor this villager.");
             return;
         }
         LivingEntity entity = villagerHandler.getEntity();
         ServerWorld world = (ServerWorld) VersionHelper.getWorld(entity);
         if (AnchorHandler.isAnchored(entity)) {
             AnchorHandler.removeAnchorEffect(entity);
-            MessageType.ANCHOR_REMOVE.sendActionbarSilently(player, Text.literal("You removed this villager's anchor."));
+            MessageTypes.ANCHOR_REMOVE.sendOverlaySilently(linenPlayer, "You removed this villager's anchor.");
             VersionHelper.playSound(player, SoundEvents.BLOCK_CHAIN_PLACE, SoundCategory.MASTER, 1, 1);
             world.spawnParticles(
                     ParticleTypes.WAX_OFF,
@@ -169,11 +180,11 @@ public class UseVillagerEntityCallback implements UseEntityCallback {
             );
         } else {
             if (!ENABLE_ANCHORS.get()) {
-                MessageType.FAIL.send(player, Text.literal("Anchoring villagers is disabled."));
+                MessageType.ERROR.send(linenPlayer, "Anchoring villagers is disabled.");
                 return;
             }
             AnchorHandler.addAnchorEffect(entity);
-            MessageType.ANCHOR_ADD.sendActionbarSilently(player, Text.literal("You anchored this villager."));
+            MessageTypes.ANCHOR_ADD.sendOverlaySilently(linenPlayer,"You anchored this villager.");
             VersionHelper.playSound(player, SoundEvents.BLOCK_CHAIN_PLACE, SoundCategory.NEUTRAL, 1, .5f);
             BlockPos posBelow = entity.getBlockPos().down();
             world.spawnParticles(

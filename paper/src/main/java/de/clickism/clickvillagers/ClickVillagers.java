@@ -23,6 +23,7 @@ import de.clickism.configured.papercommandadapter.command.GetCommand;
 import de.clickism.configured.papercommandadapter.command.PathCommand;
 import de.clickism.configured.papercommandadapter.command.ReloadCommand;
 import de.clickism.configured.papercommandadapter.command.SetCommand;
+import de.clickism.linen.core.Linen;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -59,6 +60,7 @@ public final class ClickVillagers extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Linen.initialize(this);
         CONFIG.load(); // Will also load messages
         // Load data
         PartnerManager partnerManager;

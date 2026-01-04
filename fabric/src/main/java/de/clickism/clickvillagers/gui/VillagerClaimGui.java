@@ -6,11 +6,12 @@
 
 package de.clickism.clickvillagers.gui;
 
+import de.clickism.linen.core.Linen;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import de.clickism.clickvillagers.callback.CooldownManager;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.VillagerHandler;
-import de.clickism.clickvillagers.util.MessageType;
+import de.clickism.linen.core.message.MessageType;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -33,9 +34,10 @@ public class VillagerClaimGui extends VillagerGui {
                 /*.hideFlags()*/
                 .addLoreLine(Text.literal("Click to claim this villager.").formatted(Formatting.YELLOW))
                 .setCallback((index, type, action, gui) -> {
-                    MessageType.CONFIRM.sendSilently(player, Text.literal("You claimed this villager. ").formatted(Formatting.GREEN)
-                            .append(Text.literal("Shift + Right Click").formatted(Formatting.WHITE, Formatting.UNDERLINE))
-                            .append(Text.literal(" on the villager to edit it.").formatted(Formatting.GREEN)));
+                    MessageType.SUCCESS.sendSilently(
+                            Linen.player(player),
+                            "You claimed this villager. <white><underlined>Shift + Right Click</underlined></white> on the villager to edit it."
+                    );
                     VersionHelper.playSound(player, SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.MASTER, 1, 1);
                     villagerHandler.setOwner(player.getUuid());
                     cooldownManager.giveCooldown(player);

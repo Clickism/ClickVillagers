@@ -7,13 +7,14 @@
 package de.clickism.clickvillagers;
 
 import de.clickism.clickvillagers.callback.*;
-import de.clickism.clickvillagers.util.MessageType;
+import de.clickism.clickvillagers.message.MessageTypes;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.configured.fabriccommandadapter.FabricCommandAdapter;
 import de.clickism.configured.fabriccommandadapter.command.GetCommand;
 import de.clickism.configured.fabriccommandadapter.command.PathCommand;
 import de.clickism.configured.fabriccommandadapter.command.ReloadCommand;
 import de.clickism.configured.fabriccommandadapter.command.SetCommand;
+import de.clickism.linen.core.Linen;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -37,8 +38,12 @@ public class ClickVillagers implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // Linen
+        Linen.initialize();
+        // Load Config
         CONFIG.load();
-        CooldownManager cooldownManager = new CooldownManager(() -> COOLDOWN.get());
+        CooldownManager cooldownManager = new CooldownManager(COOLDOWN::get);
+        // Register Callbacks
         UseEntityCallback.EVENT.register(new UseVillagerEntityCallback(cooldownManager));
         UseEntityCallback.EVENT.register(new UseVehicleEntityCallback());
         UseBlockCallback.EVENT.register(new UseVillagerBlockCallback());
@@ -53,16 +58,16 @@ public class ClickVillagers implements ModInitializer {
                     .requires(VersionHelper::isOp)
                     .then(FabricCommandAdapter.ofConfig(CONFIG)
                             .add(new SetCommand((sender, key, value) -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aConfig option \"§l" + key + "\" §aset to §l" + value + "."));
+                                MessageTypes.CONFIG.send(Linen.commandSender(sender), "Config option <bold>\"" + key + "\"</bold> set to <bold>" + value + "</bold>.");
                             }))
                             .add(new GetCommand((sender, key, value) -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aConfig option \"§l" + key + "\" §ahas value §l" + value + "."));
+                                MessageTypes.CONFIG.send(Linen.commandSender(sender), "Config option \"<bold>" + key + "\"</bold> has value <bold>" + value + "</bold>.");
                             }))
                             .add(new ReloadCommand(sender -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aReloaded the config file."));
+                                MessageTypes.CONFIG.send(Linen.commandSender(sender), "Reloaded the config file.");
                             }))
                             .add(new PathCommand((sender, path) -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aThe config file is located at: §f" + path));
+                                MessageTypes.CONFIG.send(Linen.commandSender(sender), "The config file is located at: <white>" + path + "</white>.");
                             }))
                             .buildRoot()
                     )

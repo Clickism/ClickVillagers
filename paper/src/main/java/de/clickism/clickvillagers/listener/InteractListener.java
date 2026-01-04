@@ -165,13 +165,13 @@ public class InteractListener implements Listener {
         if (anchorManager.isAnchored(villager)) {
             // Remove anchor
             anchorManager.removeAnchorEffect(villager);
-            Message.ANCHOR_REMOVE.sendActionbarSilently(player);
+            Message.ANCHOR_REMOVE.sendOverlaySilently(player);
             world.playSound(location, Sound.BLOCK_CHAIN_PLACE, 1, 1f);
             world.spawnParticle(Particle.WAX_OFF, location, 10, .2, 0, .2, 2);
         } else {
             // Add anchor
             anchorManager.addAnchorEffect(villager);
-            Message.ANCHOR_ADD.sendActionbarSilently(player);
+            Message.ANCHOR_ADD.sendOverlaySilently(player);
             world.playSound(player, Sound.BLOCK_CHAIN_PLACE, 1, .5f);
             world.spawnParticle(Particle.WAX_ON, location, 10, .2, 0, .2, 2);
             Block blockBelow = location.getBlock().getRelative(BlockFace.DOWN);
@@ -186,7 +186,7 @@ public class InteractListener implements Listener {
         }
         if (Permission.CLAIM.lacksAndNotify(player)) return;
         if (cooldownManager.hasCooldown(player) && Permission.BYPASS_CLAIMS.lacks(player)) {
-            Message.CLAIM_COOLDOWN.sendActionbar(player, cooldownManager.getRemainingCooldownSeconds(player));
+            Message.CLAIM_COOLDOWN.sendOverlay(player, cooldownManager.getRemainingCooldownSeconds(player));
             return;
         }
         new VillagerClaimMenu(player, villager, claimManager, pickupManager, partnerManager, chatInputListener,
@@ -207,7 +207,7 @@ public class InteractListener implements Listener {
     private void handlePickup(Player player, LivingEntity villager) {
         if (Permission.PICKUP.lacksAndNotify(player)) return;
         if (cooldownManager.hasCooldown(player) && Permission.BYPASS_CLAIMS.lacks(player)) {
-            Message.PICK_UP_COOLDOWN.sendActionbar(player, cooldownManager.getRemainingCooldownSeconds(player));
+            Message.PICK_UP_COOLDOWN.sendOverlay(player, cooldownManager.getRemainingCooldownSeconds(player));
             return;
         }
         ItemStack item;
@@ -219,7 +219,7 @@ public class InteractListener implements Listener {
             return;
         }
         Utils.setHandOrGive(player, item);
-        Message.PICK_UP_VILLAGER.sendActionbarSilently(player);
+        Message.PICK_UP_VILLAGER.sendOverlaySilently(player);
         pickupManager.sendPickupEffect(villager);
         cooldownManager.giveCooldown(player);
     }

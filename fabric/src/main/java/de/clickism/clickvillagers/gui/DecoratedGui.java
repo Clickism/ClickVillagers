@@ -9,7 +9,8 @@ package de.clickism.clickvillagers.gui;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import de.clickism.clickvillagers.util.MessageType;
+import de.clickism.linen.core.message.MessageType;
+import de.clickism.linen.core.Linen;
 import de.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
@@ -25,7 +26,7 @@ public abstract class DecoratedGui extends SimpleGui {
             //?} else
             /*.hideFlags()*/
             .setCallback((index, type, action, gui) -> {
-                MessageType.FAIL.playSound(gui.getPlayer());
+                MessageType.ERROR.playSound(Linen.player(gui.getPlayer()));
             })
             .build();
     private static final GuiElementInterface GRAY = new GuiElementBuilder(Items.GRAY_STAINED_GLASS_PANE)
@@ -35,7 +36,7 @@ public abstract class DecoratedGui extends SimpleGui {
             //?} else
             /*.hideFlags()*/
             .setCallback((index, type, action, gui) -> {
-                MessageType.FAIL.playSound(gui.getPlayer());
+                MessageType.ERROR.playSound(Linen.player(gui.getPlayer()));
             })
             .build();
     

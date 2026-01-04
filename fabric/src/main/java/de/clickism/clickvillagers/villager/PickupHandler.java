@@ -7,10 +7,12 @@
 package de.clickism.clickvillagers.villager;
 
 import de.clickism.clickvillagers.anchor.AnchorHandler;
-import de.clickism.clickvillagers.util.MessageType;
+import de.clickism.clickvillagers.message.MessageTypes;
 import de.clickism.clickvillagers.util.NbtFixer;
 import de.clickism.clickvillagers.util.Utils;
 import de.clickism.clickvillagers.util.VersionHelper;
+import de.clickism.linen.core.Linen;
+import de.clickism.linen.core.player.LinenPlayer;
 import net.minecraft.SharedConstants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -100,7 +102,7 @@ public class PickupHandler {
                                           //? if >=1.21.6 {
                                           NbtWriteView nbt
                                           //?} else
-                                          /*NbtCompound nbt*/
+            /*NbtCompound nbt*/
     ) {
         ItemStack itemStack = Items.PLAYER_HEAD.getDefaultStack();
         writeCustomData(itemStack, nbt);
@@ -136,7 +138,7 @@ public class PickupHandler {
                     .formatted(Formatting.RED));
         }
         if (entity instanceof Merchant merchant && entity instanceof VillagerDataContainer container
-                && !merchant.getOffers().isEmpty() && SHOW_TRADES.get()) {
+            && !merchant.getOffers().isEmpty() && SHOW_TRADES.get()) {
             //? if >=1.21.5 {
             RegistryKey<VillagerProfession> profession = container.getVillagerData().profession()
                     .getKey().orElseThrow();
@@ -164,7 +166,7 @@ public class PickupHandler {
                                         //? if >=1.21.6 {
                                         NbtWriteView view
                                         //?} else
-                                        /*NbtCompound nbt*/
+            /*NbtCompound nbt*/
     ) {
         itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(
                 //? if >=1.21.6 {
@@ -296,12 +298,13 @@ public class PickupHandler {
     }
 
     public static void notifyPickup(PlayerEntity player, Entity entity) {
-        MessageType.PICKUP_MESSAGE.sendActionbarSilently(player, Text.literal("You picked up a villager"));
+        LinenPlayer linenPlayer = Linen.player(player);
+        MessageTypes.PICK_UP.send(linenPlayer, "You picked up a villager");
         ServerWorld world = (ServerWorld) VersionHelper.getWorld(entity);
         double x = entity.getX();
         double y = entity.getY() + .25f;
         double z = entity.getZ();
         world.spawnParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 1, 0, 0, 0, 1);
-        VersionHelper.playSound(player, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.NEUTRAL, 1, .5f);
+        linenPlayer.playSound("entity.player.attack.sweep", 1f, .5f);
     }
 }

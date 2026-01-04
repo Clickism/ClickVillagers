@@ -12,12 +12,13 @@ import de.clickism.clickgui.menu.Menu;
 import de.clickism.clickgui.menu.MenuType;
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.message.Message;
-import de.clickism.clickvillagers.message.MessageType;
 import de.clickism.clickvillagers.util.Utils;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PartnerManager;
 import de.clickism.clickvillagers.villager.PickupManager;
 import de.clickism.clickvillagers.villager.VillagerTextures;
+import de.clickism.linen.core.Linen;
+import de.clickism.linen.core.message.MessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -37,7 +38,7 @@ public class VillagerEditMenu extends Menu {
         super(viewer, MenuType.MENU_9X3);
         UUID owner = claimManager.getOwnerUUID(villager);
         String ownerName = (owner == null) ? null : Bukkit.getOfflinePlayer(owner).getName();
-        setTitle("&2⚒ " + TITLE_EDIT.localized(ownerName == null ? "?" : ownerName));
+        setTitle("&2⚒ " + TITLE_EDIT.get(ownerName == null ? "?" : ownerName));
         setBackground(new VillagerBackground());
         addButton(10, Button.withIcon(BUTTON_PICK_UP_VILLAGER
                         .toIcon(VillagerTextures.getDefaultVillagerItem(villager)))
@@ -48,7 +49,7 @@ public class VillagerEditMenu extends Menu {
                         if (Permission.PICKUP.lacksAndNotify(player)) return;
                     }
                     Utils.setHandOrGive(player, pickupManager.toItemStack(villager));
-                    PICK_UP_VILLAGER.sendActionbarSilently(player);
+                    PICK_UP_VILLAGER.sendOverlaySilently(player);
                     pickupManager.sendPickupEffect(villager);
                 }));
         addButton(12, addPartnerLore(
@@ -71,7 +72,7 @@ public class VillagerEditMenu extends Menu {
                         .toIcon(Material.BRUSH))
                 .setOnClick((player, view, slot) -> {
                     if (!hasPermission(player, villager, claimManager)) return;
-                    MessageType.CONFIRM.playSound(player);
+                    MessageType.SUCCESS.playSound(Linen.player(player));
                     view.open(new VillagerBiomeChangeMenu(player, villager, view));
                 }));
         addButton(16, Button.withIcon(BUTTON_UNCLAIM_VILLAGER.toIcon(Material.BARRIER))
@@ -80,7 +81,7 @@ public class VillagerEditMenu extends Menu {
                     if (!hasPermission(player, villager, claimManager)) return;
                     claimManager.removeOwner(villager);
                     Message.UNCLAIM_VILLAGER.sendSilently(player);
-                    MessageType.FAIL.playSound(player);
+                    MessageType.ERROR.playSound(Linen.player(player));
                 }));
     }
 
@@ -96,9 +97,9 @@ public class VillagerEditMenu extends Menu {
             boolean tradeOpen = claimManager.isTradeOpen(entity);
             claimManager.setTradeOpen(entity, !tradeOpen);
             if (tradeOpen) {
-                MessageType.WARN.playSound(player);
+                MessageType.WARN.playSound(Linen.player(player));
             } else {
-                MessageType.CONFIRM.playSound(player);
+                MessageType.SUCCESS.playSound(Linen.player(player));
             }
             view.refresh(slot);
         });

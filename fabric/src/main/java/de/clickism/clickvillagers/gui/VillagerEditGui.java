@@ -6,13 +6,14 @@
 
 package de.clickism.clickvillagers.gui;
 
-import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.Utils;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.PartnerState;
 import de.clickism.clickvillagers.villager.PickupHandler;
 import de.clickism.clickvillagers.villager.VillagerHandler;
 import de.clickism.clickvillagers.villager.VillagerTextures;
+import de.clickism.linen.core.Linen;
+import de.clickism.linen.core.message.MessageType;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import net.minecraft.item.Items;
@@ -36,7 +37,7 @@ public class VillagerEditGui extends VillagerGui {
                         .append(Text.literal("CHANGE BIOME").formatted(Formatting.GOLD, Formatting.BOLD)))
                 .addLoreLine(Text.literal("Click to change the villager's biome.").formatted(Formatting.YELLOW))
                 .setCallback((index, type, action, gui) -> {
-                    MessageType.CONFIRM.playSound(player);
+                    MessageType.SUCCESS.playSound(Linen.player(player));
                     new VillagerBiomeChangeGui(player, villagerHandler, this).open();
                 })
                 .build());
@@ -58,7 +59,7 @@ public class VillagerEditGui extends VillagerGui {
                 .addLoreLine(Text.literal("Click to unclaim this villager.").formatted(Formatting.RED, Formatting.BOLD))
                 .addLoreLine(Text.literal("Unclaimed villagers can be picked up by anyone.").formatted(Formatting.RED))
                 .setCallback((index, type, action, gui) -> {
-                    MessageType.WARN.send(player, Text.literal("You unclaimed this villager."));
+                    MessageType.WARN.send(Linen.player(player),"You unclaimed this villager.");
                     villagerHandler.setOwner(null);
                     gui.close();
                 })
@@ -70,7 +71,7 @@ public class VillagerEditGui extends VillagerGui {
                 .addLoreLine(Text.literal("Click to add/remove a trading partner.").formatted(Formatting.GRAY))
                 .addLoreLine(Text.literal("Trading partners can trade with all of your villagers.").formatted(Formatting.GRAY))
                 .setCallback((index, type, action, gui) -> {
-                    MessageType.CONFIRM.playSound(player);
+                    MessageType.SUCCESS.playSound(Linen.player(player));
                     new VillagerPartnerGui(player, this).open();
                 }))
                 .build());
@@ -81,10 +82,10 @@ public class VillagerEditGui extends VillagerGui {
                 .setCallback((index, type, action, gui) -> {
                     if (villagerHandler.isTradingOpen()) {
                         villagerHandler.setTradingOpen(false);
-                        MessageType.WARN.playSound(player);
+                        MessageType.WARN.playSound(Linen.player(player));
                     } else {
                         villagerHandler.setTradingOpen(true);
-                        MessageType.CONFIRM.playSound(player);
+                        MessageType.SUCCESS.playSound(Linen.player(player));
                     }
                     gui.setSlot(index, getTradeOpenButton(villagerHandler));
                 });

@@ -8,17 +8,18 @@ package de.clickism.clickvillagers.gui;
 
 import de.clickism.clickgui.menu.Button;
 import de.clickism.clickgui.menu.MenuBackground;
-import de.clickism.clickvillagers.message.MessageType;
+import de.clickism.linen.core.Linen;
+import de.clickism.linen.core.message.MessageType;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
 public class VillagerBackground implements MenuBackground {
     private static final Button DARK_BUTTON = Button.withIcon(Material.BLACK_STAINED_GLASS_PANE)
             .setName("&8x")
-            .setOnClick((player, view, slot) -> MessageType.FAIL.playSound(player));
+            .setOnClick((player, view, slot) -> MessageType.ERROR.playSound(Linen.player(player)));
     private static final Button LIGHT_BUTTON = Button.withIcon(Material.GRAY_STAINED_GLASS_PANE)
             .setName("&8x")
-            .setOnClick((player, view, slot) -> MessageType.FAIL.playSound(player));
+            .setOnClick((player, view, slot) -> MessageType.ERROR.playSound(Linen.player(player)));
 
     @Override
     public @Nullable Button getButton(int i) {

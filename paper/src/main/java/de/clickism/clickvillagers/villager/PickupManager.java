@@ -35,7 +35,6 @@ import java.util.List;
 
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 import static de.clickism.clickvillagers.message.Message.VILLAGER_WITH_PROFESSION;
-import static de.clickism.clickvillagers.message.Message.localize;
 
 public class PickupManager implements Listener {
     public static final NamespacedKey VILLAGER_KEY = new NamespacedKey(ClickVillagers.INSTANCE, "villager");
@@ -45,6 +44,7 @@ public class PickupManager implements Listener {
     private final EntitySaver entitySaver;
     private final ClaimManager claimManager;
     private final AnchorManager anchorManager;
+
     @AutoRegistered
     public PickupManager(JavaPlugin plugin, EntitySaver entitySaver, ClaimManager claimManager, AnchorManager anchorManager) {
         this.entitySaver = entitySaver;
@@ -63,8 +63,8 @@ public class PickupManager implements Listener {
         if (profession == Villager.Profession.NONE) {
             return Message.VILLAGER.toString();
         }
-        String professionName = localize("profession." + profession.key().asMinimalString().toLowerCase());
-        return VILLAGER_WITH_PROFESSION.localized(professionName);
+        String professionName = Message.LOCALIZATION.get("profession." + profession.key().asMinimalString().toLowerCase());
+        return VILLAGER_WITH_PROFESSION.get(professionName);
     }
 
     @EventHandler(ignoreCancelled = true)

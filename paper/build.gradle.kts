@@ -25,11 +25,19 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
+val linenVersion = "0.1"
 val configuredVersion = "0.3"
 
 dependencies {
     // Paper
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    // Linen
+    implementation("de.clickism:linen-core:$linenVersion") {
+        isChanging = true
+    }
+    implementation("de.clickism:linen-core-paper:$linenVersion") {
+        isChanging = true
+    }
     // GUI
     implementation("de.clickism:click-gui:1.1")
     // Configuration & Localization
@@ -44,6 +52,10 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.1.0")
     // Other
     compileOnly("org.jetbrains:annotations:22.0.0")
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
 }
 
 tasks.runServer {
@@ -73,6 +85,8 @@ tasks.shadowJar {
     // Stop Gson and Snakeyaml from being relocated
     relocate("com.google.gson", "com.google.gson")
     relocate("org.yaml.snakeyaml", "org.yaml.snakeyaml")
+    // TODO: REMOVE TEMPORARY LINEN
+    relocate("de.clickism.linen", "de.clickism.linen")
 }
 
 tasks.withType<JavaCompile> {

@@ -6,9 +6,11 @@
 
 package de.clickism.clickvillagers.mixin;
 
-import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.TradeResetHelper;
 import de.clickism.clickvillagers.util.VersionHelper;
+import de.clickism.linen.core.Linen;
+import de.clickism.linen.core.message.MessageType;
+import de.clickism.linen.core.player.LinenPlayer;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static de.clickism.clickvillagers.ClickVillagersConfig.ALLOW_RESETTING_TRADES;
-import static de.clickism.clickvillagers.ClickVillagersConfig.CONFIG;
 
 @Mixin(MerchantInventory.class)
 public abstract class MerchantInventoryMixin implements Inventory {
@@ -53,8 +54,9 @@ public abstract class MerchantInventoryMixin implements Inventory {
                 var customer = (ServerPlayerEntity) villager.getCustomer();
                 if (customer != null) {
                     customer.closeHandledScreen();
-                    VersionHelper.playSound(customer, SoundEvents.BLOCK_SMITHING_TABLE_USE, SoundCategory.NEUTRAL, 1, .5f);
-                    MessageType.WARN.sendActionbarSilently(customer, Text.literal("You reset this villager's trades."));
+                    LinenPlayer player = Linen.player(customer);
+                    MessageType.WARN.sendOverlaySilently(player, "You reset this villager's trades.");
+                    player.playSound("block.smithing_table.use", 1f, .5f);
                 }
                 ci.cancel();
             }

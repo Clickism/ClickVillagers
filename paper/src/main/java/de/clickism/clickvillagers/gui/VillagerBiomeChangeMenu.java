@@ -17,8 +17,6 @@ import org.bukkit.entity.ZombieVillager;
 
 import java.util.List;
 
-import static de.clickism.clickvillagers.message.Message.localize;
-
 public class VillagerBiomeChangeMenu extends Menu {
 
     private static final List<VillagerBiome> BIOMES = List.of(
@@ -48,7 +46,7 @@ public class VillagerBiomeChangeMenu extends Menu {
     }
 
     private Button getBiomeButton(LivingEntity entity, Villager.Type type, Material material) {
-        String name = localize("biome." + type.name().toLowerCase());
+        String name = Message.LOCALIZATION.get("biome." + type.name().toLowerCase());
         return Button.withIcon(() -> Message.BUTTON_CHANGE_BIOME.toIcon(material)
                         .setName("&2🌲 &l" + name)
                         .runIf(type == getType(entity), Icon::addEnchantmentGlint))

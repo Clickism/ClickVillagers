@@ -7,11 +7,13 @@
 package de.clickism.clickvillagers.gui;
 
 import de.clickism.clickvillagers.util.VersionHelper;
+import de.clickism.linen.core.Linen;
+import de.clickism.linen.core.message.MessageType;
+import de.clickism.linen.core.player.LinenPlayer;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
 import de.clickism.clickvillagers.villager.PartnerState;
-import de.clickism.clickvillagers.util.MessageType;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -48,24 +50,25 @@ public class VillagerPartnerGui extends AnvilInputGui {
                 .setName(Text.literal("✍ ").formatted(Formatting.WHITE)
                         .append(Text.literal("ADD PARTNER").formatted(Formatting.WHITE, Formatting.BOLD)))
                 .setCallback((index, type, action, gui) -> {
+                    LinenPlayer linenPlayer = Linen.player(player);
                     if (!isValid(input)) {
-                        MessageType.FAIL.playSound(player);
+                        MessageType.ERROR.playSound(linenPlayer);
                         return;
                     }
                     PartnerState partnerState = PartnerState.getServerState(server);
                     UUID uuid = player.getUuid();
                     if (partnerState.isPartner(uuid, input)) {
                         partnerState.removePartner(uuid, input);
-                        MessageType.WARN.send(player, Text.literal("Removed " + input + " from your trading partners."));
+                        MessageType.WARN.send(linenPlayer, "Removed <bold>" + input + "</bold> from your trading partners.");
                     } else {
                         int limit = PARTNER_LIMIT_PER_PLAYER.get();
                         if (partnerState.getPartners(uuid).size() >= limit) {
-                            MessageType.FAIL.send(player, Text.literal("You have reached the partner limit: ")
-                                    .append(Text.literal(String.valueOf(limit)).formatted(Formatting.BOLD)));
+                            MessageType.ERROR.send(linenPlayer,
+                                    "You have reached the partner limit: <bold>" + limit + "</bold>");
                             return;
                         }
                         partnerState.addPartner(uuid, input);
-                        MessageType.CONFIRM.send(player, Text.literal("Added " + input + " to your trading partners."));
+                        MessageType.SUCCESS.send(linenPlayer, "Added " + input + " to your trading partners.");
                     }
                     new VillagerEditGui(player, previous.villagerHandler).open();
                 });
