@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "credit": [
     "MadokaStudio"
   ],
@@ -112,8 +112,8 @@
   "pick_up_cooldown": "Подождите \u0026l{seconds} секунд \u0026cперед тем, как подобрать жителя",
   "claim_cooldown": "Подождите \u0026l{seconds} секунд \u0026cперед тем, как заприватить жителя",
 
-  "config_set": "Опция конфигурации \"&l{option}\" &aустановлена на &l{value}.",
-  "config_get": "Опция конфигурации \"&l{option}\" &aимеет значение &l{value}.",
+  "config_set": "Опция конфигурации \"&l{option}&a\" установлена на &l{value}.",
+  "config_get": "Опция конфигурации \"&l{option}&a\" имеет значение &l{value}.",
   "config_path": "Файл конфигурации находится по пути: &f{path}",
   "config_reload": "Файл конфигурации перезагружен."
 }

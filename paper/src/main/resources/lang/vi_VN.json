@@ -1,7 +1,6 @@
 {
-  "version": 5,
+  "version": 6,
   "credit": [
-    "Clickism",
     "litsonhoang"
   ],
   "update": "ClickVillagers: \u0026a\u0026lCập nhật mới: \u0026f{version}",
@@ -115,8 +114,8 @@
   "pick_up_cooldown": "Hãy đợi \u0026l{seconds} giây \u0026cđể nhặt được dân làng này",
   "claim_cooldown": "Hãy đợi \u0026l{seconds} giây \u0026cđể sở hữu được dân làng này",
 
-  "config_set": "Tùy chọn cấu hình \"&l{option}\" &ađã được đặt thành &l{value}.",
-  "config_get": "Tùy chọn cấu hình \"&l{option}\" &acó giá trị &l{value}.",
+  "config_set": "Tùy chọn cấu hình \"&l{option}&a\" đã được đặt thành &l{value}.",
+  "config_get": "Tùy chọn cấu hình \"&l{option}&a\" có giá trị &l{value}.",
   "config_path": "Tệp cấu hình nằm tại: &f{path}",
   "config_reload": "Đã reload tệp cấu hình."
 }

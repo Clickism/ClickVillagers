@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "credit": [
     "Clickism"
   ],
@@ -115,8 +115,8 @@
   "pick_up_cooldown": "Warte bitte &l{seconds} Sekunden &c, um diesen Dorfbewohner aufzuheben",
   "claim_cooldown": "Warte bitte &l{seconds} Sekunden &c, um diesen Dorfbewohner zu übernehmen",
 
-  "config_set": "Config-Option \"&l{option}\" &awurde auf &l{value} gesetzt.",
-  "config_get": "Config-Option \"&l{option}\" &ahat den Wert &l{value}.",
+  "config_set": "Config-Option \"&l{option}&a\" wurde auf &l{value} gesetzt.",
+  "config_get": "Config-Option \"&l{option}&a\" hat den Wert &l{value}.",
   "config_path": "Die Konfigurationsdatei befindet sich unter: &f{path}",
   "config_reload": "Konfiguration neu geladen."
 }
