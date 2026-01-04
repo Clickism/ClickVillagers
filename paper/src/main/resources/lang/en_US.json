@@ -1,26 +1,26 @@
 {
-  "version": 5,
+  "version": 6,
   "credit": [
     "Clickism"
   ],
-  "update": "ClickVillagers: &a&lNew version available: &f{version}",
+  "update": "ClickVillagers: <green><bold>New version available: <white>{version}</white></bold></green>",
   "no_permission": "You don't have permission to do this.",
   "anchor_add": "You anchored this villager",
   "anchor_remove": "You removed this villager's anchor",
   "villager_hopper_place": "You placed a villager hopper",
   "villager_hopper_break": "You broke a villager hopper",
   "pick_up_villager": "You picked up a villager",
-  "enter_partner": "You have &l10 seconds&e to type the name of the trading partner you want to add/remove &l&nin the chat:",
+  "enter_partner": "You have <bold>10 seconds</bold> to type the name of the trading partner you want to add/remove <bold><underlined>in</underlined></bold> the chat:",
   "enter_partner_timeout": "Trading partner selection cancelled.",
-  "claim_villager": "You claimed this villager. &f&nShift + Right Click&a on the villager to edit it.",
+  "claim_villager": "You claimed this villager. <white><underlined>Shift + Right Click</underlined></white> on the villager to edit it.",
   "unclaim_villager": "You unclaimed this villager.",
   "invalid_partner": "Please input a valid player.",
-  "partner_add": "Added &l{partner}&a to your trading partners.",
-  "partner_remove": "Removed &l{partner}&e from your trading partners.",
-  "partner_limit_reached": "Trading partner limit reached: &6&l{limit}",
-  "hopper_limit_reached": "Villager Hopper limit in this chunk reached: &6&l{limit}",
-  "belongs_to": "This villager belongs to: &6🔑 {owner}",
-  "biome_changed": "Changed the biome of this villager to &l{biome}.",
+  "partner_add": "Added <bold>{partner}</bold> to your trading partners.",
+  "partner_remove": "Removed <bold>{partner}</bold> from your trading partners.",
+  "partner_limit_reached": "Trading partner limit reached: <gold><bold>{limit}</bold></gold>",
+  "hopper_limit_reached": "Villager Hopper limit in this chunk reached: <gold><bold>{limit}</bold></gold>",
+  "belongs_to": "This villager belongs to: <gold>🔑 {owner}</gold>",
+  "biome_changed": "Changed the biome of this villager to <bold>{biome}</bold>.",
   "write_error": "Failed to write villager data.",
   "read_error": "Failed to read villager data.",
   "trades_reset": "You reset this villager's trades.",
@@ -32,61 +32,61 @@
   "baby_villager": "Baby Villager",
   "villager_with_profession": "{profession} Villager",
   "villager.lore": [
-    "&8Right click to place the villager back."
+    "<dark_gray>Right click to place the villager back.</dark_gray>"
   ],
   "villager_hopper": "Villager Hopper",
   "villager_hopper.lore": [
-    "&8Use this to automatically pick up villagers."
+    "<dark_gray>Use this to automatically pick up villagers.</dark_gray>"
   ],
   "title_claim_villager": "Claim Villager",
-  "title_edit": "&l{owner}&2's Villager",
+  "title_edit": "<bold>{owner}</bold><dark_green>'s Villager</dark_green>",
   "title_change_biome": "Choose Villager's Biome",
-  "button_claim_villager": "&6🔒 &lCLAIM VILLAGER",
+  "button_claim_villager": "<gold>🔒 <bold>CLAIM VILLAGER</bold></gold>",
   "button_claim_villager.lore": [
-    "&e&lClick to claim this villager.",
-    "&eClaimed villagers can only be picked up",
-    "&eby its owner."
+    "<yellow><bold>Click to claim this villager.</bold></yellow>",
+    "Claimed villagers can only be picked up",
+    "eby its owner."
   ],
-  "button_unclaim_villager": "&4🔓 &lUNCLAIM VILLAGER",
+  "button_unclaim_villager": "<dark_red>🔓 <bold>UNCLAIM VILLAGER</bold></dark_red>",
   "button_unclaim_villager.lore": [
-    "&c&lClick to unclaim this villager.",
-    "&cUnclaimed villagers can be picked up",
-    "&cby anyone."
+    "<red><bold>Click to unclaim this villager.</bold></red>",
+    "Unclaimed villagers can be picked up",
+    "by anyone."
   ],
-  "button_pick_up_villager": "&6&l↑ &lPICK UP VILLAGER &6&l↑",
+  "button_pick_up_villager": "<gold><bold>↑ PICK UP VILLAGER ↑</bold></gold>",
   "button_pick_up_villager.lore": [
-    "&eClick to pick up this villager."
+    "<yellow>Click to pick up this villager.</yellow>"
   ],
-  "button_partner": "&6✍ &f&lADD TRADING PARTNER",
+  "button_partner": "<gold>✍ </gold><white><bold>ADD TRADING PARTNER</bold></white>",
   "button_partner.lore": [
-    "&7Click to add/remove a trading partner.",
-    "&7Trading partners can trade with all",
-    "&7of your villagers."
+    "<gray>Click to add/remove a trading partner.</gray>",
+    "<gray>Trading partners can trade with all</gray>",
+    "<gray>of your villagers.</gray>"
   ],
-  "button_trade_open": "&2$ &lTRADING OPEN",
+  "button_trade_open": "<dark_green>$ <bold>TRADING OPEN</bold></dark_green>",
   "button_trade_open.lore": [
-    "&aEveryone can trade with this villager."
+    "<green>Everyone can trade with this villager.</green>"
   ],
-  "button_trade_closed": "&4❌ &lTRADING CLOSED",
+  "button_trade_closed": "<dark_red>❌ <bold>TRADING CLOSED</bold></dark_red>",
   "button_trade_closed.lore": [
-    "&cOnly you and your trading partners",
-    "&ccan trade with this villager."
+    "<red>Only you and your trading partners</red>",
+    "<red>can trade with this villager.</red>"
   ],
-  "button_redirect_change_biome_menu": "&6🌲 &lCHANGE BIOME",
+  "button_redirect_change_biome_menu": "<gold>🌲 <bold>CHANGE BIOME</bold></gold>",
   "button_redirect_change_biome_menu.lore": [
-    "&eClick to change this villager's biome."
+    "<yellow>Click to change this villager's biome.</yellow>"
   ],
   "button_change_biome.lore": [
-    "&aClick to change this villager's biome."
+    "<green>Click to change this villager's biome.</green>"
   ],
-  "button_back": "&f◀ &lBACK",
+  "button_back": "<white>◀ <bold>BACK</bold></white>",
   "button_back.lore": [
-    "&7Go back to the previous menu."
+    "<gray>Go back to the previous menu.</gray>"
   ],
-  "button_reset_trades": "&4♻ &lRESET TRADES",
+  "button_reset_trades": "<dark_red>♻ <bold>RESET TRADES</bold></dark_red>",
   "button_reset_trades.lore": [
-    "&cClick on this recipe to reset trades.",
-    "&c&lThis cannot be undone."
+    "<red>Click on this recipe to reset trades.</red>",
+    "<red><bold>This cannot be undone.</bold></red>"
   ],
   "biome.desert": "DESERT",
   "biome.jungle": "JUNGLE",
@@ -109,12 +109,10 @@
   "profession.shepherd": "Shepherd",
   "profession.toolsmith": "Toolsmith",
   "profession.weaponsmith": "Weaponsmith",
-  "usage": "&cUsage: {usage}",
-  "pick_up_cooldown": "Please wait &l{seconds} seconds &cto pick up this villager",
-  "claim_cooldown": "Please wait &l{seconds} seconds &cto claim this villager",
-
-  "config_set": "Config option \"&l{option}\" &aset to &l{value}.",
-  "config_get": "Config option \"&l{option}\" &ahas value &l{value}.",
-  "config_path": "The config file is located at: &f{path}",
+  "pick_up_cooldown": "Please wait <bold>{seconds}</bold> seconds to pick up this villager",
+  "claim_cooldown": "Please wait <bold>{seconds}</bold> seconds to claim this villager",
+  "config_set": "Config option \"<bold>{option}</bold>\" set to <bold>{value}</bold>.",
+  "config_get": "Config option \"<bold>{option}</bold>\" has value <bold>{value}</bold>.",
+  "config_path": "The config file is located at: <white>{path}</white>",
   "config_reload": "Reloaded the config file."
 }

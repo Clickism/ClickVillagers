@@ -1,94 +1,94 @@
 {
-  "version": 5,
+  "version": 6,
   "credit": [
     "Clickism"
   ],
-  "update": "ClickVillagers: &a&lNeue Version verfügbar: &f{version}",
+  "update": "ClickVillagers: <green><bold>Neue Version verfügbar: <white>{version}</white></bold></green>",
   "no_permission": "Du bist nicht berechtigt, das zu tun.",
   "anchor_add": "Du hast diesen Dorfbewohner verankert",
   "anchor_remove": "Du hast den Anker des Dorfbewohners entfernt",
   "villager_hopper_place": "Du hast einen Dorfbewohner-Trichter platziert",
   "villager_hopper_break": "Du hast einen Dorfbewohner-Trichter abgebaut",
   "pick_up_villager": "Du hast einen Dorfbewohner aufgehoben",
-  "enter_partner": "Du hast &l10 Sekunden&e, um den Namen des Handelspartners, den du hinzufügen/entfernen möchtest, &l&nim Chat&e einzugeben:",
+  "enter_partner": "Du hast <bold>10 Sekunden</bold>, um den Namen des Handelspartners, den du hinzufügen/entfernen möchtest, <bold><underlined>im</underlined></bold> Chat einzugeben:",
   "enter_partner_timeout": "Handelspartnerauswahl abgebrochen.",
-  "claim_villager": "Du hast diesen Dorfbewohner übernommen. &f&nShift + Rechtsklick&a auf den Dorfbewohner, um ihn zu bearbeiten.",
+  "claim_villager": "Du hast diesen Dorfbewohner übernommen. <white><underlined>Shift + Rechtsklick</underlined></white> auf den Dorfbewohner, um ihn zu bearbeiten.",
   "unclaim_villager": "Du hast diesen Dorfbewohner freigegeben.",
   "invalid_partner": "Bitte gib einen gültigen Spielernamen ein.",
-  "partner_add": "&l{partner}&a wurde zu deinen Handelspartnern hinzugefügt.",
-  "partner_remove": "&l{partner}&e wurde von deinen Handelspartnern entfernt.",
-  "partner_limit_reached": "Handelspartnerlimit erreicht: &6&l{limit}",
-  "hopper_limit_reached": "Dorfbewohner-Trichter-Limit im diesen Chunk erreicht: &6&l{limit}",
-  "belongs_to": "Dieser Dorfbewohner gehört: &6🔑 {owner}",
-  "biome_changed": "Das Biom dieses Dorfbewohners wurde zu &l{biome} geändert.",
+  "partner_add": "<bold>{partner}</bold> wurde zu deinen Handelspartnern hinzugefügt.",
+  "partner_remove": "<bold>{partner}</bold> wurde von deinen Handelspartnern entfernt.",
+  "partner_limit_reached": "Handelspartnerlimit erreicht: <gold><bold>{limit}</bold></gold>",
+  "hopper_limit_reached": "Dorfbewohner-Trichter-Limit in diesem Chunk erreicht: <gold><bold>{limit}</bold></gold>",
+  "belongs_to": "Dieser Dorfbewohner gehört: <gold>🔑 {owner}</gold>",
+  "biome_changed": "Das Biom dieses Dorfbewohners wurde zu <bold>{biome}</bold> geändert.",
   "write_error": "Schreiben der Dorfbewohnerdaten fehlgeschlagen.",
   "read_error": "Lesen der Dorfbewohnerdaten fehlgeschlagen.",
   "trades_reset": "Du hast die Angebote dieses Dorfbewohners zurückgesetzt.",
   "info_owner": "Besitzer",
   "info_anchored": "Verankert",
-  "info_trade_closed": "Handel Begrenzt",
+  "info_trade_closed": "Handel begrenzt",
   "info_trades": "Angebote",
   "villager": "Dorfbewohner",
   "baby_villager": "Baby-Dorfbewohner",
   "villager_with_profession": "{profession} Dorfbewohner",
   "villager.lore": [
-    "&8Rechtsklick, um den Dorfbewohner",
-    "&8zurück zu platzieren."
+    "<dark_gray>Rechtsklick, um den Dorfbewohner</dark_gray>",
+    "<dark_gray>zurück zu platzieren.</dark_gray>"
   ],
   "villager_hopper": "Dorfbewohner-Trichter",
   "villager_hopper.lore": [
-    "&8Ermöglicht automatisches Aufheben",
-    "&8von Dorfbewohnern."
+    "<dark_gray>Ermöglicht automatisches Aufheben</dark_gray>",
+    "<dark_gray>von Dorfbewohnern.</dark_gray>"
   ],
   "title_claim_villager": "Übernehmen",
-  "title_edit": "&l{owner}&2's Dorfbewohner",
-  "title_change_biome": "Biom Ändern",
-  "button_claim_villager": "&6🔒 &lDORFBEWOHNER ÜBERNEHMEN",
+  "title_edit": "<bold>{owner}</bold><dark_green>'s Dorfbewohner</dark_green>",
+  "title_change_biome": "Biom ändern",
+  "button_claim_villager": "<gold>🔒 <bold>DORFBEWOHNER ÜBERNEHMEN</bold></gold>",
   "button_claim_villager.lore": [
-    "&e&lKlicke, um diesen Dorfbewohner zu übernehmen.",
-    "&eÜbernommene Dorfbewohner können nur von",
-    "&eihrem Besitzer aufgehoben werden."
+    "<yellow><bold>Klicke, um diesen Dorfbewohner zu übernehmen.</bold></yellow>",
+    "<yellow>Übernommene Dorfbewohner können nur von</yellow>",
+    "<yellow>ihrem Besitzer aufgehoben werden.</yellow>"
   ],
-  "button_unclaim_villager": "&4🔓 &lDORFBEWOHNER FREIGEBEN",
+  "button_unclaim_villager": "<dark_red>🔓 <bold>DORFBEWOHNER FREIGEBEN</bold></dark_red>",
   "button_unclaim_villager.lore": [
-    "&c&lKlicke, um diesen Dorfbewohner freizugeben.",
-    "&cFreigegebene Dorfbewohner können von jedem",
-    "&caufgehoben werden."
+    "<red><bold>Klicke, um diesen Dorfbewohner freizugeben.</bold></red>",
+    "<red>Freigegebene Dorfbewohner können von jedem</red>",
+    "<red>aufgehoben werden.</red>"
   ],
-  "button_pick_up_villager": "&6&l↑ &lDORFBEWOHNER AUFHEBEN &6&l↑",
+  "button_pick_up_villager": "<gold><bold>↑ DORFBEWOHNER AUFHEBEN ↑</bold></gold>",
   "button_pick_up_villager.lore": [
-    "&eKlicke, um diesen Dorfbewohner aufzuheben."
+    "<yellow>Klicke, um diesen Dorfbewohner aufzuheben.</yellow>"
   ],
-  "button_partner": "&6✍ &f&lHANDELSPARTNER HINZUFÜGEN",
+  "button_partner": "<gold>✍ </gold><white><bold>HANDELSPARTNER HINZUFÜGEN</bold></white>",
   "button_partner.lore": [
-    "&7Klicke, um einen Handelspartner hinzuzufügen.",
-    "&7Handelspartner können mit allen deinen",
-    "&7Dorfbewohnern handeln."
+    "<gray>Klicke, um einen Handelspartner hinzuzufügen.</gray>",
+    "<gray>Handelspartner können mit allen deinen</gray>",
+    "<gray>Dorfbewohnern handeln.</gray>"
   ],
-  "button_trade_open": "&2$ &lHANDEL OFFEN",
+  "button_trade_open": "<dark_green>$ <bold>HANDEL OFFEN</bold></dark_green>",
   "button_trade_open.lore": [
-    "&aJeder kann mit diesem Dorfbewohner handeln."
+    "<green>Jeder kann mit diesem Dorfbewohner handeln.</green>"
   ],
-  "button_trade_closed": "&4❌ &lHANDEL BEGRENZT",
+  "button_trade_closed": "<dark_red>❌ <bold>HANDEL BEGRENZT</bold></dark_red>",
   "button_trade_closed.lore": [
-    "&cNur du und deine Handelspartner können",
-    "&cmit diesem Dorfbewohner handeln."
+    "<red>Nur du und deine Handelspartner können</red>",
+    "<red>mit diesem Dorfbewohner handeln.</red>"
   ],
-  "button_redirect_change_biome_menu": "&6🌲 &lBIOM ÄNDERN",
+  "button_redirect_change_biome_menu": "<gold>🌲 <bold>BIOM ÄNDERN</bold></gold>",
   "button_redirect_change_biome_menu.lore": [
-    "&eKlicke, um das Biom dieses Dorfbewohners zu ändern."
+    "<yellow>Klicke, um das Biom dieses Dorfbewohners zu ändern.</yellow>"
   ],
   "button_change_biome.lore": [
-    "&aKlicke, um das Biom dieses Dorfbewohners zu ändern."
+    "<green>Klicke, um das Biom dieses Dorfbewohners zu ändern.</green>"
   ],
-  "button_back": "&f◀ &lZURÜCK",
+  "button_back": "<white>◀ <bold>ZURÜCK</bold></white>",
   "button_back.lore": [
-    "&7Kehre zurück zum vorherigen Menü."
+    "<gray>Kehre zurück zum vorherigen Menü.</gray>"
   ],
-  "button_reset_trades": "&4♻ &lANGEBOTE ZURÜCKSETZEN",
+  "button_reset_trades": "<dark_red>♻ <bold>ANGEBOTE ZURÜCKSETZEN</bold></dark_red>",
   "button_reset_trades.lore": [
-    "&cKlicke auf dieses Rezept, um die Angebote zurückzusetzen.",
-    "&c&lDies kann nicht rückgängig gemacht werden."
+    "<red>Klicke auf dieses Rezept, um die Angebote zurückzusetzen.</red>",
+    "<red><bold>Dies kann nicht rückgängig gemacht werden.</bold></red>"
   ],
   "biome.desert": "WÜSTE",
   "biome.jungle": "DSCHUNGEL",
@@ -108,15 +108,13 @@
   "profession.librarian": "Bibliothekar",
   "profession.mason": "Maurer",
   "profession.nitwit": "Nichtsnutz",
-  "profession.shepherd": "Shepherd",
+  "profession.shepherd": "Schäfer",
   "profession.toolsmith": "Werkzeugschmied",
   "profession.weaponsmith": "Waffenschmied",
-  "usage": "&cAnwendung: {usage}",
-  "pick_up_cooldown": "Warte bitte &l{seconds} Sekunden &c, um diesen Dorfbewohner aufzuheben",
-  "claim_cooldown": "Warte bitte &l{seconds} Sekunden &c, um diesen Dorfbewohner zu übernehmen",
-
-  "config_set": "Config-Option \"&l{option}\" &awurde auf &l{value} gesetzt.",
-  "config_get": "Config-Option \"&l{option}\" &ahat den Wert &l{value}.",
-  "config_path": "Die Konfigurationsdatei befindet sich unter: &f{path}",
+  "pick_up_cooldown": "Warte bitte <bold>{seconds} Sekunden</bold>, um diesen Dorfbewohner aufzuheben",
+  "claim_cooldown": "Warte bitte <bold>{seconds} Sekunden</bold>, um diesen Dorfbewohner zu übernehmen",
+  "config_set": "Config-Option \"<bold>{option}</bold>\" wurde auf <bold>{value}</bold> gesetzt.",
+  "config_get": "Config-Option \"<bold>{option}</bold>\" hat den Wert <bold>{value}</bold>.",
+  "config_path": "Die Konfigurationsdatei befindet sich unter: <white>{path}</white>",
   "config_reload": "Konfiguration neu geladen."
 }
