@@ -85,8 +85,6 @@ tasks.shadowJar {
     // Stop Gson and Snakeyaml from being relocated
     relocate("com.google.gson", "com.google.gson")
     relocate("org.yaml.snakeyaml", "org.yaml.snakeyaml")
-    // TODO: REMOVE TEMPORARY LINEN
-    relocate("de.clickism.linen", "de.clickism.linen")
 }
 
 tasks.withType<JavaCompile> {
