@@ -53,10 +53,10 @@ public class ClickVillagers implements ModInitializer {
                     .requires(VersionHelper::isOp)
                     .then(FabricCommandAdapter.ofConfig(CONFIG)
                             .add(new SetCommand((sender, key, value) -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aConfig option \"§l" + key + "\" §aset to §l" + value + "."));
+                                MessageType.CONFIG.send(sender, Text.literal("§aConfig option \"§l" + key + "§a\" set to §l" + value + "."));
                             }))
                             .add(new GetCommand((sender, key, value) -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aConfig option \"§l" + key + "\" §ahas value §l" + value + "."));
+                                MessageType.CONFIG.send(sender, Text.literal("§aConfig option \"§l" + key + "§a\" has value §l" + value + "."));
                             }))
                             .add(new ReloadCommand(sender -> {
                                 MessageType.CONFIG.send(sender, Text.literal("§aReloaded the config file."));
