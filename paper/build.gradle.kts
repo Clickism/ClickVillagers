@@ -96,6 +96,7 @@ publishMods {
     type.set(STABLE)
     modLoaders.add("paper")
     modLoaders.add("purpur")
+    modLoaders.add("folia")
     val mcVersionStart = "1.21"
     val mcVersionEnd = "1.21.11"
     modrinth {
