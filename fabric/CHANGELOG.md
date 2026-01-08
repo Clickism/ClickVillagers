@@ -1,6 +1,2 @@
-- Fixed: Command/interaction sounds wouldn't play on 1.21.11.
-- **Updated to Configured 0.3**: Internal refactor and added command interface for configuration options!
-  - `/clickvillagers config set <option> <value>`: Sets a configuration option.
-  - `/clickvillagers config get <option>`: Gets the value of a configuration option.
-  - `/clickvillagers config path`: Prints the path to the **configuration file**.
-  - `/clickvillagers config reload`: Reloads the configuration file.
+- Updated the formatting of some configuration messages.
+- Fixed: Some sounds would not play.
