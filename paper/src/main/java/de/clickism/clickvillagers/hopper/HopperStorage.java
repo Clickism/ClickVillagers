@@ -8,7 +8,6 @@ package de.clickism.clickvillagers.hopper;
 
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.hopper.util.HopperUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -20,11 +19,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.BlockVector;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manages the storage and tracking of all loaded custom villager hoppers
@@ -38,16 +35,24 @@ import java.util.function.BiConsumer;
 public class HopperStorage {
 
     /**
+     * A unique key representing a chunk's coordinates.
+     *
+     * @param x the chunk's x-coordinate
+     * @param z the chunk's z-coordinate
+     */
+    public record ChunkKey(int x, int z) {
+        public static ChunkKey of(Chunk chunk) {
+            return new ChunkKey(chunk.getX(), chunk.getZ());
+        }
+    }
+
+    /**
      * A map of loaded chunks to their corresponding villager hopper positions.
      */
-    private final Map<Chunk, Set<BlockVector>> loadedHoppers = new HashMap<>();
+    private final Map<World, Map<ChunkKey, Set<BlockVector>>> loadedHoppers = new ConcurrentHashMap<>();
 
     public HopperStorage() {
-        for (World world : Bukkit.getWorlds()) {
-            for (Chunk chunk : world.getLoadedChunks()) {
-                loadHoppersInChunk(chunk);
-            }
-        }
+        // Chunks loaded via ChunkListener
     }
 
     /**
@@ -57,7 +62,8 @@ public class HopperStorage {
      * @param block the hopper block to register
      */
     public void add(Chunk chunk, Block block) {
-        loadedHoppers.computeIfAbsent(chunk, c -> new HashSet<>())
+        loadedHoppers.computeIfAbsent(chunk.getWorld(), c -> new ConcurrentHashMap<>())
+                .computeIfAbsent(ChunkKey.of(chunk), k -> ConcurrentHashMap.newKeySet())
                 .add(block.getLocation().toVector().toBlockVector());
     }
 
@@ -71,7 +77,9 @@ public class HopperStorage {
      * @param block the hopper block to remove
      */
     public void removeHopper(Chunk chunk, Block block) {
-        Set<BlockVector> set = loadedHoppers.get(chunk);
+        var map = loadedHoppers.get(chunk.getWorld());
+        if (map == null) return;
+        var set = map.get(ChunkKey.of(chunk));
         if (set == null) return;
         set.remove(block.getLocation().toVector().toBlockVector());
         removeChunkIfEmpty(chunk);
@@ -83,9 +91,12 @@ public class HopperStorage {
      * @param chunk the chunk the hopper resides in
      */
     public void removeChunkIfEmpty(Chunk chunk) {
-        Set<BlockVector> set = loadedHoppers.get(chunk);
+        var map = loadedHoppers.get(chunk.getWorld());
+        if (map == null) return;
+        ChunkKey chunkKey = ChunkKey.of(chunk);
+        var set = map.get(chunkKey);
         if (set == null || set.isEmpty()) {
-            loadedHoppers.remove(chunk);
+            map.remove(chunkKey);
         }
     }
 
@@ -98,7 +109,7 @@ public class HopperStorage {
      * @param chunk the chunk to scan
      */
     public void loadHoppersInChunk(Chunk chunk) {
-        Set<BlockVector> set = new HashSet<>();
+        Set<BlockVector> set = ConcurrentHashMap.newKeySet();
         for (BlockState state : chunk.getTileEntities(block -> block.getType() == Material.HOPPER, false)) {
             if (!(state instanceof Hopper hopper)) continue;
             PersistentDataContainer data = hopper.getPersistentDataContainer();
@@ -106,7 +117,8 @@ public class HopperStorage {
             set.add(hopper.getLocation().toVector().toBlockVector());
         }
 
-        loadedHoppers.put(chunk, set);
+        loadedHoppers.computeIfAbsent(chunk.getWorld(), c -> new ConcurrentHashMap<>())
+                .put(ChunkKey.of(chunk), set);
     }
 
     /**
@@ -118,7 +130,10 @@ public class HopperStorage {
      * @param chunk the chunk being unloaded
      */
     public void unloadHoppersInChunk(Chunk chunk) {
-        loadedHoppers.remove(chunk);
+        var map = loadedHoppers.get(chunk.getWorld());
+        if (map != null) {
+            map.remove(ChunkKey.of(chunk));
+        }
     }
 
     /**
@@ -128,7 +143,9 @@ public class HopperStorage {
      * @return the number of villager hoppers in the chunk
      */
     public int getHopperCount(Chunk chunk) {
-        Set<BlockVector> set = loadedHoppers.get(chunk);
+        var map = loadedHoppers.get(chunk.getWorld());
+        if (map == null) return 0;
+        var set = map.get(ChunkKey.of(chunk));
         return set == null ? 0 : set.size();
     }
 
@@ -150,7 +167,13 @@ public class HopperStorage {
      * @return the total count of loaded villager hoppers
      */
     public int getTotalCount() {
-        return loadedHoppers.values().stream().mapToInt(Set::size).sum();
+        int total = 0;
+        for (var worldEntry : loadedHoppers.entrySet()) {
+            for (var chunkEntry : worldEntry.getValue().entrySet()) {
+                total += chunkEntry.getValue().size();
+            }
+        }
+        return total;
     }
 
     /**
@@ -159,7 +182,19 @@ public class HopperStorage {
      *
      * @param consumer the function to apply for each chunk and its hopper positions
      */
-    public void forEachChunk(@NotNull BiConsumer<Chunk, Set<BlockVector>> consumer) {
-        loadedHoppers.forEach(consumer);
+    public void forEachChunk(@NotNull ChunkHopperConsumer consumer) {
+        for (var worldEntry : loadedHoppers.entrySet()) {
+            World world = worldEntry.getKey();
+            for (var chunkEntry : worldEntry.getValue().entrySet()) {
+                ChunkKey chunkKey = chunkEntry.getKey();
+                Set<BlockVector> set = chunkEntry.getValue();
+                consumer.accept(world, chunkKey, set);
+            }
+        }
+    }
+
+    @FunctionalInterface
+    public interface ChunkHopperConsumer {
+        void accept(World world, ChunkKey chunkKey, Set<BlockVector> hoppers);
     }
 }

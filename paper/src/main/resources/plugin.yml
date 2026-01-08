@@ -4,6 +4,7 @@ main: de.clickism.clickvillagers.ClickVillagers
 api-version: '1.21'
 authors: [Clickism]
 description: A simple plugin that makes handling villagers a lot easier
+folia-supported: true
 commands:
   clickvillagers:
     description: Main command for ClickVillagers.

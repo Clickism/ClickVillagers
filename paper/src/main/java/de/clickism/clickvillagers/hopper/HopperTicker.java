@@ -10,10 +10,7 @@ import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.hopper.util.HopperUtil;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PickupManager;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.BlockDisplay;
@@ -64,21 +61,25 @@ public class HopperTicker {
         ignoreBabies = IGNORE_BABY_VILLAGERS.get();
         ignoreClaimed = IGNORE_CLAIMED_VILLAGERS.get();
 
-        Queue<Chunk> toRemove = new ArrayDeque<>();
+        storage.forEachChunk((world, chunkKey, hoppers) -> {
+            int chunkX = chunkKey.x();
+            int chunkZ = chunkKey.z();
 
-        storage.forEachChunk((chunk, set) -> {
-            tickChunk(chunk, set);
-            if (set.isEmpty()) {
-                toRemove.add(chunk);
-            }
+            Bukkit.getRegionScheduler().run(
+                    ClickVillagers.INSTANCE,
+                    world,
+                    chunkX,
+                    chunkZ,
+                    task -> {
+                        tickChunk(world, chunkX, chunkZ, hoppers);
+                    }
+            );
         });
-
-        toRemove.forEach(storage::removeChunkIfEmpty);
     }
 
-    private void tickChunk(Chunk chunk, Set<BlockVector> vectors) {
+    private void tickChunk(World world, int chunkX, int chunkZ, Set<BlockVector> vectors) {
+        Chunk chunk = world.getChunkAt(chunkX, chunkZ);
         if (!chunk.isLoaded()) return; // Should never happen
-        World world = chunk.getWorld();
         Location hopperLoc = new Location(world, 0, 0, 0);
 
         for (Iterator<BlockVector> setIterator = vectors.iterator(); setIterator.hasNext(); ) {
@@ -95,7 +96,7 @@ public class HopperTicker {
         // Hopper doesn't exist anymore for some reason, remove it
         // This should never happen
         if (hopper == null) {
-            Location center = hopperLoc.add(0.5, 1, 0.5);
+            Location center = hopperLoc.clone().add(0.5, 1, 0.5);
             World world = center.getWorld();
             if (world == null) return;
             // Tick hopper

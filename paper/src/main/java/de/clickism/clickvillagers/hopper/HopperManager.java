@@ -11,6 +11,7 @@ import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.villager.ClaimManager;
 import de.clickism.clickvillagers.villager.PickupManager;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,7 +43,7 @@ public class HopperManager {
 
     private final HopperStorage storage = new HopperStorage();
     private final HopperTicker ticker;
-    private BukkitTask tickerTask;
+    private ScheduledTask tickerTask;
 
     public HopperManager(Plugin plugin, PickupManager pickupManager, ClaimManager claimManager) {
         this.plugin = plugin;
@@ -59,8 +60,8 @@ public class HopperManager {
 
     private void startTasks() {
         int tickRate = HOPPER_TICK_RATE.get();
-        tickerTask = Bukkit.getScheduler()
-                .runTaskTimer(plugin, ticker::tickAll, tickRate, tickRate);
+        tickerTask = Bukkit.getGlobalRegionScheduler()
+                .runAtFixedRate(plugin, task -> ticker.tickAll(), tickRate, tickRate);
     }
 
     private void stopTasks() {

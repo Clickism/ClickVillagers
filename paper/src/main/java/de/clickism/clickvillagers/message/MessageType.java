@@ -27,7 +27,7 @@ public abstract class MessageType {
         @Override
         public void playSound(Player player) {
             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 1f, 1f);
-            Bukkit.getScheduler().runTaskLater(ClickVillagers.INSTANCE, task -> {
+            Bukkit.getGlobalRegionScheduler().runDelayed(ClickVillagers.INSTANCE, task -> {
                 player.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 1f, 2f);
             }, 2L);
         }

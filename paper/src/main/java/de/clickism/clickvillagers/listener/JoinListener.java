@@ -42,7 +42,7 @@ public class JoinListener implements Listener {
         if (notifiedPlayers.contains(player.getUniqueId())) return;
         notifiedPlayers.add(player.getUniqueId());
         // Delay the message
-        Bukkit.getScheduler().runTaskLater(plugin,
-                () -> Message.UPDATE.send(player, newerVersion), 10L);
+        Bukkit.getGlobalRegionScheduler().runDelayed(plugin,
+                task -> Message.UPDATE.send(player, newerVersion), 10L);
     }
 }

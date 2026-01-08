@@ -6,23 +6,25 @@
 
 package de.clickism.clickvillagers.gui;
 
-import org.bukkit.Bukkit;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class ChatInputListener implements Listener {
 
     private final JavaPlugin plugin;
-    private final Map<Player, Consumer<String>> callbackMap = new ConcurrentHashMap<>();
+    private final Map<UUID, Consumer<String>> callbackMap = new ConcurrentHashMap<>();
 
     public ChatInputListener(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -30,27 +32,44 @@ public class ChatInputListener implements Listener {
     }
 
     public void addChatCallback(Player player, Consumer<String> onInput, Runnable onCancel, long timeoutTicks) {
-        callbackMap.put(player, onInput);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (!onInput.equals(callbackMap.get(player))) return;
-            callbackMap.remove(player);
-            onCancel.run();
-        }, timeoutTicks);
+        UUID uuid = player.getUniqueId();
+        callbackMap.put(uuid, onInput);
+        player.getScheduler().runDelayed(plugin,
+                task -> {
+                    var current = callbackMap.get(uuid);
+                    if (onInput != current) return;
+                    callbackMap.remove(uuid);
+                    onCancel.run();
+                },
+                null,
+                timeoutTicks
+        );
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onChat(AsyncPlayerChatEvent event) {
+    public void onChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
-        Consumer<String> callback = callbackMap.get(player);
+        UUID uuid = player.getUniqueId();
+        var callback = callbackMap.get(uuid);
         if (callback == null) return;
-        callback.accept(event.getMessage());
-        callbackMap.remove(player);
-        event.setMessage("");
+
+        String message = PlainTextComponentSerializer.plainText().serialize(event.message());
+
+        event.message(Component.empty());
         event.setCancelled(true);
+
+        // Run on player region
+        player.getScheduler().run(plugin, task -> {
+            var current = callbackMap.remove(uuid);
+            if (current == null) return;
+            current.accept(message);
+        }, null);
+
     }
 
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
-        callbackMap.remove(event.getPlayer());
+        UUID uuid = event.getPlayer().getUniqueId();
+        callbackMap.remove(uuid);
     }
 }
