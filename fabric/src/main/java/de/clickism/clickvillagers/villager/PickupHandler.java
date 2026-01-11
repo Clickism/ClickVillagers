@@ -299,7 +299,7 @@ public class PickupHandler {
 
     public static void notifyPickup(PlayerEntity player, Entity entity) {
         LinenPlayer linenPlayer = Linen.player(player);
-        MessageTypes.PICK_UP.send(linenPlayer, "You picked up a villager");
+        MessageTypes.PICK_UP.sendOverlaySilently(linenPlayer, "You picked up a villager");
         ServerWorld world = (ServerWorld) VersionHelper.getWorld(entity);
         double x = entity.getX();
         double y = entity.getY() + .25f;

@@ -37,7 +37,7 @@ public class VersionHelper {
     public static void playSound(PlayerEntity player, SoundEvent soundEvent, SoundCategory category, float volume, float pitch) {
         //? if >=1.21.11 {
         player.getEntityWorld().playSound(
-                player,
+                null,
                 player.getX(),
                 player.getY(),
                 player.getZ(),
