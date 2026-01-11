@@ -48,7 +48,7 @@ public class FabricEntrypoint implements ModInitializer {
         // Register Commands
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(Commands.literal("clickvillagers")
-                    .requires(VersionHelper::isOp)
+                    .requires(VersionHelper::isOpOrInSinglePlayer)
                     .then(FabricCommandAdapter.ofConfig(CONFIG)
                             .add(new SetCommand((sender, key, value) -> {
                                 MessageType.CONFIG.send(sender, Component.literal("§aConfig option \"§l" + key + "§a\" set to §l" + value + "."));
