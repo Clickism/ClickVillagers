@@ -130,4 +130,11 @@ public class VersionHelper {
         //?} else
         //return key.location();
     }
+
+    public static void moveEntity(Entity entity, BlockPos blockPos) {
+        //? if >=1.21.5 {
+        entity.snapTo(blockPos, 0, 0);
+        //?} else
+        //entity.moveTo(blockPos, 0, 0);
+    }
 }

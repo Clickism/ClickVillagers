@@ -48,7 +48,7 @@ public class UseVillagerBlockCallback implements UseBlockCallback {
         /*ActionResult actionResult = world.getBlockState(clickedPos).onUse(world, player, hand, hitResult);*/
         if (actionResult.consumesAction()) return actionResult;
         BlockPos pos = clickedPos.relative(hitResult.getDirection());
-        entity.snapTo(pos, 0, 0);
+        VersionHelper.moveEntity(entity, pos);
         world.addFreshEntity(entity);
         itemStack.shrink(1);
         if (itemStack.getCount() <= 0) {

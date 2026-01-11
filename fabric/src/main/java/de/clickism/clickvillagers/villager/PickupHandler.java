@@ -13,10 +13,10 @@ import de.clickism.clickvillagers.util.Utils;
 import de.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.commands.TagCommand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.monster.zombie.ZombieVillager;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -57,6 +57,9 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.nbt.NbtString;
  *///?}
 
+//? if >=1.21.4
+import net.minecraft.world.entity.EntitySpawnReason;
+
 public class PickupHandler {
 
     private static final String TYPE_KEY = "EntityType";
@@ -66,7 +69,7 @@ public class PickupHandler {
     //? if >=1.21.6 {
     private static final int DATA_VERSION = SharedConstants.getCurrentVersion().dataVersion().version();
     //?} else
-    //private static final int DATA_VERSION = SharedConstants.getGameVersion().getSaveVersion().getId();
+    //private static final int DATA_VERSION = SharedConstants.getCurrentVersion().getDataVersion().getVersion();
 
     //? if >=1.21.6 {
     public static <T extends LivingEntity & VillagerDataHolder> ItemStack toItemStack(T entity) {
@@ -83,13 +86,13 @@ public class PickupHandler {
         return itemStack;
     }
     //?} else {
-    /*public static <T extends LivingEntity & VillagerDataContainer> ItemStack toItemStack(T entity) {
-        NbtCompound nbt = new NbtCompound();
-        entity.writeNbt(nbt);
-        String id = EntityType.getId(entity.getType()).toString();
+    /*public static <T extends LivingEntity & VillagerDataHolder> ItemStack toItemStack(T entity) {
+        CompoundTag nbt = new CompoundTag();
+        entity.save(nbt);
+        String id = EntityType.getKey(entity.getType()).toString();
         nbt.putString(TYPE_KEY, id);
         nbt.putString(DATA_VERSION_KEY, String.valueOf(DATA_VERSION));
-        List<Text> lore = getLore(new VillagerHandler<>(entity));
+        List<Component> lore = getLore(new VillagerHandler<>(entity));
         ItemStack itemStack = getItemStack(getDisplayName(entity), lore, nbt);
         VillagerTextures.setEntityTexture(itemStack, entity);
         entity.remove(Entity.RemovalReason.DISCARDED);
@@ -101,7 +104,7 @@ public class PickupHandler {
                                           //? if >=1.21.6 {
                                           TagValueOutput nbt
                                           //?} else
-                                          //NbtCompound nbt
+                                          //CompoundTag nbt
     ) {
         ItemStack itemStack = Items.PLAYER_HEAD.getDefaultInstance();
         writeCustomData(itemStack, nbt);
@@ -142,7 +145,7 @@ public class PickupHandler {
             ResourceKey<VillagerProfession> profession = container.getVillagerData().profession()
                     .unwrapKey().orElseThrow();
             //?} else
-            /*VillagerProfession profession = container.getVillagerData().getProfession();*/
+            //VillagerProfession profession = container.getVillagerData().getProfession();
             TradeInfoProvider provider = (FORMAT_TRADES.get())
                     ? TradeInfoProviders.getProvider(profession)
                     : TradeInfoProviders.ALL_TRADES;
@@ -165,7 +168,7 @@ public class PickupHandler {
                                         //? if >=1.21.6 {
                                         TagValueOutput view
                                         //?} else
-                                        //NbtCompound nbt
+                                        //CompoundTag nbt
     ) {
         itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(
                 //? if >=1.21.6 {
@@ -226,20 +229,20 @@ public class PickupHandler {
             //? if >=1.21.5 {
             String id = nbt.getString(TYPE_KEY).orElseThrow();
             //?} else
-            /*String id = nbt.getString(TYPE_KEY);*/
+            //String id = nbt.getString(TYPE_KEY);
             if (id == null) return null;
             EntityType<?> type = EntityType.byString(id).orElse(null);
             if (type == null) return null;
             //? if >=1.21.3 {
             Entity entity = type.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
             //?} else
-            /*Entity entity = type.create(world);*/
+            //Entity entity = type.create(world);
             if (entity == null) return null;
             //? if >=1.21.6 {
             ValueInput view = TagValueInput.create(new ProblemReporter.Collector(), world.registryAccess(), nbt);
             entity.load(view);
             //?} else
-            //entity.readNbt(nbt);
+            //entity.load(nbt);
             return entity;
         } catch (Exception e) {
             return null;
@@ -255,8 +258,8 @@ public class PickupHandler {
             }
         });
         //?} else {
-        /*UUID uuid = nbt.getUuid("UUID");
-        if (((ServerWorld) world).getEntity(uuid) != null) {
+        /*UUID uuid = nbt.getUUID("UUID");
+        if (((ServerLevel) world).getEntity(uuid) != null) {
             nbt.remove("UUID");
         }
         *///?}
@@ -289,7 +292,7 @@ public class PickupHandler {
         /*VillagerProfession profession = villager.getVillagerData().getProfession();
         String professionName = profession.toString();
         if (profession.equals(VillagerProfession.NONE)) {
-            return Text.literal("Villager");
+            return Component.literal("Villager");
         }
         *///?}
 

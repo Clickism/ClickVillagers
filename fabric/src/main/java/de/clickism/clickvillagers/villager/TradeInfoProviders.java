@@ -160,7 +160,7 @@ public class TradeInfoProviders {
     //? if >=1.21.5 {
     private static final Map<ResourceKey<VillagerProfession>, TradeInfoProvider> PROVIDERS = Map.ofEntries(
     //?} else
-    /*private static final Map<VillagerProfession, TradeInfoProvider> PROVIDERS = Map.ofEntries(*/
+    //private static final Map<VillagerProfession, TradeInfoProvider> PROVIDERS = Map.ofEntries(
             Map.entry(VillagerProfession.LIBRARIAN, LIBRARIAN),
             Map.entry(VillagerProfession.FARMER, FARMER),
             Map.entry(VillagerProfession.TOOLSMITH, SMITH),

@@ -6,6 +6,7 @@
 
 package de.clickism.clickvillagers.mixin;
 
+import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.PickupHandler;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,7 +58,7 @@ public abstract class DispenserBlockMixin extends BaseEntityBlock {
             BlockPos blockPos = pos(pointer).relative(direction);
             Entity entity = PickupHandler.readEntityFromItemStack(world, stack);
             if (entity == null) return stack;
-            entity.snapTo(blockPos, 0, 0);
+            VersionHelper.moveEntity(entity, blockPos);
             world.addFreshEntity(entity);
             stack.shrink(1);
             return stack;

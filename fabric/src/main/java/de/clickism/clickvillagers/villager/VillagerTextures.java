@@ -39,7 +39,7 @@ public class VillagerTextures {
     //? if >=1.21.5 {
     public static final Map<ResourceKey<VillagerProfession>, String> TEXTURE_MAP = Map.ofEntries(
     //?} else
-    /*public static final Map<VillagerProfession, String> TEXTURE_MAP = Map.ofEntries(*/
+    //public static final Map<VillagerProfession, String> TEXTURE_MAP = Map.ofEntries(
             Map.entry(VillagerProfession.FISHERMAN, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWMxNWU1ZmI1NmZhMTZiMDc0N2IxYmNiMDUzMzVmNTVkMWZhMzE1NjFjMDgyYjVlMzY0M2RiNTU2NTQxMDg1MiJ9fX0="),
             Map.entry(VillagerProfession.ARMORER, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjUyMmRiOTJmMTg4ZWJjNzcxM2NmMzViNGNiYWVkMWNmZTI2NDJhNTk4NmMzYmRlOTkzZjVjZmIzNzI3NjY0YyJ9fX0="),
             Map.entry(VillagerProfession.BUTCHER, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzY3NzRkMmRmNTE1ZWNlYWU5ZWVkMjkxYzFiNDBmOTRhZGY3MWRmMGFiODFjNzE5MTQwMmUxYTQ1YjNhMjA4NyJ9fX0="),
@@ -95,7 +95,7 @@ public class VillagerTextures {
         String texture = TEXTURE_MAP.get(villager.getVillagerData().profession()
                 .unwrapKey().orElseThrow());
         //?} else
-        /*String texture = TEXTURE_MAP.get(villager.getVillagerData().getProfession());*/
+        //String texture = TEXTURE_MAP.get(villager.getVillagerData().getProfession());
         if (texture != null) {
             return texture;
         }

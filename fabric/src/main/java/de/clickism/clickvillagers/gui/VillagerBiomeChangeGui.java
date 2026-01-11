@@ -30,7 +30,7 @@ public class VillagerBiomeChangeGui extends VillagerGui {
     //? if >=1.21.5 {
     private record VillagerBiome(ResourceKey<VillagerType> type, Item icon) {}
     //?} else
-    /*private record VillagerBiome(VillagerType type, Item icon) {}*/
+    //private record VillagerBiome(VillagerType type, Item icon) {}
 
     private static final List<VillagerBiome> BIOMES = List.of(
             new VillagerBiome(VillagerType.PLAINS, Items.OAK_SAPLING),
@@ -77,19 +77,24 @@ public class VillagerBiomeChangeGui extends VillagerGui {
                 .get(VersionHelper.identifier(typeKey))
                 .orElseThrow();
         //?} else
-        /*private GuiElement getBiomeButton(VillagerType type, Item icon) {*/
+        //private GuiElement getBiomeButton(VillagerType type, Item icon) {
         var villager = villagerHandler.getEntity();
         //? if >=1.21.5 {
         String biomeName = VersionHelper.identifier(type.unwrapKey().orElseThrow())
                 .getPath().toUpperCase();
         //?} else
-        /*String biomeName = type.toString().toUpperCase();*/
+        //String biomeName = type.toString().toUpperCase();
         GuiElementBuilder builder = new GuiElementBuilder(icon)
                 .setName(Component.literal(biomeName).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD))
                 .addLoreLine(Component.literal("Click to change the villager's biome.").withStyle(ChatFormatting.DARK_GREEN))
                 .setCallback((index, t, action, gui) -> {
                     if (villager.isRemoved()) return;
-                    villager.setVillagerData(villager.getVillagerData().withType(type));
+                    villager.setVillagerData(villager.getVillagerData()
+                            //? if >=1.21.5 {
+                            .withType(type)
+                            //?} else
+                            //.setType(type)
+                    );
                     VersionHelper.playSound(player, SoundEvents.COMPOSTER_FILL_SUCCESS, SoundSource.MASTER, 1, .5f);
                     VersionHelper.playSound(player, SoundEvents.AZALEA_LEAVES_PLACE, SoundSource.MASTER, 1, 1);
                     VersionHelper.playSound(player, SoundEvents.AZALEA_PLACE, SoundSource.MASTER, 1, 2);
@@ -98,7 +103,7 @@ public class VillagerBiomeChangeGui extends VillagerGui {
         //? if >=1.21.5 {
         if (villager.getVillagerData().type().equals(type)) {
         //?} else
-        /*if (villager.getVillagerData().getType().equals(type)) {*/
+        //if (villager.getVillagerData().getType().equals(type)) {
             builder.glow();
         }
         return builder.build();

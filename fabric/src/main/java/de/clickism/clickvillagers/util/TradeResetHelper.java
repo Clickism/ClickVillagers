@@ -11,13 +11,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 //? if >1.21.4 {
 import net.minecraft.core.component.DataComponentExactPredicate;
-import net.minecraft.world.item.trading.ItemCost;
 //?} elif >1.20.1 {
-/*import net.minecraft.predicate.ComponentPredicate;
-import net.minecraft.village.TradedItem;
+/*import net.minecraft.core.component.DataComponentPredicate;
 *///?}
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -43,7 +42,7 @@ public class TradeResetHelper {
             //? if >1.21.4 {
             DataComponentExactPredicate.allOf(RESET_ITEM_STACK.getComponents())
             //?} else
-            /*ComponentPredicate.of(RESET_ITEM_STACK.getComponents())*/
+            //DataComponentPredicate.allOf(RESET_ITEM_STACK.getComponents())
     );
     //?}
 

@@ -32,7 +32,7 @@ public class PartnerState extends SavedData {
             @Override
             public <T> DataResult<T> encode(PartnerState input, DynamicOps<T> ops, T prefix) {
                 CompoundTag nbtCompound = new CompoundTag();
-                input.writeNbt(nbtCompound, world.registryAccess());
+                input.save(nbtCompound, world.registryAccess());
                 return DataResult.success((T) nbtCompound);
             }
         }, new Decoder<>() {
@@ -45,7 +45,7 @@ public class PartnerState extends SavedData {
         });
     }
     //?} elif >=1.20.5 {
-    /*private static final Type<PartnerState> type = new Type<>(
+    /*private static final Factory<PartnerState> type = new Factory<>(
             PartnerState::new,
             PartnerState::createFromNbt,
             null
@@ -55,8 +55,8 @@ public class PartnerState extends SavedData {
     private final Map<UUID, Set<String>> partners = new HashMap<>();
 
     //? if <1.21.5
-    /*@Override*/
-    public CompoundTag writeNbt(CompoundTag nbt
+    //@Override
+    public CompoundTag save(CompoundTag nbt
                                 //? if >=1.20.5
             , HolderLookup.Provider registries
     ) {
@@ -97,18 +97,23 @@ public class PartnerState extends SavedData {
         //? if >=1.21.5 {
         CompoundTag compound = nbt.getCompound("TradePartnerMap").orElseThrow();
         //?} else
-        /*NbtCompound compound = nbt.getCompound("TradePartnerMap");*/
-        compound.keySet().forEach(uuid -> {
+        //CompoundTag compound = nbt.getCompound("TradePartnerMap");
+        compound
+                //? if >=1.21.5 {
+                .keySet()
+                //?} else
+                //.getAllKeys()
+                .forEach(uuid -> {
             //? if >=1.21.5 {
             ListTag list = compound.getListOrEmpty(uuid);
             //?} else
-            /*NbtList list = compound.getList(uuid, NbtElement.STRING_TYPE);*/
+            //ListTag list = compound.getList(uuid, Tag.TAG_STRING);
             Set<String> set = state.partners.computeIfAbsent(UUID.fromString(uuid), k -> new HashSet<>(list.size()));
             list.forEach(nbtElement -> set.add(
                     //? if >=1.21.5 {
                     nbtElement.asString().orElseThrow()
                     //?} else
-                    /*nbtElement.asString()*/
+                    //nbtElement.getAsString()
             ));
         });
         return state;
@@ -127,7 +132,7 @@ public class PartnerState extends SavedData {
         );
         PartnerState state = persistentStateManager.computeIfAbsent(type);
         //?} elif >=1.20.5 {
-        /*PartnerState state = persistentStateManager.getOrCreate(type, ClickVillagers.MOD_ID);
+        /*PartnerState state = persistentStateManager.computeIfAbsent(type, ClickVillagers.MOD_ID);
         *///?} else {
         /*PartnerState state = persistentStateManager.getOrCreate(
                 PartnerState::createFromNbt,
