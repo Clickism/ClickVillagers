@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/Clickism/ClickVillagers/issues"
 showAsResourcePack=false
 
 [[mixins]]
-config="clickmobs.mixins.json"
+config="clickvillagers.mixins.json"
 
 [[mods]]
 modId="clickvillagers"
@@ -34,7 +34,12 @@ modId="configured_neoforge_command_adapter"
 type="required"
 versionRange="*"
 side="BOTH"
-ordering="AFTER"
+
+[[dependencies.clickvillagers]]
+modId="fgui"
+type="required"
+versionRange="*"
+side="BOTH"
 
 [[accessTransformers]]
 file="${access_transformer_path}"

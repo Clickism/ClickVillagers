@@ -6,7 +6,6 @@
 
 package de.clickism.clickvillagers;
 
-import de.clickism.clickvillagers.callback.*;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 import net.minecraft.DetectedVersion;
 import org.jetbrains.annotations.Nullable;

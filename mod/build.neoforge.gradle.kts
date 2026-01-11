@@ -3,6 +3,7 @@ plugins {
     id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 val modVersion = property("mod.version").toString()
+val minecraftVersion = stonecutter.current.project.substringBeforeLast('-')
 val loader = stonecutter.current.project.substringAfterLast('-')
 
 group = project.property("maven_group").toString()
@@ -18,20 +19,20 @@ val configuredVersion = "0.3.1"
 
 dependencies {
     // Configured
-    listOf(
-        "de.clickism:configured-core:${configuredVersion}",
-        "de.clickism:configured-yaml:${configuredVersion}",
-        "de.clickism:configured-json:${configuredVersion}",
-        "de.clickism:configured-neoforge-command-adapter:${configuredVersion}"
-    ).forEach {
-        jarJar(implementation(it) { isChanging = true }) {
-            version {
-                strictly("[$minConfiguredVersion,)")
-            }
+    fun configured(module: String) {
+        jarJar(implementation("de.clickism:configured-$module:$configuredVersion") { isChanging = true }) {
+            version { strictly("[$minConfiguredVersion,)") }
         }
     }
+    configured("core")
+    configured("yaml")
+    configured("json")
+    configured("neoforge-command-adapter")
+    jarJar(implementation("de.clickism:fgui-neoforge:1.0+$minecraftVersion")!!)
     // Configured Dependency
     jarJar(implementation("org.yaml:snakeyaml:2.0")!!)
+    // Update Checker
+    jarJar(implementation("de.clickism:modrinth-update-checker:1.0")!!)
 }
 
 val atPath = if (stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
@@ -42,7 +43,7 @@ val atPath = if (stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
 
 neoForge {
     version = property("deps.neoforge").toString()
-    accessTransformers.from(project.file("src/main/resources/$atPath"))
+    accessTransformers.from(rootProject.file("mod/src/main/resources/$atPath"))
     runs {
         configureEach {
             dependencies {
@@ -50,7 +51,8 @@ neoForge {
                     "de.clickism:configured-core:${configuredVersion}",
                     "de.clickism:configured-yaml:${configuredVersion}",
                     "de.clickism:configured-json:${configuredVersion}",
-                    "org.yaml:snakeyaml:2.0"
+                    "org.yaml:snakeyaml:2.0",
+                    "de.clickism:fgui-neoforge:1.0+$minecraftVersion",
                 ).forEach {
                     implementation(it)
                     val config = if (neoForge.versionCapabilities.legacyClasspath()) {
@@ -102,6 +104,7 @@ tasks.processResources {
         "mod_version" to modVersion,
         "minecraft_version_range" to project.property("mod.minecraft_version_range"),
         "minecraft_version" to project.property("mod.minecraft_version"),
+        "access_transformer_path" to atPath
     )
     filesMatching(listOf("META-INF/neoforge.mods.toml", "META-INF/mods.toml")) {
         expand(properties)
