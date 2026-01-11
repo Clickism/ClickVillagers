@@ -1,0 +1,40 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license="GPL-3.0"
+issueTrackerURL="https://github.com/Clickism/ClickVillagers/issues"
+showAsResourcePack=false
+
+[[mixins]]
+config="clickmobs.mixins.json"
+
+[[mods]]
+modId="clickvillagers"
+version="${mod_version}"
+displayName="ClickVillagers"
+logoFile="assets/clickvillagers/icon.png"
+authors="Clickism"
+description='''
+Pick villagers up, change their biomes, claim them and much more!
+'''
+
+[[dependencies.clickvillagers]]
+modId="neoforge"
+type="required"
+versionRange="*"
+side="BOTH"
+
+[[dependencies.clickvillagers]]
+modId = "minecraft"
+type = "required"
+versionRange = "*"
+side = "BOTH"
+
+[[dependencies.clickvillagers]]
+modId="configured_neoforge_command_adapter"
+type="required"
+versionRange="*"
+side="BOTH"
+ordering="AFTER"
+
+[[accessTransformers]]
+file="${access_transformer_path}"
