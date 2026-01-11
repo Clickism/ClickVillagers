@@ -28,18 +28,16 @@ dependencies {
     configured("yaml")
     configured("json")
     configured("neoforge-command-adapter")
-    jarJar(implementation("de.clickism:fgui-neoforge:1.0+$minecraftVersion")!!)
+    jarJar(implementation("de.clickism:fgui-neoforge:1.0+$minecraftVersion") { isChanging = true }) {
+        version { strictly("1.0+$minecraftVersion") }
+    }
     // Configured Dependency
     jarJar(implementation("org.yaml:snakeyaml:2.0")!!)
     // Update Checker
     jarJar(implementation("de.clickism:modrinth-update-checker:1.0")!!)
 }
 
-val atPath = if (stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
-    "META-INF/1.21.11.accesstransformer.cfg"
-} else {
-    "META-INF/1.21.10.accesstransformer.cfg"
-}
+val atPath = "META-INF/accesstransformer.cfg"
 
 neoForge {
     version = property("deps.neoforge").toString()
@@ -51,16 +49,14 @@ neoForge {
                     "de.clickism:configured-core:${configuredVersion}",
                     "de.clickism:configured-yaml:${configuredVersion}",
                     "de.clickism:configured-json:${configuredVersion}",
+                    "de.clickism:fgui-neoforge:1.0+${minecraftVersion}",
                     "org.yaml:snakeyaml:2.0",
-                    "de.clickism:fgui-neoforge:1.0+$minecraftVersion",
+                    "de.clickism:modrinth-update-checker:1.0"
                 ).forEach {
                     implementation(it)
-                    val config = if (neoForge.versionCapabilities.legacyClasspath()) {
-                        "additionalRuntimeClasspath"
-                    } else {
-                        "implementation"
+                    if (neoForge.versionCapabilities.legacyClasspath()) {
+                        add("additionalRuntimeClasspath", it)
                     }
-                    add(config, it)
                 }
             }
         }
@@ -89,6 +85,12 @@ base {
     archivesName.set(property("archives_base_name").toString())
 }
 
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
 stonecutter {
     replacements {
         string(current.parsed < "1.21.11") {
@@ -112,6 +114,10 @@ tasks.processResources {
     inputs.properties(properties)
 }
 
+tasks.named("createMinecraftArtifacts") {
+    // This tells NeoForge to wait until Stonecutter has generated the files
+    mustRunAfter(tasks.named("stonecutterGenerate"))
+}
 
 publishMods {
     displayName.set("ClickVillagers ${property("mod.version")} for NeoForge")

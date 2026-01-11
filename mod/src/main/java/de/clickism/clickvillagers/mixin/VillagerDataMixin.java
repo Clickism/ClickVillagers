@@ -64,17 +64,33 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
         ));
     }
 
-    @ModifyReturnValue(method = "withType*", at = @At("RETURN"))
+    @ModifyReturnValue(
+            //? if >1.21.1 {
+            method = "withType*",
+            //?} else
+            //method = "setType*",
+            at = @At("RETURN"))
     private VillagerData modifyWithType(VillagerData data) {
         return modifyData(data);
     }
 
-    @ModifyReturnValue(method = "withProfession*", at = @At("RETURN"))
+    @ModifyReturnValue(
+            //? if >1.21.1 {
+            method = "withProfession*",
+            //?} else
+            //method = "setProfession*",
+            at = @At("RETURN"))
     private VillagerData modifyWithProfession(VillagerData data) {
         return modifyData(data);
     }
 
-    @ModifyReturnValue(method = "withLevel", at = @At("RETURN"))
+    @ModifyReturnValue(
+            //? if >1.21.1 {
+            method = "withLevel*",
+            //?} else
+            //method = "setLevel*",
+            at = @At("RETURN")
+    )
     private VillagerData modifyWithLevel(VillagerData data) {
         return modifyData(data);
     }

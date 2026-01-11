@@ -30,11 +30,18 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
         super(type, world);
     }
 
-    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            //? if >1.21.1 {
+            method = "hurtServer",
+            //?} else
+            //method = "hurt",
+            at = @At("HEAD"), cancellable = true
+    )
     public void damage(
             //? if >1.21.1
             ServerLevel world,
             DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (this.level().isClientSide()) return;
         if (!(this instanceof VillagerDataHolder container)) return;
         if (CLAIMED_IMMUNE_KILL_COMMAND.get() && source.is(DamageTypes.GENERIC_KILL)) {
             return;

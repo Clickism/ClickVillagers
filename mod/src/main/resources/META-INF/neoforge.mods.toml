@@ -34,12 +34,14 @@ modId="configured_neoforge_command_adapter"
 type="required"
 versionRange="*"
 side="BOTH"
+ordering="AFTER"
 
 [[dependencies.clickvillagers]]
 modId="fgui"
 type="required"
 versionRange="*"
 side="BOTH"
+ordering="AFTER"
 
 [[accessTransformers]]
 file="${access_transformer_path}"

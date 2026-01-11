@@ -70,13 +70,9 @@ stonecutter {
 }
 
 java {
-	val j21 = stonecutter.eval(stonecutter.current.version, ">=1.20.5")
-	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(if (j21) 21 else 17))
-	}
-	val javaVersion = if (j21) JavaVersion.VERSION_17 else JavaVersion.VERSION_17
-	sourceCompatibility = javaVersion
-	targetCompatibility = javaVersion
+	toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 tasks.jar {
