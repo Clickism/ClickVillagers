@@ -7,7 +7,7 @@ val minecraftVersion = stonecutter.current.project.substringBeforeLast('-')
 val loader = stonecutter.current.project.substringAfterLast('-')
 
 group = project.property("maven_group").toString()
-version = "${modVersion}+${stonecutter.current.project}"
+version = "$modVersion+$minecraftVersion"
 
 repositories {
     mavenCentral()
