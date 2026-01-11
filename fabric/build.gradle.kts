@@ -33,10 +33,6 @@ dependencies {
 	// Linen
 	implementation(include("de.clickism:linen-core-api:${linenVersion}")!!)
 	modImplementation(include("de.clickism:linen-core-fabric:${linenVersion}+$minecraftVersion")!!)
-	// Linen Dependencies
-	implementation(include("net.kyori:adventure-api:4.25.0")!!)
-	implementation(include("net.kyori:adventure-text-minimessage:4.25.0")!!)
-	implementation(include("net.kyori:adventure-text-serializer-legacy:4.25.0")!!)
 	// Configured
 	implementation(include("de.clickism:configured-core:${configuredVersion}")!!)
 	implementation(include("de.clickism:configured-yaml:${configuredVersion}")!!)
