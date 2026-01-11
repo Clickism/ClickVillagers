@@ -6,7 +6,7 @@
 
 package de.clickism.clickvillagers.util;
 
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import de.clickism.fgui.api.elements.GuiElementBuilder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 //? if >1.21.4 {

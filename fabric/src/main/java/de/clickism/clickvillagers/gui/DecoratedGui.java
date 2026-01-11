@@ -6,9 +6,9 @@
 
 package de.clickism.clickvillagers.gui;
 
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
-import eu.pb4.sgui.api.gui.SimpleGui;
+import de.clickism.fgui.api.elements.GuiElementBuilder;
+import de.clickism.fgui.api.elements.GuiElementInterface;
+import de.clickism.fgui.api.gui.SimpleGui;
 import de.clickism.linen.core.message.MessageType;
 import de.clickism.linen.core.Linen;
 import de.clickism.clickvillagers.util.VersionHelper;

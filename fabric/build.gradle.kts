@@ -18,17 +18,22 @@ repositories {
 
 val configuredVersion = "0.3"
 val linenVersion = "0.1"
+val fguiVersion = "0.1"
 
 dependencies {
+	// Fabric
 	minecraft("com.mojang:minecraft:$minecraftVersion")
 	mappings("net.fabricmc:yarn:${property("deps.yarn_mappings")}:v2")
 	modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
-	modImplementation(include("eu.pb4:sgui:${property("deps.sgui")}")!!)
+	// GUI Library
+	modImplementation(include("de.clickism:fgui-fabric:1.0+$minecraftVersion")!!)
+	// Update checker
 	implementation(include("de.clickism:modrinth-update-checker:1.0")!!)
 	// Linen
-	implementation(include("de.clickism:linen-core:${linenVersion}")!!)
+	implementation(include("de.clickism:linen-core-api:${linenVersion}")!!)
 	modImplementation(include("de.clickism:linen-core-fabric:${linenVersion}+$minecraftVersion")!!)
+	// Linen Dependencies
 	implementation(include("net.kyori:adventure-api:4.25.0")!!)
 	implementation(include("net.kyori:adventure-text-minimessage:4.25.0")!!)
 	implementation(include("net.kyori:adventure-text-serializer-legacy:4.25.0")!!)

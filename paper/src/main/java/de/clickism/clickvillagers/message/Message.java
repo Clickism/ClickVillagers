@@ -12,7 +12,7 @@ import de.clickism.configured.localization.Localization;
 import de.clickism.configured.localization.Parameters;
 import de.clickism.configured.localization.Translatable;
 import de.clickism.linen.core.Linen;
-import de.clickism.linen.core.message.Colorizer;
+import de.clickism.linen.core.util.Colorizer;
 import de.clickism.linen.core.message.MessageType;
 import de.clickism.linen.core.message.TypedMessage;
 import org.bukkit.Material;

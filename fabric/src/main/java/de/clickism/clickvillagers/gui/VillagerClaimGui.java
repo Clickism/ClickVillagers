@@ -7,7 +7,7 @@
 package de.clickism.clickvillagers.gui;
 
 import de.clickism.linen.core.Linen;
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import de.clickism.fgui.api.elements.GuiElementBuilder;
 import de.clickism.clickvillagers.callback.CooldownManager;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.VillagerHandler;
