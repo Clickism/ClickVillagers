@@ -60,7 +60,11 @@ configurations.all {
 
 tasks.runServer {
     dependsOn(tasks.build)
-    minecraftVersion("1.21.10")
+    minecraftVersion("1.21.11")
+    // Try to use global run dir
+    providers.gradleProperty("minecraft.runs.paper").orNull?.let {
+        runDirectory(file(it))
+    }
 }
 
 tasks.build {
