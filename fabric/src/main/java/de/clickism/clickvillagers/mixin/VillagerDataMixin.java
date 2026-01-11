@@ -64,15 +64,11 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
         ));
     }
 
-    // TODO(Ravel): wildcard and regex target are not supported
-// TODO(Ravel): wildcard and regex target are not supported
     @ModifyReturnValue(method = "withType*", at = @At("RETURN"))
     private VillagerData modifyWithType(VillagerData data) {
         return modifyData(data);
     }
 
-    // TODO(Ravel): wildcard and regex target are not supported
-// TODO(Ravel): wildcard and regex target are not supported
     @ModifyReturnValue(method = "withProfession*", at = @At("RETURN"))
     private VillagerData modifyWithProfession(VillagerData data) {
         return modifyData(data);
