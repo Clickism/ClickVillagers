@@ -3,7 +3,8 @@ plugins {
 	id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
-version = "${parent?.name}-${property("mod.version")}+${stonecutter.current.project}"
+val minecraftVersion = stonecutter.current.version
+version = "${parent?.name}-${property("mod.version")}+$minecraftVersion"
 group = project.property("maven_group").toString()
 
 val accessWidener = if (stonecutter.eval(stonecutter.current.version, ">=1.21.11")) {
@@ -24,11 +25,14 @@ repositories {
 val configuredVersion = "0.3"
 
 dependencies {
+	// Fabric
 	minecraft("com.mojang:minecraft:${stonecutter.current.project}")
 	mappings("net.fabricmc:yarn:${property("deps.yarn_mappings")}:v2")
 	modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
-	modImplementation(include("eu.pb4:sgui:${property("deps.sgui")}")!!)
+	// GUI Library
+	modImplementation(include("de.clickism:fgui-fabric:1.0+$minecraftVersion")!!)
+	// Update Checker
 	implementation(include("de.clickism:modrinth-update-checker:1.0")!!)
 	// Configured
 	implementation(include("de.clickism:configured-core:${configuredVersion}")!!)

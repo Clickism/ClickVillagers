@@ -13,8 +13,8 @@ import de.clickism.clickvillagers.villager.PartnerState;
 import de.clickism.clickvillagers.villager.PickupHandler;
 import de.clickism.clickvillagers.villager.VillagerHandler;
 import de.clickism.clickvillagers.villager.VillagerTextures;
-import eu.pb4.sgui.api.elements.GuiElement;
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import de.clickism.fgui.api.elements.GuiElement;
+import de.clickism.fgui.api.elements.GuiElementBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -106,7 +106,6 @@ public class VillagerEditGui extends VillagerGui {
     }
 
     private GuiElementBuilder addTradePartnersLore(GuiElementBuilder builder) {
-        @SuppressWarnings("DataFlowIssue")
         PartnerState partnerState = PartnerState.getServerState(VersionHelper.getServer(player));
         Set<String> partners = partnerState.getPartners(player.getUuid());
         for (String partner : partners) {

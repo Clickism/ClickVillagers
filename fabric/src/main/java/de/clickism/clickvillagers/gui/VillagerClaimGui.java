@@ -6,7 +6,7 @@
 
 package de.clickism.clickvillagers.gui;
 
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import de.clickism.fgui.api.elements.GuiElementBuilder;
 import de.clickism.clickvillagers.callback.CooldownManager;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.VillagerHandler;
@@ -27,10 +27,7 @@ public class VillagerClaimGui extends VillagerGui {
         setSlot(13, new GuiElementBuilder(Items.GOLDEN_SHOVEL)
                 .setName(Text.literal("🔒 ").formatted(Formatting.GOLD)
                         .append(Text.literal("CLAIM VILLAGER").formatted(Formatting.GOLD, Formatting.BOLD)))
-                //? if >=1.20.5 {
                 .hideDefaultTooltip()
-                //?} else
-                /*.hideFlags()*/
                 .addLoreLine(Text.literal("Click to claim this villager.").formatted(Formatting.YELLOW))
                 .setCallback((index, type, action, gui) -> {
                     MessageType.CONFIRM.sendSilently(player, Text.literal("You claimed this villager. ").formatted(Formatting.GREEN)
