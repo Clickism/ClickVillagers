@@ -7,7 +7,7 @@ val modVersion = property("mod.version").toString()
 val minecraftVersion = stonecutter.current.project.substringBeforeLast('-')
 val loader = stonecutter.current.project.substringAfterLast('-')
 
-version = "$modVersion+$minecraftVersion"
+version = "$modVersion+$minecraftVersion-$loader"
 group = project.property("maven_group").toString()
 
 base {
