@@ -7,18 +7,18 @@
 package de.clickism.clickvillagers.util;
 
 import de.clickism.fgui.api.elements.GuiElementBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 //? if >1.21.4 {
-import net.minecraft.predicate.component.ComponentMapPredicate;
-import net.minecraft.village.TradedItem;
+import net.minecraft.core.component.DataComponentExactPredicate;
+import net.minecraft.world.item.trading.ItemCost;
 //?} elif >1.20.1 {
 /*import net.minecraft.predicate.ComponentPredicate;
 import net.minecraft.village.TradedItem;
 *///?}
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
-import net.minecraft.village.TradeOffer;
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.trading.MerchantOffer;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
@@ -28,34 +28,34 @@ public class TradeResetHelper {
 
     @Unique
     private static final ItemStack RESET_ITEM_STACK = GuiElementBuilder.from(new ItemStack(Items.BARRIER))
-            .setName(Text.literal("§4♻ §lRESET TRADES"))
+            .setName(Component.literal("§4♻ §lRESET TRADES"))
             .setLore(List.of(
-                    Text.literal("§cClick on this recipe to reset trades."),
-                    Text.literal("§c§lThis cannot be undone")
+                    Component.literal("§cClick on this recipe to reset trades."),
+                    Component.literal("§c§lThis cannot be undone")
             ))
             .glow()
             .asStack();
 
     //? if >1.20.1 {
     @Unique
-    private static final TradedItem RESET_TRADED_ITEM = new TradedItem(
-            RegistryEntry.of(Items.BARRIER), 1,
+    private static final ItemCost RESET_TRADED_ITEM = new ItemCost(
+            Holder.direct(Items.BARRIER), 1,
             //? if >1.21.4 {
-            ComponentMapPredicate.of(RESET_ITEM_STACK.getComponents())
+            DataComponentExactPredicate.allOf(RESET_ITEM_STACK.getComponents())
             //?} else
             /*ComponentPredicate.of(RESET_ITEM_STACK.getComponents())*/
     );
     //?}
 
-    public static boolean isResetOffer(TradeOffer offer) {
+    public static boolean isResetOffer(MerchantOffer offer) {
         //? if >1.20.1 {
-        return offer.getFirstBuyItem().itemStack().isOf(Items.BARRIER);
+        return offer.getItemCostA().itemStack().is(Items.BARRIER);
         //?} else
         /*return offer.getOriginalFirstBuyItem().isOf(Items.BARRIER);*/
     }
 
-    public static TradeOffer getResetOffer() {
-        return new TradeOffer(
+    public static MerchantOffer getResetOffer() {
+        return new MerchantOffer(
                 //? if >1.20.1 {
                 RESET_TRADED_ITEM,
                 Optional.of(RESET_TRADED_ITEM),

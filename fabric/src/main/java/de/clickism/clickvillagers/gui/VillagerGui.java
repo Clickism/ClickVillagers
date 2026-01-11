@@ -7,12 +7,12 @@
 package de.clickism.clickvillagers.gui;
 
 import de.clickism.clickvillagers.villager.VillagerHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public abstract class VillagerGui extends DecoratedGui {
     protected final VillagerHandler<?> villagerHandler;
 
-    public VillagerGui(ServerPlayerEntity player, VillagerHandler<?> villagerHandler) {
+    public VillagerGui(ServerPlayer player, VillagerHandler<?> villagerHandler) {
         super(player);
         this.villagerHandler = villagerHandler;
     }

@@ -11,30 +11,30 @@ import de.clickism.fgui.api.elements.GuiElementInterface;
 import de.clickism.fgui.api.gui.SimpleGui;
 import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.VersionHelper;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 public abstract class DecoratedGui extends SimpleGui {
     private static final GuiElementInterface BLACK = new GuiElementBuilder(Items.BLACK_STAINED_GLASS_PANE)
-            .setName(Text.literal("x").formatted(Formatting.DARK_GRAY))
+            .setName(Component.literal("x").withStyle(ChatFormatting.DARK_GRAY))
             .hideDefaultTooltip()
             .setCallback((index, type, action, gui) -> {
                 MessageType.FAIL.playSound(gui.getPlayer());
             })
             .build();
     private static final GuiElementInterface GRAY = new GuiElementBuilder(Items.GRAY_STAINED_GLASS_PANE)
-            .setName(Text.literal("x").formatted(Formatting.DARK_GRAY))
+            .setName(Component.literal("x").withStyle(ChatFormatting.DARK_GRAY))
             .hideDefaultTooltip()
             .setCallback((index, type, action, gui) -> {
                 MessageType.FAIL.playSound(gui.getPlayer());
             })
             .build();
     
-    public DecoratedGui(ServerPlayerEntity player) {
-        super(ScreenHandlerType.GENERIC_9X3, player, false);
+    public DecoratedGui(ServerPlayer player) {
+        super(MenuType.GENERIC_9x3, player, false);
         addBackground();
     }
     

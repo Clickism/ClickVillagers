@@ -6,7 +6,7 @@
 
 package de.clickism.clickvillagers.villager;
 
-import net.minecraft.village.VillagerData;
+import net.minecraft.world.entity.npc.villager.VillagerData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;

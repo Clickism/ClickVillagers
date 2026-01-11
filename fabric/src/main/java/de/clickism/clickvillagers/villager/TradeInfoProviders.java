@@ -8,17 +8,17 @@ package de.clickism.clickvillagers.villager;
 
 import de.clickism.clickvillagers.util.Utils;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
-import net.minecraft.util.Identifier;
-import net.minecraft.village.VillagerProfession;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import org.jetbrains.annotations.Nullable;
 
 //? if >1.20.6 {
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ItemEnchantmentsComponent;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.resources.ResourceKey;
 //?} else {
 /*import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.nbt.NbtCompound;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static net.minecraft.item.Items.*;
+import static net.minecraft.world.item.Items.*;
 
 public class TradeInfoProviders {
 
@@ -51,7 +51,7 @@ public class TradeInfoProviders {
     public static final TradeInfoProvider LIBRARIAN = TradeInfoProvider.builder()
             .acceptResults(ENCHANTED_BOOK)
             .ingredientFormatter(item -> {
-                if (!item.isOf(EMERALD)) return null;
+                if (!item.is(EMERALD)) return null;
                 return item.getCount() + " Emerald";
             })
             .resultFormatter(TradeInfoProviders::formatEnchantedBook)
@@ -157,7 +157,7 @@ public class TradeInfoProviders {
             .build();
 
     //? if >=1.21.5 {
-    private static final Map<RegistryKey<VillagerProfession>, TradeInfoProvider> PROVIDERS = Map.ofEntries(
+    private static final Map<ResourceKey<VillagerProfession>, TradeInfoProvider> PROVIDERS = Map.ofEntries(
     //?} else
     /*private static final Map<VillagerProfession, TradeInfoProvider> PROVIDERS = Map.ofEntries(*/
             Map.entry(VillagerProfession.LIBRARIAN, LIBRARIAN),
@@ -176,7 +176,7 @@ public class TradeInfoProviders {
     );
 
     //? if >=1.21.5 {
-    public static TradeInfoProvider getProvider(RegistryKey<VillagerProfession> profession) {
+    public static TradeInfoProvider getProvider(ResourceKey<VillagerProfession> profession) {
         return PROVIDERS.getOrDefault(profession, ALL_TRADES);
     }
     //?} else {
@@ -272,12 +272,12 @@ public class TradeInfoProviders {
 
     //? if >1.20.6 {
     private static String formatEnchantedBook(ItemStack item) {
-        ItemEnchantmentsComponent enchants = item.get(DataComponentTypes.STORED_ENCHANTMENTS);
+        ItemEnchantments enchants = item.get(DataComponents.STORED_ENCHANTMENTS);
         if (enchants == null) return "";
-        String enchantments = enchants.getEnchantmentEntries().stream()
+        String enchantments = enchants.entrySet().stream()
                 .map(entry -> {
-                    String enchantment = entry.getKey().getKey()
-                            .map(RegistryKey::getValue)
+                    String enchantment = entry.getKey().unwrapKey()
+                            .map(ResourceKey::identifier)
                             .map(Identifier::getPath)
                             .map(s -> s.replace("_", " "))
                             .orElse("?");

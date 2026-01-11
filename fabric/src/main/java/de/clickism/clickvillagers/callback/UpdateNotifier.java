@@ -11,9 +11,9 @@ import de.clickism.clickvillagers.util.VersionHelper;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,14 +31,14 @@ public class UpdateNotifier implements ServerPlayConnectionEvents.Join {
     }
 
     @Override
-    public void onPlayReady(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
+    public void onPlayReady(ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) {
         String newerVersion = newerVersionSupplier.get();
         if (newerVersion == null) return;
-        ServerPlayerEntity player = handler.player;
-        if (notifiedPlayers.contains(player.getUuid())) return;
-        notifiedPlayers.add(player.getUuid());
+        ServerPlayer player = handler.player;
+        if (notifiedPlayers.contains(player.getUUID())) return;
+        notifiedPlayers.add(player.getUUID());
         if (!VersionHelper.isOp(player)) return;
-        MessageType.WARN.send(player, Text.literal("ClickVillagers: Newer version available: ")
-                .append(Text.of(newerVersion)));
+        MessageType.WARN.send(player, Component.literal("ClickVillagers: Newer version available: ")
+                .append(Component.nullToEmpty(newerVersion)));
     }
 }

@@ -11,30 +11,30 @@ import de.clickism.clickvillagers.callback.CooldownManager;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.VillagerHandler;
 import de.clickism.clickvillagers.util.MessageType;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 public class VillagerClaimGui extends VillagerGui {
 
-    public VillagerClaimGui(ServerPlayerEntity player, VillagerHandler<?> villagerHandler,
+    public VillagerClaimGui(ServerPlayer player, VillagerHandler<?> villagerHandler,
                             CooldownManager cooldownManager) {
         super(player, villagerHandler);
-        setTitle(Text.literal("🔒 Claim Villager").formatted(Formatting.DARK_GRAY, Formatting.BOLD));
+        setTitle(Component.literal("🔒 Claim Villager").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.BOLD));
         setSlot(13, new GuiElementBuilder(Items.GOLDEN_SHOVEL)
-                .setName(Text.literal("🔒 ").formatted(Formatting.GOLD)
-                        .append(Text.literal("CLAIM VILLAGER").formatted(Formatting.GOLD, Formatting.BOLD)))
+                .setName(Component.literal("🔒 ").withStyle(ChatFormatting.GOLD)
+                        .append(Component.literal("CLAIM VILLAGER").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)))
                 .hideDefaultTooltip()
-                .addLoreLine(Text.literal("Click to claim this villager.").formatted(Formatting.YELLOW))
+                .addLoreLine(Component.literal("Click to claim this villager.").withStyle(ChatFormatting.YELLOW))
                 .setCallback((index, type, action, gui) -> {
-                    MessageType.CONFIRM.sendSilently(player, Text.literal("You claimed this villager. ").formatted(Formatting.GREEN)
-                            .append(Text.literal("Shift + Right Click").formatted(Formatting.WHITE, Formatting.UNDERLINE))
-                            .append(Text.literal(" on the villager to edit it.").formatted(Formatting.GREEN)));
-                    VersionHelper.playSound(player, SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.MASTER, 1, 1);
-                    villagerHandler.setOwner(player.getUuid());
+                    MessageType.CONFIRM.sendSilently(player, Component.literal("You claimed this villager. ").withStyle(ChatFormatting.GREEN)
+                            .append(Component.literal("Shift + Right Click").withStyle(ChatFormatting.WHITE, ChatFormatting.UNDERLINE))
+                            .append(Component.literal(" on the villager to edit it.").withStyle(ChatFormatting.GREEN)));
+                    VersionHelper.playSound(player, SoundEvents.ANVIL_DESTROY, SoundSource.MASTER, 1, 1);
+                    villagerHandler.setOwner(player.getUUID());
                     cooldownManager.giveCooldown(player);
                     new VillagerEditGui(player, villagerHandler).open();
                 })

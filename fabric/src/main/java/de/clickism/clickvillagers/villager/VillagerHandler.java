@@ -6,12 +6,12 @@
 
 package de.clickism.clickvillagers.villager;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.village.VillagerDataContainer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.npc.villager.VillagerDataHolder;
 import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
-public class VillagerHandler<T extends LivingEntity & VillagerDataContainer> {
+public class VillagerHandler<T extends LivingEntity & VillagerDataHolder> {
     protected final T entity;
     public VillagerHandler(T entity) {
         this.entity = entity;

@@ -21,9 +21,9 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.MinecraftVersion;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.text.Text;
+import net.minecraft.DetectedVersion;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,20 +49,20 @@ public class ClickVillagers implements ModInitializer {
 
         // Register Commands
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(CommandManager.literal("clickvillagers")
+            dispatcher.register(Commands.literal("clickvillagers")
                     .requires(VersionHelper::isOp)
                     .then(FabricCommandAdapter.ofConfig(CONFIG)
                             .add(new SetCommand((sender, key, value) -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aConfig option \"§l" + key + "§a\" set to §l" + value + "."));
+                                MessageType.CONFIG.send(sender, Component.literal("§aConfig option \"§l" + key + "§a\" set to §l" + value + "."));
                             }))
                             .add(new GetCommand((sender, key, value) -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aConfig option \"§l" + key + "§a\" has value §l" + value + "."));
+                                MessageType.CONFIG.send(sender, Component.literal("§aConfig option \"§l" + key + "§a\" has value §l" + value + "."));
                             }))
                             .add(new ReloadCommand(sender -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aReloaded the config file."));
+                                MessageType.CONFIG.send(sender, Component.literal("§aReloaded the config file."));
                             }))
                             .add(new PathCommand((sender, path) -> {
-                                MessageType.CONFIG.send(sender, Text.literal("§aThe config file is located at: §f" + path));
+                                MessageType.CONFIG.send(sender, Component.literal("§aThe config file is located at: §f" + path));
                             }))
                             .buildRoot()
                     )
@@ -75,7 +75,7 @@ public class ClickVillagers implements ModInitializer {
                 .map(container -> container.getMetadata().getVersion().getFriendlyString())
                 .orElse(null);
         //? if >=1.21.9 {
-        String minecraftVersion = MinecraftVersion.create().name();
+        String minecraftVersion = DetectedVersion.tryDetectVersion().name();
         //?} elif >= 1.21.6 {
         /*String minecraftVersion = MinecraftVersion.CURRENT.name();
          *///?} else

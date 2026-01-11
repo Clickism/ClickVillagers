@@ -10,58 +10,58 @@ import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.PickupHandler;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class UseVillagerBlockCallback implements UseBlockCallback {
     @Override
-    public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
-        if (!hand.equals(Hand.MAIN_HAND)) return ActionResult.PASS;
-        if (hitResult == null) return ActionResult.PASS;
-        if (world.isClient()) return ActionResult.PASS;
-        if (player.isSpectator()) return ActionResult.PASS;
-        ItemStack itemStack = player.getMainHandStack();
-        if (!itemStack.isOf(Items.PLAYER_HEAD)) return ActionResult.PASS;
-        if (!PickupHandler.isVillager(itemStack)) return ActionResult.PASS;
+    public InteractionResult interact(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+        if (!hand.equals(InteractionHand.MAIN_HAND)) return InteractionResult.PASS;
+        if (hitResult == null) return InteractionResult.PASS;
+        if (world.isClientSide()) return InteractionResult.PASS;
+        if (player.isSpectator()) return InteractionResult.PASS;
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(Items.PLAYER_HEAD)) return InteractionResult.PASS;
+        if (!PickupHandler.isVillager(itemStack)) return InteractionResult.PASS;
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
         if (entity == null) {
-            MessageType.FAIL.send(player, Text.literal("Couldn't read villager data."));
-            return ActionResult.CONSUME;
+            MessageType.FAIL.send(player, Component.literal("Couldn't read villager data."));
+            return InteractionResult.CONSUME;
         }
         BlockPos clickedPos = hitResult.getBlockPos();
         //? if >=1.20.5 {
-        ActionResult actionResult = world.getBlockState(clickedPos).onUse(world, player, hitResult);
+        InteractionResult actionResult = world.getBlockState(clickedPos).useWithoutItem(world, player, hitResult);
         //?} else
         /*ActionResult actionResult = world.getBlockState(clickedPos).onUse(world, player, hand, hitResult);*/
-        if (actionResult.isAccepted()) return actionResult;
-        BlockPos pos = clickedPos.offset(hitResult.getSide());
-        entity.refreshPositionAndAngles(pos, 0, 0);
-        world.spawnEntity(entity);
-        itemStack.decrement(1);
+        if (actionResult.consumesAction()) return actionResult;
+        BlockPos pos = clickedPos.relative(hitResult.getDirection());
+        entity.snapTo(pos, 0, 0);
+        world.addFreshEntity(entity);
+        itemStack.shrink(1);
         if (itemStack.getCount() <= 0) {
             int slot = VersionHelper.getSelectedSlot(player.getInventory());
-            player.getInventory().setStack(slot, Items.AIR.getDefaultStack());
+            player.getInventory().setItem(slot, Items.AIR.getDefaultInstance());
         }
-        BlockPos posBelow = pos.down();
-        VersionHelper.playSound(player, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, SoundCategory.NEUTRAL, 1, .5f);
-        ((ServerWorld) world).spawnParticles(
-                new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(posBelow)),
+        BlockPos posBelow = pos.below();
+        VersionHelper.playSound(player, SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.NEUTRAL, 1, .5f);
+        ((ServerLevel) world).sendParticles(
+                new BlockParticleOption(ParticleTypes.BLOCK, world.getBlockState(posBelow)),
                 pos.getX() + .5, pos.getY(), pos.getZ() + .5,
                 30, 0, 0, 0, 1
         );
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

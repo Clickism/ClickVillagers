@@ -14,12 +14,12 @@ import de.clickism.clickvillagers.util.CodecUtils;
 import de.clickism.clickvillagers.util.LazyCodec;
 import de.clickism.clickvillagers.villager.ClaimedVillagerData;
 //? if >=1.21.8 {
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.ByteBufCodecs;
 //?}
-import net.minecraft.util.Uuids;
-import net.minecraft.village.VillagerData;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.entity.npc.villager.VillagerData;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -49,7 +49,7 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
                 RecordCodecBuilder.create(
                         instance -> instance.group(
                                 CodecUtils.assumeMapUnsafe(original).forGetter(Function.identity()),
-                                Uuids.CODEC.optionalFieldOf("owner").orElse(null).forGetter(villagerData ->
+                                UUIDUtil.AUTHLIB_CODEC.optionalFieldOf("owner").orElse(null).forGetter(villagerData ->
                                         Optional.ofNullable((ClaimedVillagerData.of(villagerData)).clickVillagers_Fabric$getOwner())),
                                 Codec.BOOL.fieldOf("tradingOpen").orElse(true).forGetter(villagerData ->
                                         (ClaimedVillagerData.of(villagerData)).clickVillagers_Fabric$isTradingOpen())
@@ -64,11 +64,15 @@ public abstract class VillagerDataMixin implements ClaimedVillagerData {
         ));
     }
 
+    // TODO(Ravel): wildcard and regex target are not supported
+// TODO(Ravel): wildcard and regex target are not supported
     @ModifyReturnValue(method = "withType*", at = @At("RETURN"))
     private VillagerData modifyWithType(VillagerData data) {
         return modifyData(data);
     }
 
+    // TODO(Ravel): wildcard and regex target are not supported
+// TODO(Ravel): wildcard and regex target are not supported
     @ModifyReturnValue(method = "withProfession*", at = @At("RETURN"))
     private VillagerData modifyWithProfession(VillagerData data) {
         return modifyData(data);

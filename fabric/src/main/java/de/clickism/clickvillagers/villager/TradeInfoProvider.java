@@ -8,13 +8,13 @@ package de.clickism.clickvillagers.villager;
 
 import de.clickism.clickvillagers.util.Utils;
 import de.clickism.clickvillagers.util.VersionHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradeOfferList;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
 
 import java.util.List;
 import java.util.Objects;
@@ -50,23 +50,23 @@ public class TradeInfoProvider {
         this.formatEnchantments = formatEnchantments;
     }
 
-    public List<String> getTradeInfoLines(TradeOfferList offers) {
+    public List<String> getTradeInfoLines(MerchantOffers offers) {
         return offers.stream()
                 .filter(offer -> ingredientsFilter.test(VersionHelper.getFirstBuyItem(offer))
                         || resultsFilter.test(VersionHelper.getSecondBuyItem(offer))
-                        || resultsFilter.test(offer.getSellItem()))
+                        || resultsFilter.test(offer.getResult()))
                 .map(this::formatRecipe)
                 .flatMap(LINE_BREAK_PATTERN::splitAsStream)
                 .toList();
     }
 
-    private String formatRecipe(TradeOffer offer) {
+    private String formatRecipe(MerchantOffer offer) {
         String ingredients = Stream.of(VersionHelper.getFirstBuyItem(offer), VersionHelper.getSecondBuyItem(offer))
-                .filter(item -> !item.isOf(Items.AIR))
+                .filter(item -> !item.is(Items.AIR))
                 .map(ingredientFormatter)
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" + "));
-        String result = resultFormatter.apply(offer.getSellItem());
+        String result = resultFormatter.apply(offer.getResult());
         String line = formatLine(ingredients, result);
         if (formatEnchantments) {
             line += formatEnchantments(offer);
@@ -82,13 +82,13 @@ public class TradeInfoProvider {
     private static final String DOUBLE_SPACING = " ".repeat(27);
 
     //? if >=1.20.5 {
-    private static String formatEnchantments(TradeOffer offer) {
+    private static String formatEnchantments(MerchantOffer offer) {
         String spacing = getSpacing(offer);
-        ItemStack item = offer.getSellItem();
-        return item.getEnchantments().getEnchantmentEntries().stream()
+        ItemStack item = offer.getResult();
+        return item.getEnchantments().entrySet().stream()
                 .map(entry -> {
-                    String enchantment = entry.getKey().getKey()
-                            .map(RegistryKey::getValue)
+                    String enchantment = entry.getKey().unwrapKey()
+                            .map(ResourceKey::identifier)
                             .map(Identifier::getPath)
                             .map(s -> s.replace("_", " "))
                             .orElse("?");
@@ -107,9 +107,9 @@ public class TradeInfoProvider {
     }
     *///?}
 
-    private static String getSpacing(TradeOffer offer) {
+    private static String getSpacing(MerchantOffer offer) {
         int emeraldCount = Stream.of(VersionHelper.getFirstBuyItem(offer), VersionHelper.getSecondBuyItem(offer))
-                .filter(item -> item.isOf(Items.EMERALD))
+                .filter(item -> item.is(Items.EMERALD))
                 .mapToInt(ItemStack::getCount)
                 .sum();
         if (emeraldCount == 0) return "";

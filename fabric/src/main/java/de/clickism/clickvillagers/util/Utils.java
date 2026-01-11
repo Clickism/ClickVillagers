@@ -6,12 +6,12 @@
 
 package de.clickism.clickvillagers.util;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
 //? if <1.20.5 {
 /*import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -49,14 +49,14 @@ public class Utils {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
-    public static void offerToHand(PlayerEntity player, ItemStack itemStack) {
-        PlayerInventory inventory = player.getInventory();
+    public static void offerToHand(Player player, ItemStack itemStack) {
+        Inventory inventory = player.getInventory();
         int selectedSlot = VersionHelper.getSelectedSlot(inventory);
-        if (inventory.getStack(selectedSlot).isEmpty()) {
-            inventory.insertStack(selectedSlot, itemStack);
+        if (inventory.getItem(selectedSlot).isEmpty()) {
+            inventory.add(selectedSlot, itemStack);
             return;
         }
-        inventory.offerOrDrop(itemStack);
+        inventory.placeItemBackInInventory(itemStack);
     }
 
     /**
@@ -70,8 +70,8 @@ public class Utils {
     }
 
     public static String formatItem(Item item) {
-        return titleCase(item.getDefaultStack().getRegistryEntry().getKey()
-                .map(RegistryKey::getValue)
+        return titleCase(item.getDefaultInstance().getItemHolder().unwrapKey()
+                .map(ResourceKey::identifier)
                 .map(Identifier::getPath)
                 .map(s -> s.replace("_", " "))
                 .orElse("?"));

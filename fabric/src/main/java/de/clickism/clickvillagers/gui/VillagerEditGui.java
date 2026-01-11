@@ -15,36 +15,37 @@ import de.clickism.clickvillagers.villager.VillagerHandler;
 import de.clickism.clickvillagers.villager.VillagerTextures;
 import de.clickism.fgui.api.elements.GuiElement;
 import de.clickism.fgui.api.elements.GuiElementBuilder;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Items;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
+@SuppressWarnings("deprecation")
 public class VillagerEditGui extends VillagerGui {
-    public VillagerEditGui(ServerPlayerEntity player, VillagerHandler<?> villagerHandler) {
+    public VillagerEditGui(ServerPlayer player, VillagerHandler<?> villagerHandler) {
         super(player, villagerHandler);
         String ownerName = getOwnerName(VersionHelper.getServer(player), villagerHandler);
-        setTitle(Text.literal("⚒ ").formatted(Formatting.DARK_GREEN)
-                .append(Text.literal(ownerName).formatted(Formatting.DARK_GREEN, Formatting.BOLD))
-                .append(Text.literal("'s Villager").formatted(Formatting.DARK_GREEN)));
+        setTitle(Component.literal("⚒ ").withStyle(ChatFormatting.DARK_GREEN)
+                .append(Component.literal(ownerName).withStyle(ChatFormatting.DARK_GREEN, ChatFormatting.BOLD))
+                .append(Component.literal("'s Villager").withStyle(ChatFormatting.DARK_GREEN)));
         setSlot(14, new GuiElementBuilder(Items.BRUSH)
-                .setName(Text.literal("🌲 ").formatted(Formatting.GOLD)
-                        .append(Text.literal("CHANGE BIOME").formatted(Formatting.GOLD, Formatting.BOLD)))
-                .addLoreLine(Text.literal("Click to change the villager's biome.").formatted(Formatting.YELLOW))
+                .setName(Component.literal("🌲 ").withStyle(ChatFormatting.GOLD)
+                        .append(Component.literal("CHANGE BIOME").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)))
+                .addLoreLine(Component.literal("Click to change the villager's biome.").withStyle(ChatFormatting.YELLOW))
                 .setCallback((index, type, action, gui) -> {
                     MessageType.CONFIRM.playSound(player);
                     new VillagerBiomeChangeGui(player, villagerHandler, this).open();
                 })
                 .build());
         setSlot(10, new GuiElementBuilder(Items.PLAYER_HEAD)
-                .setName(Text.literal("↑ ").formatted(Formatting.GOLD)
-                        .append(Text.literal("PICK UP VILLAGER").formatted(Formatting.GOLD, Formatting.BOLD)
-                                .append(Text.literal(" ↑").formatted(Formatting.GOLD))))
-                .addLoreLine(Text.literal("Click to pick up the villager.").formatted(Formatting.YELLOW))
+                .setName(Component.literal("↑ ").withStyle(ChatFormatting.GOLD)
+                        .append(Component.literal("PICK UP VILLAGER").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
+                                .append(Component.literal(" ↑").withStyle(ChatFormatting.GOLD))))
+                .addLoreLine(Component.literal("Click to pick up the villager.").withStyle(ChatFormatting.YELLOW))
                 .setSkullOwner(VillagerTextures.DEFAULT_TEXTURE)
                 .setCallback((index, type, action, gui) -> {
                     PickupHandler.notifyPickup(player, villagerHandler.getEntity());
@@ -53,22 +54,22 @@ public class VillagerEditGui extends VillagerGui {
                 })
                 .build());
         setSlot(16, new GuiElementBuilder(Items.BARRIER)
-                .setName(Text.literal("🔓 ").formatted(Formatting.DARK_RED)
-                        .append(Text.literal("UNCLAIM VILLAGER").formatted(Formatting.DARK_RED, Formatting.BOLD)))
-                .addLoreLine(Text.literal("Click to unclaim this villager.").formatted(Formatting.RED, Formatting.BOLD))
-                .addLoreLine(Text.literal("Unclaimed villagers can be picked up by anyone.").formatted(Formatting.RED))
+                .setName(Component.literal("🔓 ").withStyle(ChatFormatting.DARK_RED)
+                        .append(Component.literal("UNCLAIM VILLAGER").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD)))
+                .addLoreLine(Component.literal("Click to unclaim this villager.").withStyle(ChatFormatting.RED, ChatFormatting.BOLD))
+                .addLoreLine(Component.literal("Unclaimed villagers can be picked up by anyone.").withStyle(ChatFormatting.RED))
                 .setCallback((index, type, action, gui) -> {
-                    MessageType.WARN.send(player, Text.literal("You unclaimed this villager."));
+                    MessageType.WARN.send(player, Component.literal("You unclaimed this villager."));
                     villagerHandler.setOwner(null);
                     gui.close();
                 })
                 .build());
         setSlot(13, getTradeOpenButton(villagerHandler));
         setSlot(12, addTradePartnersLore(new GuiElementBuilder(Items.WRITABLE_BOOK)
-                .setName(Text.literal("✍ ").formatted(Formatting.GOLD)
-                        .append(Text.literal("ADD TRADING PARTNER").formatted(Formatting.WHITE, Formatting.BOLD)))
-                .addLoreLine(Text.literal("Click to add/remove a trading partner.").formatted(Formatting.GRAY))
-                .addLoreLine(Text.literal("Trading partners can trade with all of your villagers.").formatted(Formatting.GRAY))
+                .setName(Component.literal("✍ ").withStyle(ChatFormatting.GOLD)
+                        .append(Component.literal("ADD TRADING PARTNER").withStyle(ChatFormatting.WHITE, ChatFormatting.BOLD)))
+                .addLoreLine(Component.literal("Click to add/remove a trading partner.").withStyle(ChatFormatting.GRAY))
+                .addLoreLine(Component.literal("Trading partners can trade with all of your villagers.").withStyle(ChatFormatting.GRAY))
                 .setCallback((index, type, action, gui) -> {
                     MessageType.CONFIRM.playSound(player);
                     new VillagerPartnerGui(player, this).open();
@@ -90,27 +91,27 @@ public class VillagerEditGui extends VillagerGui {
                 });
         if (villagerHandler.isTradingOpen()) {
             builder
-                    .setName(Text.literal("$ ").formatted(Formatting.DARK_GREEN)
-                            .append(Text.literal("TRADING OPEN").formatted(Formatting.DARK_GREEN, Formatting.BOLD)))
-                    .addLoreLine(Text.literal("Everyone can trade with this villager.").formatted(Formatting.GREEN));
+                    .setName(Component.literal("$ ").withStyle(ChatFormatting.DARK_GREEN)
+                            .append(Component.literal("TRADING OPEN").withStyle(ChatFormatting.DARK_GREEN, ChatFormatting.BOLD)))
+                    .addLoreLine(Component.literal("Everyone can trade with this villager.").withStyle(ChatFormatting.GREEN));
 
         } else {
             builder
                     .setItem(Items.REDSTONE)
-                    .setName(Text.literal("❌ ").formatted(Formatting.DARK_RED)
-                            .append(Text.literal("TRADING CLOSED").formatted(Formatting.DARK_RED, Formatting.BOLD)))
-                    .addLoreLine(Text.literal("Only you and you trading partners").formatted(Formatting.RED))
-                    .addLoreLine(Text.literal("can trade with this villager.").formatted(Formatting.RED));
+                    .setName(Component.literal("❌ ").withStyle(ChatFormatting.DARK_RED)
+                            .append(Component.literal("TRADING CLOSED").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD)))
+                    .addLoreLine(Component.literal("Only you and you trading partners").withStyle(ChatFormatting.RED))
+                    .addLoreLine(Component.literal("can trade with this villager.").withStyle(ChatFormatting.RED));
         }
         return builder.build();
     }
 
     private GuiElementBuilder addTradePartnersLore(GuiElementBuilder builder) {
         PartnerState partnerState = PartnerState.getServerState(VersionHelper.getServer(player));
-        Set<String> partners = partnerState.getPartners(player.getUuid());
+        Set<String> partners = partnerState.getPartners(player.getUUID());
         for (String partner : partners) {
-            builder.addLoreLine(Text.literal("→ ").formatted(Formatting.GRAY)
-                    .append(Text.literal(partner).formatted(Formatting.YELLOW)));
+            builder.addLoreLine(Component.literal("→ ").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal(partner).withStyle(ChatFormatting.YELLOW)));
         }
         return builder;
     }

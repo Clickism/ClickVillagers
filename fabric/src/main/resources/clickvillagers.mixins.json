@@ -6,7 +6,7 @@
     "DispenserBlockMixin",
     "HopperBlockMixin",
     "LivingEntityMixin",
-    "MerchantInventoryMixin",
+    "MerchantContainerMixin",
     "TradeResetMixin",
     "VillagerDataMixin"
   ],

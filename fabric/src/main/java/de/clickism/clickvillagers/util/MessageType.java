@@ -6,143 +6,143 @@
 
 package de.clickism.clickvillagers.util;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 public abstract class MessageType {
 
     public static final MessageType CONFIRM = new MessageType(
-            Text.literal("[✔] ").formatted(Formatting.GREEN),
-            Style.EMPTY.withColor(Formatting.GREEN)
+            Component.literal("[✔] ").withStyle(ChatFormatting.GREEN),
+            Style.EMPTY.withColor(ChatFormatting.GREEN)
     ) {
         @Override
-        public void playSound(PlayerEntity player) {
-            VersionHelper.playSound(player, SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.MASTER, 1, 1);
-            VersionHelper.playSound(player, SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.MASTER, 1, 2);
+        public void playSound(Player player) {
+            VersionHelper.playSound(player, SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.MASTER, 1, 1);
+            VersionHelper.playSound(player, SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.MASTER, 1, 2);
         }
     };
 
     public static final MessageType FAIL = new MessageType(
-            Text.literal("[✘] ").formatted(Formatting.RED),
-            Style.EMPTY.withColor(Formatting.RED)
+            Component.literal("[✘] ").withStyle(ChatFormatting.RED),
+            Style.EMPTY.withColor(ChatFormatting.RED)
     ) {
         @Override
-        public void playSound(PlayerEntity player) {
-            VersionHelper.playSound(player, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.MASTER, 1, .5f);
+        public void playSound(Player player) {
+            VersionHelper.playSound(player, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.MASTER, 1, .5f);
         }
     };
 
     public static final MessageType WARN = new MessageType(
-            Text.literal("[⚠] ").formatted(Formatting.YELLOW),
-            Style.EMPTY.withColor(Formatting.YELLOW)
+            Component.literal("[⚠] ").withStyle(ChatFormatting.YELLOW),
+            Style.EMPTY.withColor(ChatFormatting.YELLOW)
     ) {
         @Override
-        public void playSound(PlayerEntity player) {
-            VersionHelper.playSound(player, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.MASTER, 1, 1f);
+        public void playSound(Player player) {
+            VersionHelper.playSound(player, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.MASTER, 1, 1f);
         }
     };
 
     public static final MessageType PICKUP_MESSAGE = silent(
-            Text.literal("[↑] ").formatted(Formatting.GREEN),
-            Text.literal("< ").formatted(Formatting.DARK_GRAY)
-                    .append(Text.literal("↑ ").formatted(Formatting.DARK_GREEN)),
-            Text.literal(" >").formatted(Formatting.DARK_GRAY),
-            Style.EMPTY.withColor(Formatting.GREEN)
+            Component.literal("[↑] ").withStyle(ChatFormatting.GREEN),
+            Component.literal("< ").withStyle(ChatFormatting.DARK_GRAY)
+                    .append(Component.literal("↑ ").withStyle(ChatFormatting.DARK_GREEN)),
+            Component.literal(" >").withStyle(ChatFormatting.DARK_GRAY),
+            Style.EMPTY.withColor(ChatFormatting.GREEN)
     );
 
     public static final MessageType ANCHOR_ADD = silent(
-            Text.literal("[⚓] ").formatted(Formatting.DARK_GREEN),
-            Text.literal("< ").formatted(Formatting.DARK_GRAY)
-                    .append(Text.literal("⚓ ").formatted(Formatting.DARK_GREEN)),
-            Text.literal(" >").formatted(Formatting.DARK_GRAY),
-            Style.EMPTY.withColor(Formatting.GREEN)
+            Component.literal("[⚓] ").withStyle(ChatFormatting.DARK_GREEN),
+            Component.literal("< ").withStyle(ChatFormatting.DARK_GRAY)
+                    .append(Component.literal("⚓ ").withStyle(ChatFormatting.DARK_GREEN)),
+            Component.literal(" >").withStyle(ChatFormatting.DARK_GRAY),
+            Style.EMPTY.withColor(ChatFormatting.GREEN)
     );
 
     public static final MessageType ANCHOR_REMOVE = silent(
-            Text.literal("[⚓] ").formatted(Formatting.GOLD),
-            Text.literal("< ").formatted(Formatting.DARK_GRAY)
-                    .append(Text.literal("⚓ ").formatted(Formatting.GOLD)),
-            Text.literal(" >").formatted(Formatting.DARK_GRAY),
-            Style.EMPTY.withColor(Formatting.YELLOW)
+            Component.literal("[⚓] ").withStyle(ChatFormatting.GOLD),
+            Component.literal("< ").withStyle(ChatFormatting.DARK_GRAY)
+                    .append(Component.literal("⚓ ").withStyle(ChatFormatting.GOLD)),
+            Component.literal(" >").withStyle(ChatFormatting.DARK_GRAY),
+            Style.EMPTY.withColor(ChatFormatting.YELLOW)
     );
 
     public static final MessageType CONFIG = new MessageType(
-            Text.literal("[⚒] ").formatted(Formatting.GOLD),
-            Style.EMPTY.withColor(Formatting.GREEN)
+            Component.literal("[⚒] ").withStyle(ChatFormatting.GOLD),
+            Style.EMPTY.withColor(ChatFormatting.GREEN)
     ) {
         @Override
-        public void playSound(PlayerEntity player) {
+        public void playSound(Player player) {
             MessageType.CONFIRM.playSound(player);
         }
     };
 
-    private final Text prefix;
+    private final Component prefix;
 
-    private final Text actionbarPrefix;
-    private final Text actionbarSuffix;
+    private final Component actionbarPrefix;
+    private final Component actionbarSuffix;
     private final Style actionbarStyle;
 
-    public MessageType(Text prefix, Style actionbarStyle) {
-        this(prefix, Text.literal("< ").formatted(Formatting.DARK_GRAY),
-                Text.literal(" >").formatted(Formatting.DARK_GRAY), actionbarStyle);
+    public MessageType(Component prefix, Style actionbarStyle) {
+        this(prefix, Component.literal("< ").withStyle(ChatFormatting.DARK_GRAY),
+                Component.literal(" >").withStyle(ChatFormatting.DARK_GRAY), actionbarStyle);
     }
 
-    public MessageType(Text prefix, Text actionbarPrefix, Text actionbarSuffix, Style actionbarStyle) {
+    public MessageType(Component prefix, Component actionbarPrefix, Component actionbarSuffix, Style actionbarStyle) {
         this.prefix = prefix;
         this.actionbarPrefix = actionbarPrefix;
         this.actionbarSuffix = actionbarSuffix;
         this.actionbarStyle = actionbarStyle;
     }
 
-    public abstract void playSound(PlayerEntity player);
+    public abstract void playSound(Player player);
 
-    public void send(PlayerEntity player, Text message) {
+    public void send(Player player, Component message) {
         send(player, message, false, false);
     }
 
-    public void send(ServerCommandSource source, Text message) {
+    public void send(CommandSourceStack source, Component message) {
         var player = source.getPlayer();
         if (player != null) {
             send(player, message, false, false);
             return;
         }
-        source.sendMessage(message);
+        source.sendSystemMessage(message);
     }
 
-    public void sendSilently(PlayerEntity player, Text message) {
+    public void sendSilently(Player player, Component message) {
         send(player, message, true, false);
     }
 
-    public void sendActionbar(PlayerEntity player, Text message) {
+    public void sendActionbar(Player player, Component message) {
         send(player, message, false, true);
     }
 
-    public void sendActionbarSilently(PlayerEntity player, Text message) {
+    public void sendActionbarSilently(Player player, Component message) {
         send(player, message, true, true);
     }
 
-    public void send(PlayerEntity player, Text message, boolean silent, boolean actionbar) {
-        MutableText text;
+    public void send(Player player, Component message, boolean silent, boolean actionbar) {
+        MutableComponent text;
         if (actionbar) {
             text = actionbarPrefix.copy().append(message.copy().setStyle(actionbarStyle)).append(actionbarSuffix);
         } else {
             text = prefix.copy().append(message.copy().setStyle(prefix.getStyle()));
         }
-        player.sendMessage(text, actionbar);
+        player.displayClientMessage(text, actionbar);
         if (silent) return;
         playSound(player);
     }
     
-    public static MessageType silent(Text prefix, Text actionbarPrefix, Text actionbarSuffix, Style actionbarStyle) {
+    public static MessageType silent(Component prefix, Component actionbarPrefix, Component actionbarSuffix, Style actionbarStyle) {
         return new MessageType(prefix, actionbarPrefix, actionbarSuffix, actionbarStyle) {
             @Override 
-            public void playSound(PlayerEntity player) {}
+            public void playSound(Player player) {}
         };
     }
 }

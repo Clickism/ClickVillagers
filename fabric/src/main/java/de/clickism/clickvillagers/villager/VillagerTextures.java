@@ -11,22 +11,22 @@ import com.google.common.collect.ArrayListMultimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.ZombieVillagerEntity;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.village.VillagerProfession;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.zombie.ZombieVillager;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 //? if >=1.20.5 {
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ProfileComponent;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ResolvableProfile;
 import org.spongepowered.include.com.google.common.collect.Multimap;
 //?}
 
@@ -37,7 +37,7 @@ public class VillagerTextures {
     public static final String ZOMBIE_TEXTURE = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGM3NTA1ZjIyNGQ1MTY0YTExN2Q4YzY5ZjAxNWY5OWVmZjQzNDQ3MWM4YTJkZjkwNzA5NmM0MjQyYzM1MjRlOCJ9fX0=";
 
     //? if >=1.21.5 {
-    public static final Map<RegistryKey<VillagerProfession>, String> TEXTURE_MAP = Map.ofEntries(
+    public static final Map<ResourceKey<VillagerProfession>, String> TEXTURE_MAP = Map.ofEntries(
     //?} else
     /*public static final Map<VillagerProfession, String> TEXTURE_MAP = Map.ofEntries(*/
             Map.entry(VillagerProfession.FISHERMAN, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWMxNWU1ZmI1NmZhMTZiMDc0N2IxYmNiMDUzMzVmNTVkMWZhMzE1NjFjMDgyYjVlMzY0M2RiNTU2NTQxMDg1MiJ9fX0="),
@@ -65,8 +65,8 @@ public class VillagerTextures {
         ArrayListMultimap<String, Property> properties = ArrayListMultimap.create();
         properties.put("textures", new Property("textures", texture));
         PropertyMap propertyMap = new PropertyMap(properties);
-        var profile = ProfileComponent.ofStatic(new GameProfile(UUID.randomUUID(), "", propertyMap));
-        itemStack.set(DataComponentTypes.PROFILE, profile);
+        var profile = ResolvableProfile.createResolved(new GameProfile(UUID.randomUUID(), "", propertyMap));
+        itemStack.set(DataComponents.PROFILE, profile);
     }
     //?} elif >=1.20.5 {
     /*private static void setTexture(ItemStack itemStack, String texture) {
@@ -84,16 +84,16 @@ public class VillagerTextures {
     *///?}
 
     public static String getTexture(Entity entity) {
-        if (entity instanceof ZombieVillagerEntity) {
+        if (entity instanceof ZombieVillager) {
             return ZOMBIE_TEXTURE;
         }
-        if (!(entity instanceof VillagerEntity villager)) return DEFAULT_TEXTURE;
+        if (!(entity instanceof Villager villager)) return DEFAULT_TEXTURE;
         if (villager.isBaby()) {
             return BABY_TEXTURE;
         }
         //? if >=1.21.5 {
         String texture = TEXTURE_MAP.get(villager.getVillagerData().profession()
-                .getKey().orElseThrow());
+                .unwrapKey().orElseThrow());
         //?} else
         /*String texture = TEXTURE_MAP.get(villager.getVillagerData().getProfession());*/
         if (texture != null) {

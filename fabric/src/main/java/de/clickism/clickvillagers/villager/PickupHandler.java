@@ -12,45 +12,46 @@ import de.clickism.clickvillagers.util.NbtFixer;
 import de.clickism.clickvillagers.util.Utils;
 import de.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.SharedConstants;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.ZombieVillagerEntity;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.monster.zombie.ZombieVillager;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.nbt.*;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Uuids;
-import net.minecraft.village.Merchant;
-import net.minecraft.village.VillagerDataContainer;
-import net.minecraft.village.VillagerProfession;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.item.trading.Merchant;
+import net.minecraft.world.entity.npc.villager.VillagerDataHolder;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 //? if >=1.21.6 {
-import net.minecraft.storage.NbtReadView;
-import net.minecraft.storage.NbtWriteView;
-import net.minecraft.storage.ReadView;
-import net.minecraft.util.ErrorReporter;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.util.ProblemReporter;
 //?}
 //? if >=1.20.5 {
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.component.type.NbtComponent;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.component.CustomData;
 //?} else {
 /*import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
@@ -63,19 +64,19 @@ public class PickupHandler {
     //? if <1.21.1
     /*private static final String DATA_KEY = "ClickVillagersData";*/
     //? if >=1.21.6 {
-    private static final int DATA_VERSION = SharedConstants.getGameVersion().dataVersion().id();
+    private static final int DATA_VERSION = SharedConstants.getCurrentVersion().dataVersion().version();
     //?} else
     /*private static final int DATA_VERSION = SharedConstants.getGameVersion().getSaveVersion().getId();*/
 
     //? if >=1.21.6 {
-    public static <T extends LivingEntity & VillagerDataContainer> ItemStack toItemStack(T entity) {
-        NbtWriteView view = NbtWriteView.create(new ErrorReporter.Impl(), VersionHelper.getWorld(entity).getRegistryManager());
-        entity.writeData(view);
-        String id = EntityType.getId(entity.getType()).toString();
+    public static <T extends LivingEntity & VillagerDataHolder> ItemStack toItemStack(T entity) {
+        TagValueOutput view = TagValueOutput.createWithContext(new ProblemReporter.Collector(), VersionHelper.getWorld(entity).registryAccess());
+        entity.saveWithoutId(view);
+        String id = EntityType.getKey(entity.getType()).toString();
         view.putString(TYPE_KEY, id);
         view.putString(DATA_VERSION_KEY, String.valueOf(DATA_VERSION));
-        List<Text> lore = getLore(new VillagerHandler<>(entity));
-        MutableText displayName = getDisplayName(entity);
+        List<Component> lore = getLore(new VillagerHandler<>(entity));
+        MutableComponent displayName = getDisplayName(entity);
         ItemStack itemStack = getItemStack(displayName, lore, view);
         VillagerTextures.setEntityTexture(itemStack, entity);
         entity.remove(Entity.RemovalReason.DISCARDED);
@@ -96,23 +97,23 @@ public class PickupHandler {
     }
     *///?}
 
-    private static ItemStack getItemStack(Text name, List<Text> lore,
+    private static ItemStack getItemStack(Component name, List<Component> lore,
                                           //? if >=1.21.6 {
-                                          NbtWriteView nbt
+                                          TagValueOutput nbt
                                           //?} else
                                           /*NbtCompound nbt*/
     ) {
-        ItemStack itemStack = Items.PLAYER_HEAD.getDefaultStack();
+        ItemStack itemStack = Items.PLAYER_HEAD.getDefaultInstance();
         writeCustomData(itemStack, nbt);
-        formatItem(itemStack, name.copy().fillStyle(Style.EMPTY.withItalic(false).withColor(Formatting.YELLOW)), lore);
+        formatItem(itemStack, name.copy().withStyle(Style.EMPTY.withItalic(false).withColor(ChatFormatting.YELLOW)), lore);
         return itemStack;
     }
 
-    private static List<Text> getLore(VillagerHandler<?> villager) {
-        List<Text> lore = new ArrayList<>();
-        lore.add(Text.literal("Right click to place the villager back.")
-                .fillStyle(Style.EMPTY.withItalic(false))
-                .formatted(Formatting.DARK_GRAY));
+    private static List<Component> getLore(VillagerHandler<?> villager) {
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.literal("Right click to place the villager back.")
+                .withStyle(Style.EMPTY.withItalic(false))
+                .withStyle(ChatFormatting.DARK_GRAY));
         LivingEntity entity = villager.getEntity();
         if (villager.hasOwner()) {
             UUID ownerUuid = villager.getOwner();
@@ -120,26 +121,26 @@ public class PickupHandler {
             String ownerName = (server != null)
                     ? VersionHelper.getPlayerName(ownerUuid, server).orElse("?")
                     : "?";
-            lore.add(Text.literal("🔑 Owner: ")
-                    .fillStyle(Style.EMPTY.withItalic(false))
-                    .formatted(Formatting.GOLD)
-                    .append(Text.literal(ownerName).formatted(Formatting.RESET).formatted(Formatting.WHITE)));
+            lore.add(Component.literal("🔑 Owner: ")
+                    .withStyle(Style.EMPTY.withItalic(false))
+                    .withStyle(ChatFormatting.GOLD)
+                    .append(Component.literal(ownerName).withStyle(ChatFormatting.RESET).withStyle(ChatFormatting.WHITE)));
         }
         if (AnchorHandler.isAnchored(entity)) {
-            lore.add(Text.literal("⚓ Anchored")
-                    .fillStyle(Style.EMPTY.withItalic(false))
-                    .formatted(Formatting.DARK_AQUA));
+            lore.add(Component.literal("⚓ Anchored")
+                    .withStyle(Style.EMPTY.withItalic(false))
+                    .withStyle(ChatFormatting.DARK_AQUA));
         }
         if (!villager.isTradingOpen()) {
-            lore.add(Text.literal("👥 Trading Closed")
-                    .fillStyle(Style.EMPTY.withItalic(false))
-                    .formatted(Formatting.RED));
+            lore.add(Component.literal("👥 Trading Closed")
+                    .withStyle(Style.EMPTY.withItalic(false))
+                    .withStyle(ChatFormatting.RED));
         }
-        if (entity instanceof Merchant merchant && entity instanceof VillagerDataContainer container
-                && !merchant.getOffers().isEmpty() && SHOW_TRADES.get()) {
+        if (entity instanceof Merchant merchant && entity instanceof VillagerDataHolder container
+            && !merchant.getOffers().isEmpty() && SHOW_TRADES.get()) {
             //? if >=1.21.5 {
-            RegistryKey<VillagerProfession> profession = container.getVillagerData().profession()
-                    .getKey().orElseThrow();
+            ResourceKey<VillagerProfession> profession = container.getVillagerData().profession()
+                    .unwrapKey().orElseThrow();
             //?} else
             /*VillagerProfession profession = container.getVillagerData().getProfession();*/
             TradeInfoProvider provider = (FORMAT_TRADES.get())
@@ -147,12 +148,12 @@ public class PickupHandler {
                     : TradeInfoProviders.ALL_TRADES;
             List<String> tradeInfoLines = provider.getTradeInfoLines(merchant.getOffers());
             if (!tradeInfoLines.isEmpty()) {
-                lore.add(Text.literal(" "));
-                lore.add(Text.literal("🛍 Trades:")
-                        .fillStyle(Style.EMPTY.withItalic(false))
-                        .formatted(Formatting.GRAY));
+                lore.add(Component.literal(" "));
+                lore.add(Component.literal("🛍 Trades:")
+                        .withStyle(Style.EMPTY.withItalic(false))
+                        .withStyle(ChatFormatting.GRAY));
                 tradeInfoLines.forEach(line -> {
-                    lore.add(Text.literal(line));
+                    lore.add(Component.literal(line));
                 });
             }
         }
@@ -162,29 +163,29 @@ public class PickupHandler {
     //? if >=1.20.5 {
     private static void writeCustomData(ItemStack itemStack,
                                         //? if >=1.21.6 {
-                                        NbtWriteView view
+                                        TagValueOutput view
                                         //?} else
                                         /*NbtCompound nbt*/
     ) {
-        itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(
+        itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(
                 //? if >=1.21.6 {
-                view.getNbt()
+                view.buildResult()
                 //?} else
                 /*nbt*/
         ));
     }
 
     @Nullable
-    private static NbtCompound readCustomData(ItemStack itemStack) {
-        NbtComponent nbt = itemStack.get(DataComponentTypes.CUSTOM_DATA);
+    private static CompoundTag readCustomData(ItemStack itemStack) {
+        CustomData nbt = itemStack.get(DataComponents.CUSTOM_DATA);
         if (nbt == null) return null;
-        return nbt.copyNbt();
+        return nbt.copyTag();
     }
 
-    private static void formatItem(ItemStack itemStack, Text name, List<Text> lore) {
-        itemStack.set(DataComponentTypes.ITEM_NAME, name);
-        itemStack.set(DataComponentTypes.CUSTOM_NAME, name);
-        itemStack.set(DataComponentTypes.LORE, new LoreComponent(lore));
+    private static void formatItem(ItemStack itemStack, Component name, List<Component> lore) {
+        itemStack.set(DataComponents.ITEM_NAME, name);
+        itemStack.set(DataComponents.CUSTOM_NAME, name);
+        itemStack.set(DataComponents.LORE, new ItemLore(lore));
     }
     //?} else {
     /*private static void writeCustomData(ItemStack itemStack, NbtCompound nbt) {
@@ -212,9 +213,9 @@ public class PickupHandler {
     }
 
     @Nullable
-    public static Entity readEntityFromItemStack(World world, ItemStack itemStack) {
+    public static Entity readEntityFromItemStack(Level world, ItemStack itemStack) {
         try {
-            NbtCompound nbt = readCustomData(itemStack);
+            CompoundTag nbt = readCustomData(itemStack);
             if (nbt == null) return null;
             removeUuidIfDuplicate(nbt, world);
             MinecraftServer server = world.getServer();
@@ -227,16 +228,16 @@ public class PickupHandler {
             //?} else
             /*String id = nbt.getString(TYPE_KEY);*/
             if (id == null) return null;
-            EntityType<?> type = EntityType.get(id).orElse(null);
+            EntityType<?> type = EntityType.byString(id).orElse(null);
             if (type == null) return null;
             //? if >=1.21.3 {
-            Entity entity = type.create(world, SpawnReason.SPAWN_ITEM_USE);
+            Entity entity = type.create(world, EntitySpawnReason.SPAWN_ITEM_USE);
             //?} else
             /*Entity entity = type.create(world);*/
             if (entity == null) return null;
             //? if >=1.21.6 {
-            ReadView view = NbtReadView.create(new ErrorReporter.Impl(), world.getRegistryManager(), nbt);
-            entity.readData(view);
+            ValueInput view = TagValueInput.create(new ProblemReporter.Collector(), world.registryAccess(), nbt);
+            entity.load(view);
             //?} else
             /*entity.readNbt(nbt);*/
             return entity;
@@ -245,10 +246,10 @@ public class PickupHandler {
         }
     }
 
-    private static void removeUuidIfDuplicate(NbtCompound nbt, World world) {
+    private static void removeUuidIfDuplicate(CompoundTag nbt, Level world) {
         if (!nbt.contains("UUID")) return;
         //? if >=1.21.5 {
-        nbt.get("UUID", Uuids.INT_STREAM_CODEC).ifPresent(uuid -> {
+        nbt.read("UUID", UUIDUtil.CODEC).ifPresent(uuid -> {
             if (world.getEntity(uuid) != null) {
                 nbt.remove("UUID");
             }
@@ -261,28 +262,28 @@ public class PickupHandler {
         *///?}
     }
 
-    private static MutableText getDisplayName(Entity entity) {
+    private static MutableComponent getDisplayName(Entity entity) {
         if (entity.hasCustomName()) {
-            return Text.literal("\"").append(entity.getCustomName()).append("\"");
+            return Component.literal("\"").append(entity.getCustomName()).append("\"");
         }
-        if (entity instanceof VillagerEntity villager) {
+        if (entity instanceof Villager villager) {
             return getVillagerDisplayName(villager);
         }
-        if (entity instanceof ZombieVillagerEntity) {
-            return Text.literal("Zombie Villager");
+        if (entity instanceof ZombieVillager) {
+            return Component.literal("Zombie Villager");
         }
-        return Text.literal("Unknown");
+        return Component.literal("Unknown");
     }
 
-    private static MutableText getVillagerDisplayName(VillagerEntity villager) {
+    private static MutableComponent getVillagerDisplayName(Villager villager) {
         if (villager.isBaby()) {
-            return Text.literal("Baby Villager");
+            return Component.literal("Baby Villager");
         }
         //? if >=1.21.5 {
-        RegistryEntry<VillagerProfession> profession = villager.getVillagerData().profession();
-        String professionName = profession.getKey().orElseThrow().getValue().getPath();
-        if (profession.matchesKey(VillagerProfession.NONE)) {
-            return Text.literal("Villager");
+        Holder<VillagerProfession> profession = villager.getVillagerData().profession();
+        String professionName = profession.unwrapKey().orElseThrow().identifier().getPath();
+        if (profession.is(VillagerProfession.NONE)) {
+            return Component.literal("Villager");
         }
         //?} else {
         /*VillagerProfession profession = villager.getVillagerData().getProfession();
@@ -292,16 +293,16 @@ public class PickupHandler {
         }
         *///?}
 
-        return Text.literal(Utils.titleCase(professionName) + " Villager");
+        return Component.literal(Utils.titleCase(professionName) + " Villager");
     }
 
-    public static void notifyPickup(PlayerEntity player, Entity entity) {
-        MessageType.PICKUP_MESSAGE.sendActionbarSilently(player, Text.literal("You picked up a villager"));
-        ServerWorld world = (ServerWorld) VersionHelper.getWorld(entity);
+    public static void notifyPickup(Player player, Entity entity) {
+        MessageType.PICKUP_MESSAGE.sendActionbarSilently(player, Component.literal("You picked up a villager"));
+        ServerLevel world = (ServerLevel) VersionHelper.getWorld(entity);
         double x = entity.getX();
         double y = entity.getY() + .25f;
         double z = entity.getZ();
-        world.spawnParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 1, 0, 0, 0, 1);
-        VersionHelper.playSound(player, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.NEUTRAL, 1, .5f);
+        world.sendParticles(ParticleTypes.SWEEP_ATTACK, x, y, z, 1, 0, 0, 0, 1);
+        VersionHelper.playSound(player, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.NEUTRAL, 1, .5f);
     }
 }

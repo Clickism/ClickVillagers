@@ -6,9 +6,9 @@
 
 package de.clickism.clickvillagers.util;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
 
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
@@ -17,12 +17,12 @@ import java.util.regex.Pattern;
 public class NbtFixer {
     //? if >=1.21.5 {
     // DataFixers didn't work so do it manually
-    public static void applyDataFixes(NbtCompound nbt) {
+    public static void applyDataFixes(CompoundTag nbt) {
         try {
-            NbtCompound offersCompound = nbt.getCompound("Offers").orElseThrow();
-            NbtList recipesList = offersCompound.getListOrEmpty("Recipes");
-            for (NbtElement recipe : recipesList) {
-                if (!(recipe instanceof NbtCompound recipeCompound)) continue;
+            CompoundTag offersCompound = nbt.getCompound("Offers").orElseThrow();
+            ListTag recipesList = offersCompound.getListOrEmpty("Recipes");
+            for (Tag recipe : recipesList) {
+                if (!(recipe instanceof CompoundTag recipeCompound)) continue;
                 removeLevelsKey(recipeCompound.getCompoundOrEmpty("buy"));
                 removeLevelsKey(recipeCompound.getCompoundOrEmpty("sell"));
             }
@@ -30,16 +30,16 @@ public class NbtFixer {
         }
     }
 
-    private static void removeLevelsKey(NbtCompound nbtCompound) {
-        NbtCompound componentsCompound = nbtCompound.getCompound("components").orElse(null);
+    private static void removeLevelsKey(CompoundTag nbtCompound) {
+        CompoundTag componentsCompound = nbtCompound.getCompound("components").orElse(null);
         if (componentsCompound == null) return;
         removeLevelsKeyFromEnchantments(componentsCompound, "minecraft:enchantments");
         removeLevelsKeyFromEnchantments(componentsCompound, "minecraft:stored_enchantments");
     }
 
-    private static void removeLevelsKeyFromEnchantments(NbtCompound nbtCompound, String enchantmentKey) {
-        NbtCompound enchantmentCompound = nbtCompound.getCompoundOrEmpty(enchantmentKey);
-        NbtCompound levelsCompound = enchantmentCompound.getCompoundOrEmpty("levels");
+    private static void removeLevelsKeyFromEnchantments(CompoundTag nbtCompound, String enchantmentKey) {
+        CompoundTag enchantmentCompound = nbtCompound.getCompoundOrEmpty(enchantmentKey);
+        CompoundTag levelsCompound = enchantmentCompound.getCompoundOrEmpty("levels");
         if (levelsCompound.isEmpty()) return;
         nbtCompound.put(enchantmentKey, levelsCompound);
     }

@@ -12,11 +12,11 @@ import de.clickism.fgui.api.elements.GuiElementBuilder;
 import de.clickism.fgui.api.gui.AnvilInputGui;
 import de.clickism.clickvillagers.villager.PartnerState;
 import de.clickism.clickvillagers.util.MessageType;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Items;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import java.util.UUID;
 
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
@@ -25,13 +25,13 @@ public class VillagerPartnerGui extends AnvilInputGui {
     private final MinecraftServer server;
     private final VillagerGui previous;
 
-    public VillagerPartnerGui(ServerPlayerEntity player, VillagerGui previous) {
+    public VillagerPartnerGui(ServerPlayer player, VillagerGui previous) {
         super(player, false);
         this.server = VersionHelper.getServer(player);
         this.previous = previous;
         if (this.server == null) throw new IllegalStateException("Server is null");
-        setTitle(Text.literal("✍ ").formatted(Formatting.DARK_GRAY)
-                .append(Text.literal("Add Partner").formatted(Formatting.DARK_GRAY, Formatting.BOLD)));
+        setTitle(Component.literal("✍ ").withStyle(ChatFormatting.DARK_GRAY)
+                .append(Component.literal("Add Partner").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.BOLD)));
         setSlot(2, getConfirmButton(getInput()));
         setSlot(1, new BackButton(previous));
         setSlot(0, new GuiElementBuilder(Items.PLAYER_HEAD).build());
@@ -45,48 +45,48 @@ public class VillagerPartnerGui extends AnvilInputGui {
 
     private GuiElement getConfirmButton(String input) {
         GuiElementBuilder builder = new GuiElementBuilder(Items.ANVIL)
-                .setName(Text.literal("✍ ").formatted(Formatting.WHITE)
-                        .append(Text.literal("ADD PARTNER").formatted(Formatting.WHITE, Formatting.BOLD)))
+                .setName(Component.literal("✍ ").withStyle(ChatFormatting.WHITE)
+                        .append(Component.literal("ADD PARTNER").withStyle(ChatFormatting.WHITE, ChatFormatting.BOLD)))
                 .setCallback((index, type, action, gui) -> {
                     if (!isValid(input)) {
                         MessageType.FAIL.playSound(player);
                         return;
                     }
                     PartnerState partnerState = PartnerState.getServerState(server);
-                    UUID uuid = player.getUuid();
+                    UUID uuid = player.getUUID();
                     if (partnerState.isPartner(uuid, input)) {
                         partnerState.removePartner(uuid, input);
-                        MessageType.WARN.send(player, Text.literal("Removed " + input + " from your trading partners."));
+                        MessageType.WARN.send(player, Component.literal("Removed " + input + " from your trading partners."));
                     } else {
                         int limit = PARTNER_LIMIT_PER_PLAYER.get();
                         if (partnerState.getPartners(uuid).size() >= limit) {
-                            MessageType.FAIL.send(player, Text.literal("You have reached the partner limit: ")
-                                    .append(Text.literal(String.valueOf(limit)).formatted(Formatting.BOLD)));
+                            MessageType.FAIL.send(player, Component.literal("You have reached the partner limit: ")
+                                    .append(Component.literal(String.valueOf(limit)).withStyle(ChatFormatting.BOLD)));
                             return;
                         }
                         partnerState.addPartner(uuid, input);
-                        MessageType.CONFIRM.send(player, Text.literal("Added " + input + " to your trading partners."));
+                        MessageType.CONFIRM.send(player, Component.literal("Added " + input + " to your trading partners."));
                     }
                     new VillagerEditGui(player, previous.villagerHandler).open();
                 });
         if (isPartner(input)) {
             builder
                     .setItem(Items.BARRIER)
-                    .setName(Text.literal("✍ ").formatted(Formatting.DARK_RED)
-                            .append(Text.literal("REMOVE PARTNER").formatted(Formatting.DARK_RED, Formatting.BOLD)))
-                    .addLoreLine(Text.literal("Click to remove \"" + input + "\" from your trading partners.").formatted(Formatting.RED));
+                    .setName(Component.literal("✍ ").withStyle(ChatFormatting.DARK_RED)
+                            .append(Component.literal("REMOVE PARTNER").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD)))
+                    .addLoreLine(Component.literal("Click to remove \"" + input + "\" from your trading partners.").withStyle(ChatFormatting.RED));
         } else {
             builder
-                    .setName(Text.literal("✍ ").formatted(Formatting.DARK_GREEN)
-                            .append(Text.literal("ADD PARTNER").formatted(Formatting.DARK_GREEN, Formatting.BOLD)))
-                    .addLoreLine(Text.literal("Click to add \"" + input + "\" to your trading partners.").formatted(Formatting.GREEN));
+                    .setName(Component.literal("✍ ").withStyle(ChatFormatting.DARK_GREEN)
+                            .append(Component.literal("ADD PARTNER").withStyle(ChatFormatting.DARK_GREEN, ChatFormatting.BOLD)))
+                    .addLoreLine(Component.literal("Click to add \"" + input + "\" to your trading partners.").withStyle(ChatFormatting.GREEN));
         }
         return builder.build();
     }
 
     private boolean isPartner(String input) {
         PartnerState partnerState = PartnerState.getServerState(server);
-        return partnerState.getPartners(player.getUuid()).contains(input);
+        return partnerState.getPartners(player.getUUID()).contains(input);
     }
 
     private boolean isValid(String input) {

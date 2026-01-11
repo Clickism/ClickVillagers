@@ -7,15 +7,15 @@
 package de.clickism.clickvillagers.mixin;
 
 import de.clickism.clickvillagers.villager.VillagerHandler;
-import net.minecraft.entity.Attackable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.village.VillagerDataContainer;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Attackable;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.npc.villager.VillagerDataHolder;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,23 +26,23 @@ import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements Attackable {
 
-    public LivingEntityMixin(EntityType<?> type, World world) {
+    public LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
-    @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
     public void damage(
             //? if >1.21.1
-            ServerWorld world,
+            ServerLevel world,
             DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (!(this instanceof VillagerDataContainer container)) return;
-        if (CLAIMED_IMMUNE_KILL_COMMAND.get() && source.isOf(DamageTypes.GENERIC_KILL)) {
+        if (!(this instanceof VillagerDataHolder container)) return;
+        if (CLAIMED_IMMUNE_KILL_COMMAND.get() && source.is(DamageTypes.GENERIC_KILL)) {
             return;
         }
         if (CLAIMED_DAMAGE.get()) {
             return;
         }
-        VillagerHandler<?> handler = new VillagerHandler<>((LivingEntity & VillagerDataContainer) container);
+        VillagerHandler<?> handler = new VillagerHandler<>((LivingEntity & VillagerDataHolder) container);
         if (!handler.hasOwner()) return;
         cir.setReturnValue(false);
         cir.cancel();

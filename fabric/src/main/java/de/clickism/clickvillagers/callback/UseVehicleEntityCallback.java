@@ -10,58 +10,61 @@ import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.PickupHandler;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.vehicle.*;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.*;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
+import net.minecraft.world.entity.vehicle.boat.Boat;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public class UseVehicleEntityCallback implements UseEntityCallback {
     @Override
-    public ActionResult interact(PlayerEntity player, World world, Hand hand, Entity vehicle, @Nullable EntityHitResult entityHitResult) {
-        if (world.isClient()) return ActionResult.PASS;
-        if (!hand.equals(Hand.MAIN_HAND)) return ActionResult.PASS;
-        if (player.isSpectator()) return ActionResult.PASS;
-        if (!player.isSneaking()) return ActionResult.PASS;
+    public InteractionResult interact(Player player, Level world, InteractionHand hand, Entity vehicle, @Nullable EntityHitResult entityHitResult) {
+        if (world.isClientSide()) return InteractionResult.PASS;
+        if (!hand.equals(InteractionHand.MAIN_HAND)) return InteractionResult.PASS;
+        if (player.isSpectator()) return InteractionResult.PASS;
+        if (!player.isShiftKeyDown()) return InteractionResult.PASS;
         //? if >=1.21.4 {
-        if (!(vehicle instanceof VehicleEntity)) return ActionResult.PASS;
+        if (!(vehicle instanceof VehicleEntity)) return InteractionResult.PASS;
         //?} else
-        /*if (!(vehicle instanceof MinecartEntity) && !(vehicle instanceof BoatEntity)) return ActionResult.PASS;*/
-        if (!hasSpace(vehicle)) return ActionResult.PASS;
-        ItemStack itemStack = player.getMainHandStack();
+        /*if (!(vehicle instanceof Minecart) && !(vehicle instanceof Boat)) return ActionResult.PASS;*/
+        if (!hasSpace(vehicle)) return InteractionResult.PASS;
+        ItemStack itemStack = player.getMainHandItem();
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
         if (entity == null) {
-            MessageType.FAIL.send(player, Text.literal("Couldn't read villager data."));
-            return ActionResult.CONSUME;
+            MessageType.FAIL.send(player, Component.literal("Couldn't read villager data."));
+            return InteractionResult.CONSUME;
         }
-        world.spawnEntity(entity);
-        BlockPos pos = vehicle.getBlockPos();
-        entity.refreshPositionAndAngles(pos, 0, 0);
-        itemStack.decrement(1);
+        world.addFreshEntity(entity);
+        BlockPos pos = vehicle.blockPosition();
+        entity.snapTo(pos, 0, 0);
+        itemStack.shrink(1);
         entity.startRiding(vehicle);
         //? if >=1.21.4 {
-        if (vehicle instanceof AbstractBoatEntity) {
+        if (vehicle instanceof AbstractBoat) {
         //?} else
-        /*if (vehicle instanceof BoatEntity) {*/
-            VersionHelper.playSound(player, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.MASTER, 1, .5f);
+        /*if (vehicle instanceof Boat) {*/
+            VersionHelper.playSound(player, SoundEvents.WOOD_BREAK, SoundSource.MASTER, 1, .5f);
         } else {
-            VersionHelper.playSound(player, SoundEvents.BLOCK_METAL_BREAK, SoundCategory.MASTER, 1, .5f);
+            VersionHelper.playSound(player, SoundEvents.METAL_BREAK, SoundSource.MASTER, 1, .5f);
         }
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
     
     private boolean hasSpace(Entity entity) {
-        if (entity instanceof BoatEntity) {
-            return entity.getPassengerList().size() < 2;
+        if (entity instanceof Boat) {
+            return entity.getPassengers().size() < 2;
         }
-        return !entity.hasPassengers();
+        return !entity.isVehicle();
     }
 }
