@@ -71,7 +71,10 @@ public class Utils {
 
     public static String formatItem(Item item) {
         return titleCase(item.getDefaultInstance().getItemHolder().unwrapKey()
+                //? if >=1.21.11 {
                 .map(ResourceKey::identifier)
+                //?} else
+                //.map(ResourceKey::location)
                 .map(Identifier::getPath)
                 .map(s -> s.replace("_", " "))
                 .orElse("?"));

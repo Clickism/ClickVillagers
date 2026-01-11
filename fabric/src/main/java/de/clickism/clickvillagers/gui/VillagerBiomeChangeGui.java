@@ -66,7 +66,7 @@ public class VillagerBiomeChangeGui extends VillagerGui {
         //? if >= 1.21.9 {
         MinecraftServer server = player.createCommandSourceStack().getServer();
         //?} else
-        /*MinecraftServer server = player.getServer();*/
+        //MinecraftServer server = player.getServer();
         if (server == null) {
             return new GuiElementBuilder(icon)
                     .setName(Component.literal("Error: Server is null").withStyle(ChatFormatting.RED))
@@ -74,13 +74,14 @@ public class VillagerBiomeChangeGui extends VillagerGui {
         }
         Holder<VillagerType> type = server.registryAccess()
                 .lookupOrThrow(net.minecraft.core.registries.Registries.VILLAGER_TYPE)
-                .get(typeKey.identifier())
+                .get(VersionHelper.identifier(typeKey))
                 .orElseThrow();
         //?} else
         /*private GuiElement getBiomeButton(VillagerType type, Item icon) {*/
         var villager = villagerHandler.getEntity();
         //? if >=1.21.5 {
-        String biomeName = type.unwrapKey().orElseThrow().identifier().getPath().toUpperCase();
+        String biomeName = VersionHelper.identifier(type.unwrapKey().orElseThrow())
+                .getPath().toUpperCase();
         //?} else
         /*String biomeName = type.toString().toUpperCase();*/
         GuiElementBuilder builder = new GuiElementBuilder(icon)

@@ -62,6 +62,8 @@ stonecutter {
 	replacements {
 		string(current.parsed < "1.21.11") {
 			replace("Identifier", "ResourceLocation")
+			replace("net.minecraft.world.entity.npc.villager", "net.minecraft.world.entity.npc")
+			replace("net.minecraft.world.entity.monster.zombie", "net.minecraft.world.entity.monster")
 		}
 	}
 }

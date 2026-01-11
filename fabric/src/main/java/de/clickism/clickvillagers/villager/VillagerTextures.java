@@ -72,8 +72,8 @@ public class VillagerTextures {
     /*private static void setTexture(ItemStack itemStack, String texture) {
         PropertyMap propertyMap = new PropertyMap();
         propertyMap.put("textures", new Property("textures", texture));
-        itemStack.set(DataComponentTypes.PROFILE,
-                new ProfileComponent(Optional.empty(), Optional.of(UUID.randomUUID()), propertyMap));
+        itemStack.set(DataComponents.PROFILE,
+                new ResolvableProfile(Optional.empty(), Optional.of(UUID.randomUUID()), propertyMap));
     }
     *///?} else {
     /*private static void setTexture(ItemStack itemStack, String texture) {

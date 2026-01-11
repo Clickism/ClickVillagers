@@ -88,7 +88,7 @@ public class TradeInfoProvider {
         return item.getEnchantments().entrySet().stream()
                 .map(entry -> {
                     String enchantment = entry.getKey().unwrapKey()
-                            .map(ResourceKey::identifier)
+                            .map(VersionHelper::identifier)
                             .map(Identifier::getPath)
                             .map(s -> s.replace("_", " "))
                             .orElse("?");

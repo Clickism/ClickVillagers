@@ -8,6 +8,7 @@ package de.clickism.clickvillagers.villager;
 
 import de.clickism.clickvillagers.util.Utils;
 
+import de.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -277,7 +278,7 @@ public class TradeInfoProviders {
         String enchantments = enchants.entrySet().stream()
                 .map(entry -> {
                     String enchantment = entry.getKey().unwrapKey()
-                            .map(ResourceKey::identifier)
+                            .map(VersionHelper::identifier)
                             .map(Identifier::getPath)
                             .map(s -> s.replace("_", " "))
                             .orElse("?");

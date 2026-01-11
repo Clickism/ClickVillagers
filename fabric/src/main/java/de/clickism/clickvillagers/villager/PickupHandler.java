@@ -66,7 +66,7 @@ public class PickupHandler {
     //? if >=1.21.6 {
     private static final int DATA_VERSION = SharedConstants.getCurrentVersion().dataVersion().version();
     //?} else
-    /*private static final int DATA_VERSION = SharedConstants.getGameVersion().getSaveVersion().getId();*/
+    //private static final int DATA_VERSION = SharedConstants.getGameVersion().getSaveVersion().getId();
 
     //? if >=1.21.6 {
     public static <T extends LivingEntity & VillagerDataHolder> ItemStack toItemStack(T entity) {
@@ -101,7 +101,7 @@ public class PickupHandler {
                                           //? if >=1.21.6 {
                                           TagValueOutput nbt
                                           //?} else
-                                          /*NbtCompound nbt*/
+                                          //NbtCompound nbt
     ) {
         ItemStack itemStack = Items.PLAYER_HEAD.getDefaultInstance();
         writeCustomData(itemStack, nbt);
@@ -165,13 +165,13 @@ public class PickupHandler {
                                         //? if >=1.21.6 {
                                         TagValueOutput view
                                         //?} else
-                                        /*NbtCompound nbt*/
+                                        //NbtCompound nbt
     ) {
         itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(
                 //? if >=1.21.6 {
                 view.buildResult()
                 //?} else
-                /*nbt*/
+                //nbt
         ));
     }
 
@@ -239,7 +239,7 @@ public class PickupHandler {
             ValueInput view = TagValueInput.create(new ProblemReporter.Collector(), world.registryAccess(), nbt);
             entity.load(view);
             //?} else
-            /*entity.readNbt(nbt);*/
+            //entity.readNbt(nbt);
             return entity;
         } catch (Exception e) {
             return null;
@@ -281,7 +281,7 @@ public class PickupHandler {
         }
         //? if >=1.21.5 {
         Holder<VillagerProfession> profession = villager.getVillagerData().profession();
-        String professionName = profession.unwrapKey().orElseThrow().identifier().getPath();
+        String professionName = VersionHelper.identifier(profession.unwrapKey().orElseThrow()).getPath();
         if (profession.is(VillagerProfession.NONE)) {
             return Component.literal("Villager");
         }
