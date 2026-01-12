@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "de.clickism.clickvillagers.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "DispenserBlockMixin",
+    "HopperBlockMixin",
+    "LivingEntityMixin",
+    "MerchantContainerMixin",
+    "TradeResetMixin",
+    "VillagerDataMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

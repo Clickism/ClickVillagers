@@ -1,0 +1,7 @@
+- Added `NeoForge` support.
+- Switched to mojang mappings for Fabric/Neoforge.
+    - *This will make updating to 26.1 faster when it releases.*
+- You can now execute `/clickvillagers` commands in singleplayer without having cheats enabled.
+    - *You still need operator permissions on servers.*
+- You will now be notified of updates in singleplayer without having cheats enabled.
+    - *You still need operator permissions on servers to be notified.*

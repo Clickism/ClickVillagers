@@ -1,2 +1,0 @@
-- Updated the formatting of some configuration messages.
-- Fixed: Some sounds would not play.
