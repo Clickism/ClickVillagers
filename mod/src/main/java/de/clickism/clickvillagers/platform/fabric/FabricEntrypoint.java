@@ -28,6 +28,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
 
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
@@ -37,8 +38,11 @@ public class FabricEntrypoint implements ModInitializer {
         CooldownManager cooldownManager = new CooldownManager(COOLDOWN::get);
         var pickupMobListener = new PickupVillagerListener(cooldownManager);
         var placeMobInVehicleListener = new PlaceVillagerInVehicleListener();
-        UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) ->
-                pickupMobListener.event(player, level, hand, entity));
+        UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
+                    if (hitResult != null) return InteractionResult.PASS;
+                    return pickupMobListener.event(player, level, hand, entity);
+                }
+        );
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) ->
                 placeMobInVehicleListener.event(player, level, hand, entity));
         UseBlockCallback.EVENT.register(new PlaceVillagerListener()::event);

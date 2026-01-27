@@ -6,36 +6,44 @@
 
 package de.clickism.clickvillagers.anchor;
 
-import net.minecraft.core.Holder;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 
 public class AnchorHandler {
-    
+
     private static final int ANCHOR_DURATION_THRESHOLD = Integer.MAX_VALUE / 4;
 
-    //? if >=1.21.5 {
-    private static final Holder<MobEffect> SLOWNESS = MobEffects.SLOWNESS;
-    //?} else
-    //private static final Holder<MobEffect> SLOWNESS = MobEffects.MOVEMENT_SLOWDOWN;
-    
     public static boolean isAnchored(LivingEntity entity) {
         return entity.getActiveEffects().stream().anyMatch(AnchorHandler::isAnchorEffect);
     }
-    
+
     public static void addAnchorEffect(LivingEntity entity) {
-        entity.addEffect(new MobEffectInstance(SLOWNESS, Integer.MAX_VALUE,
+        entity.addEffect(new MobEffectInstance(
+                //? if >=1.21.5 {
+                MobEffects.SLOWNESS,
+                //?} else
+                //MobEffects.MOVEMENT_SLOWDOWN,
+                Integer.MAX_VALUE,
                 255, true, false, false));
     }
-    
+
     public static void removeAnchorEffect(LivingEntity entity) {
-        entity.removeEffect(SLOWNESS);
+        entity.removeEffect(
+                //? if >=1.21.5 {
+                MobEffects.SLOWNESS
+                //?} else
+                //MobEffects.MOVEMENT_SLOWDOWN
+        );
     }
-    
+
     protected static boolean isAnchorEffect(MobEffectInstance effect) {
-        return effect.getEffect().equals(SLOWNESS)
+        return effect.getEffect().equals(
+                //? if >=1.21.5 {
+                MobEffects.SLOWNESS
+                //?} else
+                //MobEffects.MOVEMENT_SLOWDOWN
+        )
                && effect.getDuration() > ANCHOR_DURATION_THRESHOLD;
     }
 }
