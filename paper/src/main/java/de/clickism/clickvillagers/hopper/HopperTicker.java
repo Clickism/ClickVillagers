@@ -20,9 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockVector;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayDeque;
 import java.util.Iterator;
-import java.util.Queue;
 import java.util.Set;
 
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
@@ -78,8 +76,7 @@ public class HopperTicker {
     }
 
     private void tickChunk(World world, int chunkX, int chunkZ, Set<BlockVector> vectors) {
-        Chunk chunk = world.getChunkAt(chunkX, chunkZ);
-        if (!chunk.isLoaded()) return; // Should never happen
+        if (!world.isChunkLoaded(chunkX, chunkZ)) return; // Should never happen... but it happened
         Location hopperLoc = new Location(world, 0, 0, 0);
 
         for (Iterator<BlockVector> setIterator = vectors.iterator(); setIterator.hasNext(); ) {

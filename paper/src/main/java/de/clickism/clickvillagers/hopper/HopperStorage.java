@@ -8,6 +8,7 @@ package de.clickism.clickvillagers.hopper;
 
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.hopper.util.HopperUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -52,7 +53,9 @@ public class HopperStorage {
     private final Map<World, Map<ChunkKey, Set<BlockVector>>> loadedHoppers = new ConcurrentHashMap<>();
 
     public HopperStorage() {
-        // Chunks loaded via ChunkListener
+        for (World world : Bukkit.getWorlds()) {
+            loadHoppersInWorld(world);
+        }
     }
 
     /**
@@ -191,6 +194,30 @@ public class HopperStorage {
                 consumer.accept(world, chunkKey, set);
             }
         }
+    }
+
+    /**
+     * Loads all villager hoppers from the provided world into memory.
+     * This method iterates through all loaded chunks in the world and ensures
+     * that each chunk's hoppers are registered for processing or ticking.
+     *
+     * @param world the world containing the chunks to process
+     */
+    public void loadHoppersInWorld(World world) {
+        for (Chunk chunk : world.getLoadedChunks()) {
+            loadHoppersInChunk(chunk);
+        }
+    }
+
+    /**
+     * Unloads all villager hoppers associated with the specified world.
+     * This method should be called when a world is unloaded to properly
+     * remove references and free associated resources.
+     *
+     * @param world the world to unload hoppers from
+     */
+    public void unloadHoppersInWorld(World world) {
+        loadedHoppers.remove(world);
     }
 
     @FunctionalInterface
