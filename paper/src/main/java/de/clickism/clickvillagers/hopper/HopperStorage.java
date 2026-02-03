@@ -100,6 +100,9 @@ public class HopperStorage {
         var set = map.get(chunkKey);
         if (set == null || set.isEmpty()) {
             map.remove(chunkKey);
+            if (map.isEmpty()) {
+                loadedHoppers.remove(chunk.getWorld());
+            }
         }
     }
 
@@ -120,6 +123,7 @@ public class HopperStorage {
             set.add(hopper.getLocation().toVector().toBlockVector());
         }
 
+        if (set.isEmpty()) return;
         loadedHoppers.computeIfAbsent(chunk.getWorld(), c -> new ConcurrentHashMap<>())
                 .put(ChunkKey.of(chunk), set);
     }
@@ -204,6 +208,7 @@ public class HopperStorage {
      * @param world the world containing the chunks to process
      */
     public void loadHoppersInWorld(World world) {
+        loadedHoppers.remove(world);
         for (Chunk chunk : world.getLoadedChunks()) {
             loadHoppersInChunk(chunk);
         }
