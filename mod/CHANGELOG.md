@@ -1,1 +1,1 @@
-- Fixed: Anchoring villagers would not work and always say "Removed anchor".
+- Massive performance and memory improvements when using villager hoppers. ([#76](https://github.com/Clickism/ClickVillagers/pull/76) by [RVSkeLe](https://github.com/RVSkeLe))
