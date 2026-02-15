@@ -1,4 +1,1 @@
-- Added Folia support.
-  - *Note that this is an early implementation and there might
-  be some issues. Please report them on GitHub!*
-- Updated the formatting of some configuration messages.
+- Massive performance and memory improvements when using villager hoppers. ([#76](https://github.com/Clickism/ClickVillagers/pull/76) by [RVSkeLe](https://github.com/RVSkeLe))
