@@ -7,6 +7,7 @@
 package de.clickism.clickvillagers.util;
 
 import de.clickism.fgui.api.elements.GuiElementBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 //? if >1.21.4 {
@@ -14,7 +15,6 @@ import net.minecraft.core.component.DataComponentExactPredicate;
 //?} elif >1.20.1 {
 /*import net.minecraft.core.component.DataComponentPredicate;
 *///?}
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -38,10 +38,11 @@ public class TradeResetHelper {
     //? if >1.20.1 {
     @Unique
     private static final ItemCost RESET_TRADED_ITEM = new ItemCost(
-            Holder.direct(Items.BARRIER), 1,
+            BuiltInRegistries.ITEM.wrapAsHolder(Items.BARRIER),
+            1,
             //? if >1.21.4 {
             DataComponentExactPredicate.allOf(RESET_ITEM_STACK.getComponents())
-            //?} else
+             //?} else
             //DataComponentPredicate.allOf(RESET_ITEM_STACK.getComponents())
     );
     //?}

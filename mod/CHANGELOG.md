@@ -1,1 +1,2 @@
-- Massive performance and memory improvements when using villager hoppers. ([#76](https://github.com/Clickism/ClickVillagers/pull/76) by [RVSkeLe](https://github.com/RVSkeLe))
+- Fixed a crash when the game attempts to save a villager with the
+  "Reset Trades" recipe. ([#65](https://github.com/Clickism/ClickVillagers/issues/65))
