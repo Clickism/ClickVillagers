@@ -1,5 +1,5 @@
 plugins {
-	id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT"
+	id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT"
 	id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
@@ -57,16 +57,6 @@ tasks.processResources {
 		expand(props)
 	}
 	inputs.properties(props)
-}
-
-stonecutter {
-	replacements {
-		string(current.parsed < "1.21.11") {
-			replace("Identifier", "ResourceLocation")
-			replace("net.minecraft.world.entity.npc.villager", "net.minecraft.world.entity.npc")
-			replace("net.minecraft.world.entity.monster.zombie", "net.minecraft.world.entity.monster")
-		}
-	}
 }
 
 java {

@@ -6,7 +6,7 @@
 
 package de.clickism.clickvillagers.gui;
 
-import de.clickism.fgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import de.clickism.clickvillagers.util.CooldownManager;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.VillagerHandler;

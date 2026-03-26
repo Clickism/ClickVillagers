@@ -6,11 +6,11 @@
 
 package de.clickism.clickvillagers.gui;
 
-import de.clickism.fgui.api.elements.GuiElement;
-import de.clickism.fgui.api.elements.GuiElementBuilder;
-import de.clickism.fgui.api.gui.GuiInterface;
+import eu.pb4.sgui.api.elements.GuiElement;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.VillagerHandler;
+import eu.pb4.sgui.api.gui.GuiLike;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.resources.ResourceKey;
@@ -42,9 +42,9 @@ public class VillagerBiomeChangeGui extends VillagerGui {
             new VillagerBiome(VillagerType.TAIGA, Items.SPRUCE_SAPLING)
     );
 
-    private final GuiInterface previous;
+    private final GuiLike previous;
 
-    public VillagerBiomeChangeGui(ServerPlayer player, VillagerHandler<?> villagerHandler, GuiInterface previous) {
+    public VillagerBiomeChangeGui(ServerPlayer player, VillagerHandler<?> villagerHandler, GuiLike previous) {
         super(player, villagerHandler);
         this.previous = previous;
         setSlot(18, new BackButton(previous));

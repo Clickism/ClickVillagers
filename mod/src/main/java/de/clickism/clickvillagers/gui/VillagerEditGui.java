@@ -13,8 +13,8 @@ import de.clickism.clickvillagers.villager.PartnerState;
 import de.clickism.clickvillagers.villager.PickupHandler;
 import de.clickism.clickvillagers.villager.VillagerHandler;
 import de.clickism.clickvillagers.villager.VillagerTextures;
-import de.clickism.fgui.api.elements.GuiElement;
-import de.clickism.fgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.GuiElement;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,7 +46,10 @@ public class VillagerEditGui extends VillagerGui {
                         .append(Component.literal("PICK UP VILLAGER").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
                                 .append(Component.literal(" ↑").withStyle(ChatFormatting.GOLD))))
                 .addLoreLine(Component.literal("Click to pick up the villager.").withStyle(ChatFormatting.YELLOW))
-                .setSkullOwner(VillagerTextures.DEFAULT_TEXTURE)
+                //? if >=21.6 {
+                .setProfileSkinTexture(VillagerTextures.DEFAULT_TEXTURE)
+                //?} else
+                //.setSkullOwner(VillagerTextures.DEFAULT_TEXTURE)
                 .setCallback((index, type, action, gui) -> {
                     PickupHandler.notifyPickup(player, villagerHandler.getEntity());
                     Utils.offerToHand(player, PickupHandler.toItemStack(villagerHandler.getEntity()));

@@ -29,6 +29,7 @@ stonecutter {
         version("1.21.8", "fabric", "neoforge")
         version("1.21.10", "fabric", "neoforge")
         version("1.21.11", "fabric", "neoforge")
-        vcsVersion = "1.21.11-fabric"
+        version("26.1", "fabric+noremap")
+        vcsVersion = "26.1-fabric+noremap"
     }
 }

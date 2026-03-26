@@ -134,7 +134,10 @@ public abstract class MessageType {
         } else {
             text = prefix.copy().append(message.copy().setStyle(prefix.getStyle()));
         }
-        player.displayClientMessage(text, actionbar);
+        //? if >=26.1 {
+        player.sendOverlayMessage(text);
+        //?} else
+        //player.displayClientMessage(text, actionbar);
         if (silent) return;
         playSound(player);
     }
