@@ -39,7 +39,8 @@ public class FabricEntrypoint implements ModInitializer {
         var pickupMobListener = new PickupVillagerListener(cooldownManager);
         var placeMobInVehicleListener = new PlaceVillagerInVehicleListener();
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
-                    if (hitResult != null) return InteractionResult.PASS;
+                    //? if <21.6
+                    //if (hitResult != null) return InteractionResult.PASS;
                     return pickupMobListener.event(player, level, hand, entity);
                 }
         );

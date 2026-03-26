@@ -8,8 +8,9 @@ package de.clickism.clickvillagers.gui;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.gui.GuiInterface;
 import de.clickism.clickvillagers.util.VersionHelper;
+import eu.pb4.sgui.api.elements.SimpleGuiElement;
+import eu.pb4.sgui.api.gui.GuiLike;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.sounds.SoundSource;
@@ -17,14 +18,14 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
-public class BackButton extends GuiElement {
+public class BackButton extends SimpleGuiElement {
     private static final ItemStack item = new GuiElementBuilder(Items.MAP)
             .setName(Component.literal("◀ ").withStyle(ChatFormatting.WHITE)
                     .append(Component.literal("BACK").withStyle(ChatFormatting.WHITE, ChatFormatting.BOLD)))
             .addLoreLine(Component.literal("Go back to the previous menu.").withStyle(ChatFormatting.GRAY))
             .asStack();
-    
-    public BackButton(GuiInterface previous) {
+
+    public BackButton(GuiLike previous) {
         super(item, (index, type, action, gui) -> {
             previous.open();
             VersionHelper.playSound(previous.getPlayer(), SoundEvents.UI_LOOM_SELECT_PATTERN, SoundSource.MASTER, 1, 1);

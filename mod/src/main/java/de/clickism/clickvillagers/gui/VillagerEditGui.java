@@ -46,7 +46,10 @@ public class VillagerEditGui extends VillagerGui {
                         .append(Component.literal("PICK UP VILLAGER").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
                                 .append(Component.literal(" ↑").withStyle(ChatFormatting.GOLD))))
                 .addLoreLine(Component.literal("Click to pick up the villager.").withStyle(ChatFormatting.YELLOW))
-                .setSkullOwner(VillagerTextures.DEFAULT_TEXTURE)
+                //? if >=21.6 {
+                .setProfileSkinTexture(VillagerTextures.DEFAULT_TEXTURE)
+                //?} else
+                //.setSkullOwner(VillagerTextures.DEFAULT_TEXTURE)
                 .setCallback((index, type, action, gui) -> {
                     PickupHandler.notifyPickup(player, villagerHandler.getEntity());
                     Utils.offerToHand(player, PickupHandler.toItemStack(villagerHandler.getEntity()));
