@@ -59,20 +59,6 @@ tasks.processResources {
 	inputs.properties(props)
 }
 
-stonecutter {
-	replacements {
-		string(true) {
-			replace("SavedDataStorage", "DimensionDataStorage")
-			replace("eu.pb4.sgui", "de.clickism.fgui")
-		}
-		string(current.parsed < "1.21.11") {
-			replace("Identifier", "ResourceLocation")
-			replace("net.minecraft.world.entity.npc.villager", "net.minecraft.world.entity.npc")
-			replace("net.minecraft.world.entity.monster.zombie", "net.minecraft.world.entity.monster")
-		}
-	}
-}
-
 java {
 	toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 	sourceCompatibility = JavaVersion.VERSION_21

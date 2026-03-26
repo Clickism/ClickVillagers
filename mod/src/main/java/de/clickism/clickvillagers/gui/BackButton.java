@@ -6,10 +6,8 @@
 
 package de.clickism.clickvillagers.gui;
 
-import eu.pb4.sgui.api.elements.GuiElement;
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.*;
 import de.clickism.clickvillagers.util.VersionHelper;
-import eu.pb4.sgui.api.elements.SimpleGuiElement;
 import eu.pb4.sgui.api.gui.GuiLike;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,7 +16,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
-public class BackButton extends SimpleGuiElement {
+public class BackButton extends
+    //? if >=26.1 {
+    SimpleGuiElement
+    //?} else
+    //GuiElement
+{
     private static final ItemStack item = new GuiElementBuilder(Items.MAP)
             .setName(Component.literal("◀ ").withStyle(ChatFormatting.WHITE)
                     .append(Component.literal("BACK").withStyle(ChatFormatting.WHITE, ChatFormatting.BOLD)))
