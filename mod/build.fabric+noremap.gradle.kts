@@ -34,7 +34,7 @@ dependencies {
     implementation(include("de.clickism:configured-core:${configuredVersion}")!!)
     implementation(include("de.clickism:configured-yaml:${configuredVersion}")!!)
     implementation(include("de.clickism:configured-json:${configuredVersion}")!!)
-    implementation(include("de.clickism:configured-fabric-command-adapter:${configuredVersion}")!!)
+    implementation(include("de.clickism:configured-fabric-noremap-command-adapter:${configuredVersion}")!!)
     // Configured Dependency
     implementation(include("org.yaml:snakeyaml:2.0")!!)
 }

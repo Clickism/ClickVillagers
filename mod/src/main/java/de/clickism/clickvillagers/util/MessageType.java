@@ -135,7 +135,11 @@ public abstract class MessageType {
             text = prefix.copy().append(message.copy().setStyle(prefix.getStyle()));
         }
         //? if >=26.1 {
-        player.sendOverlayMessage(text);
+        if (actionbar) {
+            player.sendOverlayMessage(text);
+        } else {
+            player.sendSystemMessage(text);
+        }
         //?} else
         //player.displayClientMessage(text, actionbar);
         if (silent) return;

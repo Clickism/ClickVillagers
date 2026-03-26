@@ -51,26 +51,26 @@ public class FabricEntrypoint implements ModInitializer {
         ClickVillagers.initialize();
 
         // Register Commands
-//        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-//            dispatcher.register(Commands.literal("clickvillagers")
-//                    .requires(VersionHelper::isOpOrInSinglePlayer)
-//                    .then(FabricCommandAdapter.ofConfig(CONFIG)
-//                            .add(new SetCommand((sender, key, value) -> {
-//                                MessageType.CONFIG.send(sender, Component.literal("§aConfig option \"§l" + key + "§a\" set to §l" + value + "."));
-//                            }))
-//                            .add(new GetCommand((sender, key, value) -> {
-//                                MessageType.CONFIG.send(sender, Component.literal("§aConfig option \"§l" + key + "§a\" has value §l" + value + "."));
-//                            }))
-//                            .add(new ReloadCommand(sender -> {
-//                                MessageType.CONFIG.send(sender, Component.literal("§aReloaded the config file."));
-//                            }))
-//                            .add(new PathCommand((sender, path) -> {
-//                                MessageType.CONFIG.send(sender, Component.literal("§aThe config file is located at: §f" + path));
-//                            }))
-//                            .buildRoot()
-//                    )
-//            );
-//        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            dispatcher.register(Commands.literal("clickvillagers")
+                    .requires(VersionHelper::isOpOrInSinglePlayer)
+                    .then(FabricCommandAdapter.ofConfig(CONFIG)
+                            .add(new SetCommand((sender, key, value) -> {
+                                MessageType.CONFIG.send(sender, Component.literal("§aConfig option \"§l" + key + "§a\" set to §l" + value + "."));
+                            }))
+                            .add(new GetCommand((sender, key, value) -> {
+                                MessageType.CONFIG.send(sender, Component.literal("§aConfig option \"§l" + key + "§a\" has value §l" + value + "."));
+                            }))
+                            .add(new ReloadCommand(sender -> {
+                                MessageType.CONFIG.send(sender, Component.literal("§aReloaded the config file."));
+                            }))
+                            .add(new PathCommand((sender, path) -> {
+                                MessageType.CONFIG.send(sender, Component.literal("§aThe config file is located at: §f" + path));
+                            }))
+                            .buildRoot()
+                    )
+            );
+        });
 
         // Check for updates
         if (CHECK_UPDATES.get()) {
