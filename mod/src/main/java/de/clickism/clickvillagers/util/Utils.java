@@ -70,7 +70,12 @@ public class Utils {
     }
 
     public static String formatItem(Item item) {
-        return titleCase(item.getDefaultInstance().getItemHolder().unwrapKey()
+        return titleCase(item.getDefaultInstance()
+                //? if >=26.1 {
+                .typeHolder()
+                //?} else
+                //.getItemHolder()
+                .unwrapKey()
                 //? if >=1.21.11 {
                 .map(ResourceKey::identifier)
                 //?} else

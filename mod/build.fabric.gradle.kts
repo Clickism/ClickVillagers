@@ -1,5 +1,5 @@
 plugins {
-	id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT"
+	id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT"
 	id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
@@ -61,6 +61,10 @@ tasks.processResources {
 
 stonecutter {
 	replacements {
+		string(true) {
+			replace("SavedDataStorage", "DimensionDataStorage")
+			replace("eu.pb4.sgui", "de.clickism.fgui")
+		}
 		string(current.parsed < "1.21.11") {
 			replace("Identifier", "ResourceLocation")
 			replace("net.minecraft.world.entity.npc.villager", "net.minecraft.world.entity.npc")

@@ -17,7 +17,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
 //? if >=1.21.5
 import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.level.Level;
@@ -122,10 +122,13 @@ public class PartnerState extends SavedData {
     public static PartnerState getServerState(MinecraftServer server) {
         ServerLevel world = server.getLevel(Level.OVERWORLD);
         if (world == null) throw new IllegalStateException("Overworld is null");
-        DimensionDataStorage persistentStateManager = world.getDataStorage();
+        SavedDataStorage persistentStateManager = world.getDataStorage();
         //? if >=1.21.5 {
         SavedDataType<PartnerState> type = new SavedDataType<>(
-                ClickVillagers.MOD_ID,
+                //? if >=21.6 {
+                ClickVillagers.id("partner_state"),
+                //?} else
+                //ClickVillagers.MOD_ID,
                 PartnerState::new,
                 codec(world),
                 null

@@ -8,6 +8,7 @@ package de.clickism.clickvillagers;
 
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 import net.minecraft.DetectedVersion;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,5 +44,9 @@ public class ClickVillagers {
 
     public static @Nullable String newerVersion() {
         return newerVersion;
+    }
+
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 }
