@@ -6,7 +6,7 @@
 
 package de.clickism.clickvillagers.util;
 
-import de.clickism.fgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

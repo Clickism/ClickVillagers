@@ -39,14 +39,6 @@ dependencies {
     implementation(include("org.yaml:snakeyaml:2.0")!!)
 }
 
-stonecutter {
-    replacements {
-        string(true) {
-            replace("de.clickism.fgui", "eu.pb4.sgui")
-        }
-    }
-}
-
 val awPath = "26.1.clickvillagers.accesswidener"
 
 tasks.processResources {

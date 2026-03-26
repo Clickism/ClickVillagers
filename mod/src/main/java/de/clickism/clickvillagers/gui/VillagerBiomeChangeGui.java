@@ -6,9 +6,9 @@
 
 package de.clickism.clickvillagers.gui;
 
-import de.clickism.fgui.api.elements.GuiElement;
-import de.clickism.fgui.api.elements.GuiElementBuilder;
-import de.clickism.fgui.api.gui.GuiInterface;
+import eu.pb4.sgui.api.elements.GuiElement;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.gui.GuiInterface;
 import de.clickism.clickvillagers.util.VersionHelper;
 import de.clickism.clickvillagers.villager.VillagerHandler;
 import net.minecraft.world.item.Item;
