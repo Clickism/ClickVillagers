@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("com.gradleup.shadow") version "9.3.0"
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("xyz.jpenilla.run-paper") version "3.0.2"
     id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
@@ -51,7 +51,10 @@ java {
 
 tasks.runServer {
     dependsOn(tasks.build)
-    minecraftVersion("1.21.10")
+    minecraftVersion("26.1.2")
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    })
 }
 
 tasks.build {
