@@ -64,6 +64,9 @@ public class PickupManager implements Listener {
             return "\"" + customName + "\"";
         }
         if (zombie) {
+            if (!adult) {
+                return Message.BABY_ZOMBIE_VILLAGER.toString();
+            }
             return Message.ZOMBIE_VILLAGER.toString();
         }
         if (!adult) {

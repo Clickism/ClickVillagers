@@ -29,8 +29,9 @@
   "info_trade_closed": "Đã khoá trao đổi",
   "info_trades": "Trao đổi",
   "villager": "Dân làng",
-  "zombie_villager": "Dân làng zombie",
   "baby_villager": "Dân làng trẻ em",
+  "zombie_villager": "Dân làng zombie",
+  "baby_zombie_villager": "Dân làng zombie trẻ em",
   "villager_with_profession": "Dân làng {profession}",
   "villager.lore": [
     "\u00268Chuột phải để đặt lại dân làng."

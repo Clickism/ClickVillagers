@@ -29,8 +29,9 @@
   "info_trade_closed": "Handel Begrenzt",
   "info_trades": "Angebote",
   "villager": "Dorfbewohner",
-  "zombie_villager": "Zombie-Dorfbewohner",
   "baby_villager": "Baby-Dorfbewohner",
+  "zombie_villager": "Zombie-Dorfbewohner",
+  "baby_zombie_villager": "Baby-Zombie-Dorfbewohner",
   "villager_with_profession": "{profession} Dorfbewohner",
   "villager.lore": [
     "&8Rechtsklick, um den Dorfbewohner",

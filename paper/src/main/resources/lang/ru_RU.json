@@ -29,8 +29,9 @@
   "info_trade_closed": "Трейды закрыты",
   "info_trades": "Трейды",
   "villager": "Житель",
-  "zombie_villager": "Зомби житель",
   "baby_villager": "Ребенок житель",
+  "zombie_villager": "Зомби житель",
+  "baby_zombie_villager": "Ребенок зомби житель",
   "villager.lore": [
     "\u00268ПКМ, чтобы поставить жителя."
   ],

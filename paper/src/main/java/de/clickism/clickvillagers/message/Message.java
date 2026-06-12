@@ -61,8 +61,9 @@ public enum Message implements LocalizationKey {
 
     // ITEMS
     VILLAGER,
-    ZOMBIE_VILLAGER,
     BABY_VILLAGER,
+    ZOMBIE_VILLAGER,
+    BABY_ZOMBIE_VILLAGER,
     @Parameters("profession")
     VILLAGER_WITH_PROFESSION,
     VILLAGER_HOPPER,
