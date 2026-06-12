@@ -72,14 +72,14 @@ public class VillagerTextures {
         if (!(entity instanceof Villager) && !isZombie) {
             throw new IllegalArgumentException("Unsupported entity type: " + entity.getClass().getName());
         }
+        if (isZombie) {
+            return URI.create(ZOMBIE_TEXTURE).toURL();
+        }
         LivingEntity villager = (LivingEntity) entity;
         Villager.Profession profession = Utils.getVillagerProfession(villager);
         boolean isAdult = ((Ageable) villager).isAdult();
         if (!isAdult) {
             return URI.create(BABY_TEXTURE).toURL();
-        }
-        if (isZombie) {
-            return URI.create(ZOMBIE_TEXTURE).toURL();
         }
         return URI.create(TEXTURE_MAP.getOrDefault(profession, DEFAULT_TEXTURE)).toURL();
     }

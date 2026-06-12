@@ -45,6 +45,7 @@ public class PickupManager implements Listener {
     private final EntitySaver entitySaver;
     private final ClaimManager claimManager;
     private final AnchorManager anchorManager;
+
     @AutoRegistered
     public PickupManager(JavaPlugin plugin, EntitySaver entitySaver, ClaimManager claimManager, AnchorManager anchorManager) {
         this.entitySaver = entitySaver;
@@ -53,9 +54,17 @@ public class PickupManager implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    private static String getName(@Nullable String customName, Villager.Profession profession, boolean adult) {
+    private static String getName(
+            @Nullable String customName,
+            Villager.Profession profession,
+            boolean adult,
+            boolean zombie
+    ) {
         if (customName != null) {
             return "\"" + customName + "\"";
+        }
+        if (zombie) {
+            return Message.ZOMBIE_VILLAGER.toString();
         }
         if (!adult) {
             return Message.BABY_VILLAGER.toString();
@@ -168,11 +177,12 @@ public class PickupManager implements Listener {
         String customName = entity.getCustomName();
         Villager.Profession profession = Utils.getVillagerProfession(entity);
         boolean adult = ((Ageable) entity).isAdult();
-        String key = getCustomModelDataKey(profession, !adult, entity instanceof ZombieVillager);
+        boolean zombie = entity instanceof ZombieVillager;
+        String key = getCustomModelDataKey(profession, !adult, zombie);
         int modelData = CUSTOM_MODEL_DATAS.get().getOrDefault(key, 0);
         boolean hasTrades = entity instanceof Villager villager && !villager.getRecipes().isEmpty();
         Icon icon = Message.VILLAGER.toIcon(Material.PLAYER_HEAD)
-                .setName(ChatColor.YELLOW + getName(customName, profession, adult))
+                .setName(ChatColor.YELLOW + getName(customName, profession, adult, zombie))
                 .runIf(modelData != 0,
                         i -> i.applyToMeta(meta -> meta.setCustomModelData(modelData)))
                 .runIf(claimManager.hasOwner(entity),

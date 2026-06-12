@@ -61,6 +61,7 @@ public enum Message implements LocalizationKey {
 
     // ITEMS
     VILLAGER,
+    ZOMBIE_VILLAGER,
     BABY_VILLAGER,
     @Parameters("profession")
     VILLAGER_WITH_PROFESSION,
@@ -105,7 +106,7 @@ public enum Message implements LocalizationKey {
             Localization.of(lang -> "plugins/ClickVillagers/lang/" + lang + ".json")
                     .resourceProvider(ClickVillagers.class, lang -> "/lang/" + lang + ".json")
                     .fallbackLanguage("en_US")
-                    .version(6);
+                    .version(7);
 
     private final @Nullable MessageType type;
 
