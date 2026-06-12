@@ -1,1 +1,3 @@
-- Massive performance and memory improvements when using villager hoppers. ([#76](https://github.com/Clickism/ClickVillagers/pull/76) by [RVSkeLe](https://github.com/RVSkeLe))
+- Fixed: File leak on Windows when handling language files or JSON configs.
+- Fixed: Language files redeploying on every startup.
+- Fixed: *Baby zombie villagers* having default villager textures and wrong names when picked up.
