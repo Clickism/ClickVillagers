@@ -24,7 +24,7 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
-val configuredVersion = "0.3"
+val configuredVersion = "0.3.2"
 
 dependencies {
     // Paper
