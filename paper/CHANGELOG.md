@@ -5,3 +5,4 @@
   - When enabled, claimed zombie villagers won't take damage or attack.
   - Config option `claimed_damage` no longer applies to claimed zombie villagers.
 - Config option `claimed_damage` will now also update when config is updated via commands.
+- Added new permission `clickvillagers.change-biome` to manage changing the biome of villagers via the menu.

@@ -71,6 +71,7 @@ public class VillagerEditMenu extends Menu {
                         .toIcon(Material.BRUSH))
                 .setOnClick((player, view, slot) -> {
                     if (!hasPermission(player, villager, claimManager)) return;
+                    if (Permission.CHANGE_BIOME.lacksAndNotify(player)) return;
                     MessageType.CONFIRM.playSound(player);
                     view.open(new VillagerBiomeChangeMenu(player, villager, view));
                 }));

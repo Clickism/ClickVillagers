@@ -28,6 +28,9 @@ permissions:
   clickvillagers.partner:
     description: Allows players to add trading partners.
     default: true
+  clickvillagers.change-biome:
+    description: Allows players to change the biome of villagers.
+    default: true
   clickvillagers.bypass-claims:
     description: Allows players to access claimed villagers.
     default: op

@@ -16,6 +16,7 @@ public enum Permission {
     ANCHOR,
     CLAIM,
     PARTNER,
+    CHANGE_BIOME,
     BYPASS_CLAIMS,
     BYPASS_LIMITS,
     BYPASS_COOLDOWNS,
