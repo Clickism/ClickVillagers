@@ -1,3 +1,7 @@
 - Fixed: File leak on Windows when handling language files or JSON configs.
 - Fixed: Language files redeploying on every startup.
 - Fixed: *Baby zombie villagers* having default villager textures and wrong names when picked up.
+- Added new config option `claimed_zombies_passive`:
+  - When enabled, claimed zombie villagers won't take damage or attack.
+  - Config option `claimed_damage` no longer applies to claimed zombie villagers.
+- Config option `claimed_damage` will now also update when config is updated via commands.

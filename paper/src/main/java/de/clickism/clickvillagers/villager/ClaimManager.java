@@ -16,6 +16,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,8 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-import static de.clickism.clickvillagers.ClickVillagersConfig.CLAIMED_DAMAGE;
-import static de.clickism.clickvillagers.ClickVillagersConfig.CLAIMED_IMMUNE_KILL_COMMAND;
+import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 
 public class ClaimManager implements Listener {
 
@@ -34,9 +34,7 @@ public class ClaimManager implements Listener {
 
     @AutoRegistered
     public ClaimManager(JavaPlugin plugin) {
-        if (!CLAIMED_DAMAGE.get()) {
-            plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        }
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -44,10 +42,26 @@ public class ClaimManager implements Listener {
         Entity entity = event.getEntity();
         EntityType type = entity.getType();
         if (type != EntityType.VILLAGER && type != EntityType.ZOMBIE_VILLAGER) return;
+        // Check config
+        if (type == EntityType.VILLAGER && CLAIMED_DAMAGE.get()) return;
+        if (type == EntityType.ZOMBIE_VILLAGER && !CLAIMED_ZOMBIES_PASSIVE.get()) return;
+        // Protect claimed villagers and zombie villagers from damage
         LivingEntity villager = (LivingEntity) entity;
         if (!hasOwner(villager)) return;
         if (!CLAIMED_IMMUNE_KILL_COMMAND.get()
             && event.getCause() == EntityDamageEvent.DamageCause.KILL) return;
+        event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!CLAIMED_ZOMBIES_PASSIVE.get()) return;
+        Entity attacker = event.getDamager();
+        EntityType attackerType = attacker.getType();
+        if (attackerType != EntityType.ZOMBIE_VILLAGER) return;
+        LivingEntity villager = (LivingEntity) attacker;
+        if (!hasOwner(villager)) return;
+        // Claimed zombie villagers are passive, won't take damage or attack
         event.setCancelled(true);
     }
 

@@ -18,7 +18,7 @@ import java.util.Map;
 public interface ClickVillagersConfig {
     Config CONFIG =
             Config.of("plugins/ClickVillagers/config.yml")
-                    .version(7)
+                    .version(8)
                     .keyGenerator(KeyGenerator.withAlternative(key -> key.replace('-', '_')))
                     .header("""
                             ---------------------------------------------------------
@@ -46,7 +46,17 @@ public interface ClickVillagersConfig {
 
     ConfigOption<Boolean> CLAIMED_DAMAGE =
             CONFIG.option("claimed_damage", false)
-                    .description("Whether claimed villagers can take damage.");
+                    .description("""
+                            Whether claimed villagers can take damage.
+                            This doesn't affect zombie villagers, see: "claimed_zombies_passive"
+                            """);
+
+    ConfigOption<Boolean> CLAIMED_ZOMBIES_PASSIVE =
+            CONFIG.option("claimed_zombies_passive", true)
+                    .description("""
+                            Whether claimed zombie villagers should be passive.
+                            If this is enabled, claimed zombie villagers won't take damage or attack.
+                            """);
 
     ConfigOption<Boolean> CLAIMED_IMMUNE_KILL_COMMAND =
             CONFIG.option("claimed_immune_kill_command", true)
