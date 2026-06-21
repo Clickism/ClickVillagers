@@ -7,8 +7,6 @@
 package de.clickism.clickvillagers.event;
 
 import de.clickism.clickvillagers.util.MessageType;
-import de.clickism.clickvillagers.util.VersionHelper;
-import de.clickism.clickvillagers.villager.PickupHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -19,8 +17,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -34,12 +30,12 @@ public class PlaceVillagerListener {
             InteractionHand hand,
             BlockHitResult hitResult
     ) {
-        if (!hand.equals(InteractionHand.MAIN_HAND)) return InteractionResult.PASS;
+        InteractionHand usedHand = getUsedHand(player);
+        if (!hand.equals(usedHand)) return InteractionResult.PASS;
         if (hitResult == null) return InteractionResult.PASS;
         if (world.isClientSide()) return InteractionResult.PASS;
         if (player.isSpectator()) return InteractionResult.PASS;
-        ItemStack itemStack = player.getMainHandItem();
-        if (!itemStack.is(Items.PLAYER_HEAD)) return InteractionResult.PASS;
+        ItemStack itemStack = player.getItemInHand(hand);
         if (!de.clickism.clickvillagers.villager.PickupHandler.isVillager(itemStack)) return InteractionResult.PASS;
         Entity entity = de.clickism.clickvillagers.villager.PickupHandler.readEntityFromItemStack(world, itemStack);
         if (entity == null) {
@@ -68,5 +64,17 @@ public class PlaceVillagerListener {
                 30, 0, 0, 0, 1
         );
         return InteractionResult.SUCCESS;
+    }
+
+    private static InteractionHand getUsedHand(Player player) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (!mainHandItem.isEmpty()) {
+            return InteractionHand.MAIN_HAND;
+        }
+        ItemStack offHandItem = player.getOffhandItem();
+        if (!offHandItem.isEmpty()) {
+            return InteractionHand.OFF_HAND;
+        }
+        return InteractionHand.MAIN_HAND; // Default to main hand
     }
 }
