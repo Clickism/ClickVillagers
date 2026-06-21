@@ -1,3 +1,4 @@
 - Added 26.2 support
 - Fixed: Can't place a villager from the off-hand
 - Fixed: Can't open a boat with chest's inventory as error message "Couldn't read villager data" shows up
+- Bumped Configured version to 0.3.2.

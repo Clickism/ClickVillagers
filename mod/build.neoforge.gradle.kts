@@ -15,7 +15,7 @@ repositories {
 }
 
 val minConfiguredVersion = "0.3"
-val configuredVersion = "0.3.1"
+val configuredVersion = "0.3.2"
 
 dependencies {
     // Configured
