@@ -19,6 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 //? if >=1.21.11
@@ -41,6 +42,7 @@ public class PlaceVillagerInVehicleListener {
         //if (!(vehicle instanceof Minecart) && !(vehicle instanceof Boat)) return InteractionResult.PASS;
         if (!hasSpace(vehicle)) return InteractionResult.PASS;
         ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(Items.PLAYER_HEAD)) return InteractionResult.PASS;
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
         if (entity == null) {
             MessageType.FAIL.send(player, Component.literal("Couldn't read villager data."));
