@@ -6,6 +6,7 @@
 
 package de.clickism.clickvillagers.villager;
 
+import de.clickism.clickvillagers.util.ColoredItemHelper;
 import de.clickism.clickvillagers.util.Utils;
 
 import de.clickism.clickvillagers.util.VersionHelper;
@@ -25,11 +26,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 *///?}
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.minecraft.world.item.Items.*;
+import static de.clickism.clickvillagers.util.ColoredItemHelper.*;
 
 public class TradeInfoProviders {
 
@@ -123,23 +127,32 @@ public class TradeInfoProviders {
 
     public static final TradeInfoProvider MASON = TradeInfoProvider.builder()
             .acceptIngredients(CLAY_BALL, QUARTZ)
-            .acceptResults(BRICK, QUARTZ_PILLAR, QUARTZ_BLOCK,
-                    // Normal terracotta
-                    TERRACOTTA, WHITE_TERRACOTTA,
-                    ORANGE_TERRACOTTA, MAGENTA_TERRACOTTA, LIGHT_BLUE_TERRACOTTA,
-                    YELLOW_TERRACOTTA, LIME_TERRACOTTA, PINK_TERRACOTTA,
-                    GRAY_TERRACOTTA, LIGHT_GRAY_TERRACOTTA, CYAN_TERRACOTTA,
-                    PURPLE_TERRACOTTA, BLUE_TERRACOTTA, BROWN_TERRACOTTA,
-                    GREEN_TERRACOTTA, RED_TERRACOTTA, BLACK_TERRACOTTA,
-                    // Glazed terracotta
-                    WHITE_GLAZED_TERRACOTTA, ORANGE_GLAZED_TERRACOTTA,
-                    MAGENTA_GLAZED_TERRACOTTA, LIGHT_BLUE_GLAZED_TERRACOTTA,
-                    YELLOW_GLAZED_TERRACOTTA, LIME_GLAZED_TERRACOTTA,
-                    PINK_GLAZED_TERRACOTTA, GRAY_GLAZED_TERRACOTTA,
-                    LIGHT_GRAY_GLAZED_TERRACOTTA, CYAN_GLAZED_TERRACOTTA,
-                    PURPLE_GLAZED_TERRACOTTA, BLUE_GLAZED_TERRACOTTA,
-                    BROWN_GLAZED_TERRACOTTA, GREEN_GLAZED_TERRACOTTA,
-                    RED_GLAZED_TERRACOTTA, BLACK_GLAZED_TERRACOTTA)
+            .acceptResults(Stream.concat(
+                    Stream.of(BRICK, QUARTZ_PILLAR, QUARTZ_BLOCK, TERRACOTTA),
+                    Stream.concat(
+                            ColoredItemHelper.DYED_TERRACOTTA.asList().stream(),
+                            ColoredItemHelper.GLAZED_TERRACOTTA.asList().stream()
+                    )
+            ).toList())
+//            .acceptResults(BRICK, QUARTZ_PILLAR, QUARTZ_BLOCK,
+//                    // Normal terracotta
+//                    TERRACOTTA,
+//                    DYED_TERRACOTTA.asList().stream().toArray(Item[]::new),
+//                    WHITE_TERRACOTTA,
+//                    ORANGE_TERRACOTTA, MAGENTA_TERRACOTTA, LIGHT_BLUE_TERRACOTTA,
+//                    YELLOW_TERRACOTTA, LIME_TERRACOTTA, PINK_TERRACOTTA,
+//                    GRAY_TERRACOTTA, LIGHT_GRAY_TERRACOTTA, CYAN_TERRACOTTA,
+//                    PURPLE_TERRACOTTA, BLUE_TERRACOTTA, BROWN_TERRACOTTA,
+//                    GREEN_TERRACOTTA, RED_TERRACOTTA, BLACK_TERRACOTTA,
+//                    // Glazed terracotta
+//                    WHITE_GLAZED_TERRACOTTA, ORANGE_GLAZED_TERRACOTTA,
+//                    MAGENTA_GLAZED_TERRACOTTA, LIGHT_BLUE_GLAZED_TERRACOTTA,
+//                    YELLOW_GLAZED_TERRACOTTA, LIME_GLAZED_TERRACOTTA,
+//                    PINK_GLAZED_TERRACOTTA, GRAY_GLAZED_TERRACOTTA,
+//                    LIGHT_GRAY_GLAZED_TERRACOTTA, CYAN_GLAZED_TERRACOTTA,
+//                    PURPLE_GLAZED_TERRACOTTA, BLUE_GLAZED_TERRACOTTA,
+//                    BROWN_GLAZED_TERRACOTTA, GREEN_GLAZED_TERRACOTTA,
+//                    RED_GLAZED_TERRACOTTA, BLACK_GLAZED_TERRACOTTA)
             .ingredientFormatter(ITEM_FORMATTER)
             .resultFormatter(item -> {
                 Item material = item.getItem();
@@ -152,7 +165,12 @@ public class TradeInfoProviders {
             .build();
 
     public static final TradeInfoProvider SHEPHERD = TradeInfoProvider.builder()
-            .acceptIngredients(WHITE_WOOL, BROWN_WOOL, BLACK_WOOL, GRAY_WOOL)
+            .acceptIngredients(
+                    ColoredItemHelper.WOOL.white(),
+                    ColoredItemHelper.WOOL.brown(),
+                    ColoredItemHelper.WOOL.black(),
+                    ColoredItemHelper.WOOL.gray()
+            )
             .acceptResults(SHEARS, PAINTING)
             .singleFormatter(ITEM_FORMATTER)
             .build();
@@ -259,10 +277,10 @@ public class TradeInfoProviders {
             Map.entry(QUARTZ_BLOCK, "§f💎"),
             Map.entry(QUARTZ_PILLAR, "§f💎"),
 
-            Map.entry(WHITE_WOOL, "§f🧶"),
-            Map.entry(BROWN_WOOL, "§6🧶"),
-            Map.entry(BLACK_WOOL, "§8🧶"),
-            Map.entry(GRAY_WOOL, "§7🧶"),
+            Map.entry(ColoredItemHelper.WOOL.white(), "§f🧶"),
+            Map.entry(ColoredItemHelper.WOOL.brown(), "§6🧶"),
+            Map.entry(ColoredItemHelper.WOOL.black(), "§8🧶"),
+            Map.entry(ColoredItemHelper.WOOL.gray(), "§7🧶"),
             Map.entry(SHEARS, "§c✂")
     );
 

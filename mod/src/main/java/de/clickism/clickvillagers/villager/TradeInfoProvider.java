@@ -155,6 +155,12 @@ public class TradeInfoProvider {
             return this;
         }
 
+        public Builder acceptResults(List<Item> results) {
+            Set<Item> resultSet = Set.copyOf(results);
+            this.resultsFilter = item -> resultSet.contains(item.getItem());
+            return this;
+        }
+
         public Builder ingredientFormatter(Function<ItemStack, String> ingredientFormatter) {
             this.ingredientFormatter = ingredientFormatter;
             return this;

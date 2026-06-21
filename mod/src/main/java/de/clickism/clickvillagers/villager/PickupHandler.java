@@ -12,7 +12,9 @@ import de.clickism.clickvillagers.util.NbtFixer;
 import de.clickism.clickvillagers.util.Utils;
 import de.clickism.clickvillagers.util.VersionHelper;
 import net.minecraft.SharedConstants;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.commands.TagCommand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -231,7 +233,11 @@ public class PickupHandler {
             //?} else
             //String id = nbt.getString(TYPE_KEY);
             if (id == null) return null;
-            EntityType<?> type = EntityType.byString(id).orElse(null);
+            //? if >=26.2 {
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.tryParse(id)).orElse(null);
+            //?} else {
+            /*EntityType<?> type = EntityType.byString(id).orElse(null);
+            *///?}
             if (type == null) return null;
             //? if >=1.21.3 {
             Entity entity = type.create(world, EntitySpawnReason.SPAWN_ITEM_USE);

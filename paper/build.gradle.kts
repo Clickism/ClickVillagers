@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "9.3.0"
+    id("com.gradleup.shadow") version "9.4.2"
     id("xyz.jpenilla.run-paper") version "3.0.2"
     id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }

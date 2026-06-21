@@ -6,11 +6,14 @@
 
 package de.clickism.clickvillagers.gui;
 
+import de.clickism.clickvillagers.util.ColoredItemHelper;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import de.clickism.clickvillagers.util.MessageType;
 import de.clickism.clickvillagers.util.VersionHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,14 +21,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
 public abstract class DecoratedGui extends SimpleGui {
-    private static final GuiElement BLACK = new GuiElementBuilder(Items.BLACK_STAINED_GLASS_PANE)
+    private static final GuiElement BLACK = new GuiElementBuilder(ColoredItemHelper.STAINED_GLASS_PANE.black())
             .setName(Component.literal("x").withStyle(ChatFormatting.DARK_GRAY))
             .hideDefaultTooltip()
             .setCallback((index, type, action, gui) -> {
                 MessageType.FAIL.playSound(gui.getPlayer());
             })
             .build();
-    private static final GuiElement GRAY = new GuiElementBuilder(Items.GRAY_STAINED_GLASS_PANE)
+    private static final GuiElement GRAY = new GuiElementBuilder(ColoredItemHelper.STAINED_GLASS_PANE.gray())
             .setName(Component.literal("x").withStyle(ChatFormatting.DARK_GRAY))
             .hideDefaultTooltip()
             .setCallback((index, type, action, gui) -> {
