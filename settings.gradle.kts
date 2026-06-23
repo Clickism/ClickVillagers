@@ -7,7 +7,7 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.8.2"
+    id("dev.kikugie.stonecutter") version "0.9.6"
 }
 
 rootProject.name = "ClickVillagers"
