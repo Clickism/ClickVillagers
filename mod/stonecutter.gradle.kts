@@ -34,3 +34,13 @@ tasks.register("publishFabricMods") {
     group = "publishing"
     dependsOn(sc.tree.nodes.map { "${it.hierarchy}:publishMods" })
 }
+
+tasks.register("publishFabricModrinth") {
+    group = "publishing"
+    dependsOn(sc.tree.nodes.map { "${it.hierarchy}:publishModrinth" })
+}
+
+tasks.register("publishFabricCurseforge") {
+    group = "publishing"
+    dependsOn(sc.tree.nodes.map { "${it.hierarchy}:publishCurseforge" })
+}
