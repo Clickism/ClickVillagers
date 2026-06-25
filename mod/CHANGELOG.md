@@ -1,2 +1,3 @@
 - Added 26.2 support
 - Fixed: Crash when attempting to pick up a villager with a job.
+- Fixed: Unnecessary "Couldn't read villager data" errors.
