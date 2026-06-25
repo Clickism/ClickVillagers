@@ -42,7 +42,7 @@ public class PlaceVillagerInVehicleListener {
         //if (!(vehicle instanceof Minecart) && !(vehicle instanceof Boat)) return InteractionResult.PASS;
         if (!hasSpace(vehicle)) return InteractionResult.PASS;
         ItemStack itemStack = player.getMainHandItem();
-        if (!itemStack.is(Items.PLAYER_HEAD)) return InteractionResult.PASS;
+        if (!PickupHandler.isVillager(itemStack)) return InteractionResult.PASS;
         Entity entity = PickupHandler.readEntityFromItemStack(world, itemStack);
         if (entity == null) {
             MessageType.FAIL.send(player, Component.literal("Couldn't read villager data."));

@@ -214,6 +214,8 @@ public class PickupHandler {
     *///?}
 
     public static boolean isVillager(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        if (!itemStack.is(Items.PLAYER_HEAD)) return false;
         return readCustomData(itemStack) != null;
     }
 
