@@ -1,6 +1,7 @@
+
 plugins {
     id("net.fabricmc.fabric-loom") version "1.17-SNAPSHOT"
-    id("me.modmuss50.mod-publish-plugin") version "0.8.4"
+    id("me.modmuss50.mod-publish-plugin") version "2.1.1"
 }
 
 val modVersion = property("mod.version").toString()
@@ -79,12 +80,13 @@ publishMods {
         projectId.set("BITzwT7B")
         requires("fabric-api")
         minecraftVersions.addAll(mcVersions)
+        environment.set(SERVER_ONLY_CLIENT_OPTIONAL)
     }
     curseforge {
         accessToken.set(System.getenv("CURSEFORGE_TOKEN"))
         projectId.set("1162587")
-        clientRequired.set(false)
-        serverRequired.set(true)
+        client.set(false)
+        server.set(true)
         requires("fabric-api")
         minecraftVersions.addAll(mcVersions)
     }
