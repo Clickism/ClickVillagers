@@ -131,7 +131,7 @@ publishMods {
         accessToken.set(System.getenv("MODRINTH_TOKEN"))
         projectId.set("BITzwT7B")
         minecraftVersions.addAll(mcVersions)
-        environment.set(SERVER_ONLY_CLIENT_OPTIONAL);
+        environment.set(SERVER_ONLY);
     }
     curseforge {
         accessToken.set(System.getenv("CURSEFORGE_TOKEN"))

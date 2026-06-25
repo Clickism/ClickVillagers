@@ -80,7 +80,7 @@ publishMods {
         projectId.set("BITzwT7B")
         requires("fabric-api")
         minecraftVersions.addAll(mcVersions)
-        environment.set(SERVER_ONLY_CLIENT_OPTIONAL)
+        environment.set(SERVER_ONLY)
     }
     curseforge {
         accessToken.set(System.getenv("CURSEFORGE_TOKEN"))
