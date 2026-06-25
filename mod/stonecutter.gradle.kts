@@ -23,3 +23,14 @@ stonecutter parameters {
         }
     }
 }
+
+// Mod tasks for all versions
+tasks.register("buildMods") {
+    group = "build"
+    dependsOn(sc.tree.nodes.map { "${it.hierarchy}:build" })
+}
+
+tasks.register("publishFabricMods") {
+    group = "publishing"
+    dependsOn(sc.tree.nodes.map { "${it.hierarchy}:publishMods" })
+}
