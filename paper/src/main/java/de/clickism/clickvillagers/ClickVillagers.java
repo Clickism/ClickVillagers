@@ -73,7 +73,9 @@ public final class ClickVillagers extends JavaPlugin {
         MenuManager menuManager = new MenuManager(this);
         ClaimManager claimManager = new ClaimManager(this);
         AnchorManager anchorHandler = new AnchorManager(this);
-        PickupManager pickupManager = new PickupManager(this, new SnapshotSaver(), claimManager, anchorHandler);
+        InteractionAuditLogger interactionAuditLogger = new InteractionAuditLogger();
+        PickupManager pickupManager = new PickupManager(this, new SnapshotSaver(), claimManager, anchorHandler,
+                interactionAuditLogger);
         HopperManager hopperManager = new HopperManager(this, pickupManager, claimManager);
         // Set up config listeners
         HOPPER_TICK_RATE.onChange(ticks -> hopperManager.restartTasks());
@@ -89,7 +91,8 @@ public final class ClickVillagers extends JavaPlugin {
         CooldownManager cooldownManager = new CooldownManager(() -> COOLDOWN.get() * 1000L);
 
         new InteractListener(this, claimManager, pickupManager,
-                anchorHandler, partnerManager, chatInputListener, menuManager, cooldownManager);
+                anchorHandler, partnerManager, chatInputListener, menuManager, cooldownManager,
+                interactionAuditLogger);
         new DispenserListener(this, pickupManager);
         new TradeListener(this);
 

@@ -6,3 +6,7 @@
   - Config option `claimed_damage` no longer applies to claimed zombie villagers.
 - Config option `claimed_damage` will now also update when config is updated via commands.
 - Added new permission `clickvillagers.change-biome` to manage changing the biome of villagers via the menu.
+## Interaction audit logging
+- Added optional console logs for successful player villager pickups and placements.
+- Added optional asynchronous Discord webhook notifications for those interactions.
+- Both features are disabled by default and only affect the server plugin.
