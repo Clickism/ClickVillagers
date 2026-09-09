@@ -19,7 +19,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -30,8 +29,6 @@ public class PlaceVillagerListener {
             InteractionHand hand,
             BlockHitResult hitResult
     ) {
-        InteractionHand usedHand = getUsedHand(player);
-        if (!hand.equals(usedHand)) return InteractionResult.PASS;
         if (hitResult == null) return InteractionResult.PASS;
         if (world.isClientSide()) return InteractionResult.PASS;
         if (player.isSpectator()) return InteractionResult.PASS;
@@ -51,10 +48,10 @@ public class PlaceVillagerListener {
         BlockPos pos = clickedPos.relative(hitResult.getDirection());
         de.clickism.clickvillagers.util.VersionHelper.moveEntity(entity, pos);
         world.addFreshEntity(entity);
+        // ponytail: shrink the stack in the hand that was actually used, not the selected hotbar slot
         itemStack.shrink(1);
-        if (itemStack.getCount() <= 0) {
-            int slot = de.clickism.clickvillagers.util.VersionHelper.getSelectedSlot(player.getInventory());
-            player.getInventory().setItem(slot, Items.AIR.getDefaultInstance());
+        if (itemStack.isEmpty()) {
+            player.setItemInHand(hand, ItemStack.EMPTY);
         }
         BlockPos posBelow = pos.below();
         de.clickism.clickvillagers.util.VersionHelper.playSound(player, SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.NEUTRAL, 1, .5f);
@@ -66,15 +63,4 @@ public class PlaceVillagerListener {
         return InteractionResult.SUCCESS;
     }
 
-    private static InteractionHand getUsedHand(Player player) {
-        ItemStack mainHandItem = player.getMainHandItem();
-        if (!mainHandItem.isEmpty()) {
-            return InteractionHand.MAIN_HAND;
-        }
-        ItemStack offHandItem = player.getOffhandItem();
-        if (!offHandItem.isEmpty()) {
-            return InteractionHand.OFF_HAND;
-        }
-        return InteractionHand.MAIN_HAND; // Default to main hand
-    }
 }
