@@ -7,7 +7,7 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.9.6"
+    id("dev.kikugie.stonecutter") version "0.9.8"
 }
 
 rootProject.name = "ClickVillagers"
@@ -27,6 +27,7 @@ stonecutter {
         version("1.21.11", "fabric", "neoforge")
         version("26.1", "fabric+noremap")
         version("26.2", "fabric+noremap")
-        vcsVersion = "26.2-fabric+noremap"
+        version("26.3", "fabric+noremap")
+        vcsVersion = "26.3-fabric+noremap"
     }
 }

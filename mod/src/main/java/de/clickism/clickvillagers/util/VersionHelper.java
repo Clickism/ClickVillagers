@@ -5,16 +5,14 @@
  */
 
 package de.clickism.clickvillagers.util;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.sounds.SoundSource;
@@ -29,7 +27,6 @@ import net.minecraft.server.players.NameAndId;
 
 //? if >=1.21.11 {
 import net.minecraft.server.permissions.Permissions;
-import net.minecraft.server.permissions.PermissionSet;
 //?}
 
 public class VersionHelper {
@@ -136,5 +133,12 @@ public class VersionHelper {
         entity.snapTo(blockPos, 0, 0);
         //?} else
         //entity.moveTo(blockPos, 0, 0);
+    }
+
+    public static void placeItemBackInInventory(Inventory inventory, ItemStack itemStack) {
+        //? if >=26.3 {
+        inventory.placeItemBackInInventory(itemStack, Prediction.PREDICTED);
+        //?} else
+        //inventory.placeItemBackInInventory(itemStack);
     }
 }

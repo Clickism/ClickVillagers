@@ -1,6 +1,6 @@
 plugins {
 	id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT"
-	id("me.modmuss50.mod-publish-plugin") version "2.1.1"
+	id("me.modmuss50.mod-publish-plugin") version "2.2.0"
 }
 
 val modVersion = property("mod.version").toString()
@@ -93,6 +93,12 @@ publishMods {
 		server.set(true)
 		requires("fabric-api")
 		minecraftVersions.addAll(mcVersions)
+	}
+	github {
+		displayName.set("${property("mod.version")} (Fabric)")
+		accessToken.set(System.getenv("GITHUB_TOKEN"))
+		repository.set("Clickism/ClickVillagers")
+		changelog.set(rootProject.file("mod/CHANGELOG.md").readText())
 	}
 }
 

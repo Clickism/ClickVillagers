@@ -1,6 +1,6 @@
 plugins {
     id("net.neoforged.moddev") version "2.0.137"
-    id("me.modmuss50.mod-publish-plugin") version "2.1.1"
+    id("me.modmuss50.mod-publish-plugin") version "2.2.0"
 }
 val modVersion = property("mod.version").toString()
 val minecraftVersion = stonecutter.current.project.substringBeforeLast('-')
@@ -139,5 +139,11 @@ publishMods {
         client.set(false)
         server.set(true)
         minecraftVersions.addAll(mcVersions)
+    }
+    github {
+        displayName.set("${property("mod.version")} (NeoForge)")
+        accessToken.set(System.getenv("GITHUB_TOKEN"))
+        repository.set("Clickism/ClickVillagers")
+        changelog.set(rootProject.file("mod/CHANGELOG.md").readText())
     }
 }
