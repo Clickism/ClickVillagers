@@ -8,7 +8,6 @@ package de.clickism.clickvillagers.util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,6 +27,10 @@ import net.minecraft.server.players.NameAndId;
 //? if >=1.21.11 {
 import net.minecraft.server.permissions.Permissions;
 //?}
+
+//? if >=26.3 {
+import net.minecraft.util.Prediction;
+ //?}
 
 public class VersionHelper {
     public static void playSound(Player player, SoundEvent soundEvent, SoundSource category, float volume, float pitch) {
