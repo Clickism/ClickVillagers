@@ -95,6 +95,7 @@ publishMods {
         accessToken.set(System.getenv("GITHUB_TOKEN"))
         repository.set("Clickism/ClickVillagers")
         changelog.set(rootProject.file("mod/CHANGELOG.md").readText())
+        commitish = "master"
     }
 }
 
