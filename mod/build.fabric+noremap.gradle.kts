@@ -91,7 +91,9 @@ publishMods {
         minecraftVersions.addAll(mcVersions)
     }
     github {
-        displayName.set("${property("mod.version")} (Fabric)")
+        tagName.set("${property("mod.version")}-$loader")
+        allowEmptyFiles.set(true)
+        displayName.set("${property("mod.version")} ($loader)")
         accessToken.set(System.getenv("GITHUB_TOKEN"))
         repository.set("Clickism/ClickVillagers")
         changelog.set(rootProject.file("mod/CHANGELOG.md").readText())
