@@ -212,7 +212,9 @@ public class InteractListener implements Listener {
         }
         ItemStack item;
         try {
-            item = pickupManager.toItemStack(villager);
+            var itemResult = pickupManager.toItemStack(villager);
+            if (itemResult.isEmpty()) return;
+            item = itemResult.get();
         } catch (IllegalArgumentException exception) {
             Message.WRITE_ERROR.send(player);
             ClickVillagers.LOGGER.severe("Failed to write villager data: " + exception.getMessage());

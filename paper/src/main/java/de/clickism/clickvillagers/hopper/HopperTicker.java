@@ -117,8 +117,8 @@ public class HopperTicker {
         for (LivingEntity villager : villagers) {
             if (emptySlots <= 0) break;
             try {
-                ItemStack item = pickupManager.toItemStack(villager);
-                inventory.addItem(item);
+                var itemResult = pickupManager.toItemStack(villager);
+                itemResult.ifPresent(inventory::addItem);
             } catch (Exception exception) {
                 ClickVillagers.LOGGER.severe("Failed to write villager data: " + exception.getMessage());
             }

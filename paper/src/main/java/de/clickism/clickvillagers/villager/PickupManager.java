@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static de.clickism.clickvillagers.ClickVillagersConfig.*;
 import static de.clickism.clickvillagers.message.Message.VILLAGER_WITH_PROFESSION;
@@ -106,14 +107,21 @@ public class PickupManager implements Listener {
     }
 
     @NotNull
-    public ItemStack toItemStack(LivingEntity entity) throws IllegalArgumentException {
+    public Optional<ItemStack> toItemStack(LivingEntity entity) throws IllegalArgumentException {
         if (!(entity instanceof Villager) && !(entity instanceof ZombieVillager)) {
             throw new IllegalArgumentException("Entity is not a villager");
+        }
+        if (entity instanceof Villager villager && villager.isTrading()) {
+            var trader = villager.getTrader();
+            if (trader != null) {
+                trader.closeInventory();
+            }
+            return Optional.empty();
         }
         ItemStack item = createItem(entity);
         writeData(entity, item);
         entity.remove();
-        return item;
+        return Optional.of(item);
     }
 
     private ItemResult getHeldVillagerItem(PlayerInventory inventory) {

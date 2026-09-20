@@ -47,7 +47,9 @@ public class VillagerEditMenu extends Menu {
                     if (!CLAIMED_VILLAGERS_BYPASS_PERMISSIONS.get()) {
                         if (Permission.PICKUP.lacksAndNotify(player)) return;
                     }
-                    Utils.setHandOrGive(player, pickupManager.toItemStack(villager));
+                    var itemResult = pickupManager.toItemStack(villager);
+                    if (itemResult.isEmpty()) return;
+                    Utils.setHandOrGive(player, itemResult.get());
                     PICK_UP_VILLAGER.sendActionbarSilently(player);
                     pickupManager.sendPickupEffect(villager);
                 }));
