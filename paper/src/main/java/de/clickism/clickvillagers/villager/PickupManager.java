@@ -11,6 +11,7 @@ import de.clickism.clickvillagers.ClickVillagers;
 import de.clickism.clickvillagers.command.Permission;
 import de.clickism.clickvillagers.entity.EntitySaver;
 import de.clickism.clickvillagers.listener.AutoRegistered;
+import de.clickism.clickvillagers.listener.InteractionAuditLogger;
 import de.clickism.clickvillagers.message.Message;
 import de.clickism.clickvillagers.util.DataVersionUtil;
 import de.clickism.clickvillagers.util.Utils;
@@ -45,12 +46,15 @@ public class PickupManager implements Listener {
     private final EntitySaver entitySaver;
     private final ClaimManager claimManager;
     private final AnchorManager anchorManager;
+    private final InteractionAuditLogger interactionAuditLogger;
 
     @AutoRegistered
-    public PickupManager(JavaPlugin plugin, EntitySaver entitySaver, ClaimManager claimManager, AnchorManager anchorManager) {
+    public PickupManager(JavaPlugin plugin, EntitySaver entitySaver, ClaimManager claimManager, AnchorManager anchorManager,
+                         InteractionAuditLogger interactionAuditLogger) {
         this.entitySaver = entitySaver;
         this.claimManager = claimManager;
         this.anchorManager = anchorManager;
+        this.interactionAuditLogger = interactionAuditLogger;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -93,8 +97,9 @@ public class PickupManager implements Listener {
         location.setYaw((yaw + 360) % 360 - 180); // Face the villager towards the player
         try {
             ItemStack item = itemResult.item();
-            spawnFromItemStack(item, location);
+            LivingEntity villager = spawnFromItemStack(item, location);
             itemResult.decrementAmount(inventory);
+            interactionAuditLogger.place(player, villager);
             World world = player.getWorld();
             world.playSound(location, Sound.ENTITY_PLAYER_ATTACK_WEAK, 1, .5f);
             Block blockBelow = block.getRelative(BlockFace.DOWN);

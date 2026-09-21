@@ -46,12 +46,13 @@ public class InteractListener implements Listener {
     private final ChatInputListener chatInputListener;
     private final MenuManager menuManager;
     private final CooldownManager cooldownManager;
+    private final InteractionAuditLogger interactionAuditLogger;
 
     @AutoRegistered
     public InteractListener(JavaPlugin plugin, ClaimManager claimManager, PickupManager pickupManager,
                             AnchorManager anchorManager, PartnerManager partnerManager,
                             ChatInputListener chatInputListener, MenuManager menuManager,
-                            CooldownManager cooldownManager) {
+                            CooldownManager cooldownManager, InteractionAuditLogger interactionAuditLogger) {
         this.claimManager = claimManager;
         this.pickupManager = pickupManager;
         this.anchorManager = anchorManager;
@@ -59,6 +60,7 @@ public class InteractListener implements Listener {
         this.chatInputListener = chatInputListener;
         this.menuManager = menuManager;
         this.cooldownManager = cooldownManager;
+        this.interactionAuditLogger = interactionAuditLogger;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -126,6 +128,7 @@ public class InteractListener implements Listener {
                 world.playSound(player, Sound.BLOCK_WOOD_BREAK, 1, .5f);
             }
             entity.addPassenger(villager);
+            interactionAuditLogger.place(player, villager);
         } catch (IllegalArgumentException exception) {
             Message.READ_ERROR.send(player);
             ClickVillagers.LOGGER.severe("Failed to read villager data: " + exception.getMessage());
@@ -211,6 +214,7 @@ public class InteractListener implements Listener {
             return;
         }
         ItemStack item;
+        InteractionAuditLogger.VillagerDetails villagerDetails = interactionAuditLogger.capture(villager);
         try {
             item = pickupManager.toItemStack(villager);
         } catch (IllegalArgumentException exception) {
@@ -222,5 +226,6 @@ public class InteractListener implements Listener {
         Message.PICK_UP_VILLAGER.sendActionbarSilently(player);
         pickupManager.sendPickupEffect(villager);
         cooldownManager.giveCooldown(player);
+        interactionAuditLogger.pickup(player, villagerDetails);
     }
 }

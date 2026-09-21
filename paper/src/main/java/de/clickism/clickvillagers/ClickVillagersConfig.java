@@ -18,7 +18,7 @@ import java.util.Map;
 public interface ClickVillagersConfig {
     Config CONFIG =
             Config.of("plugins/ClickVillagers/config.yml")
-                    .version(8)
+                    .version(9)
                     .keyGenerator(KeyGenerator.withAlternative(key -> key.replace('-', '_')))
                     .header("""
                             ---------------------------------------------------------
@@ -198,6 +198,23 @@ public interface ClickVillagersConfig {
                     .description("""
                             Whether dispensers can dispense picked up villagers.
                             """);
+
+    ConfigOption<Boolean> LOG_VILLAGER_INTERACTIONS =
+            CONFIG.option("log_villager_interactions", false)
+                    .header("""
+                            ---------------------------------------------------------
+                            Interaction Logging
+                            ---------------------------------------------------------
+                            """)
+                    .description("Whether successful player villager pickups and placements are logged to the console.");
+
+    ConfigOption<Boolean> DISCORD_WEBHOOK_ENABLED =
+            CONFIG.option("discord_webhook_enabled", false)
+                    .description("Whether successful player villager pickups and placements are sent to Discord.");
+
+    ConfigOption<String> DISCORD_WEBHOOK_URL =
+            CONFIG.option("discord_webhook_url", "")
+                    .description("Discord webhook URL used when discord_webhook_enabled is true.");
 
     ConfigOption<Map<String, Integer>> CUSTOM_MODEL_DATAS =
             CONFIG.option("custom_model_datas", (Map<String, Integer>) new HashMap<>(Map.of(
