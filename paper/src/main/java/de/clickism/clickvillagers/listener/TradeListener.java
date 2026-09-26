@@ -79,14 +79,16 @@ public class TradeListener implements Listener {
         if (!(merchant instanceof Villager villager)) return;
         // Reset trades
         var player = (Player) event.getWhoClicked();
-        if (areTradesLocked(villager)) {
-            // Trades are locked, close inventory
-            player.closeInventory();
-        }
+        // Close inventory to prevent race condition
+        player.closeInventory();
+        // if (areTradesLocked(villager)) {
+        //     // Trades are locked, close inventory
+        //     player.closeInventory();
+        // }
         villager.resetOffers();
         Message.TRADES_RESET.sendActionbarSilently(player);
         player.playSound(player, Sound.BLOCK_SMITHING_TABLE_USE, 1f, .5f);
-        player.closeInventory();
+        // player.closeInventory();
     }
 
     @EventHandler
