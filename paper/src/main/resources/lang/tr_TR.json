@@ -1,0 +1,120 @@
+{
+  "credit": [
+    "amhunter1"
+  ],
+  "update": "ClickVillagers: &a&lYeni sürüm mevcut: &f{version}",
+  "no_permission": "Bunu yapmaya yetkiniz yok.",
+  "anchor_add": "Bu köylüyü sabitlediniz",
+  "anchor_remove": "Bu köylünün sabitlemesini kaldırdınız",
+  "villager_hopper_place": "Bir köylü hunisi yerleştirdiniz",
+  "villager_hopper_break": "Bir köylü hunisini kırdınız",
+  "pick_up_villager": "Bir köylü aldınız",
+  "enter_partner": "Eklemek/çıkarmak istediğiniz ticaret ortağının adını &l10 saniye &eiçinde sohbete yazın &l&n:",
+  "enter_partner_timeout": "Ticaret ortağı seçimi iptal edildi.",
+  "claim_villager": "Bu köylüyü sahiplendiniz. &f&nShift + Sağ Tık&a yaparak köylüyü düzenleyebilirsiniz.",
+  "unclaim_villager": "Bu köylüden vazgeçtiniz.",
+  "invalid_partner": "Lütfen geçerli bir oyuncu adı girin.",
+  "partner_add": "Ticaret ortaklarınıza &l{partner}&a eklendi.",
+  "partner_remove": "Ticaret ortaklarınızdan &l{partner}&e çıkarıldı.",
+  "partner_limit_reached": "Ticaret ortağı limitine ulaşıldı: &6&l{limit}",
+  "hopper_limit_reached": "Bu chunk'taki köylü hunisi limitine ulaşıldı: &6&l{limit}",
+  "belongs_to": "Bu köylü şuna ait: &6🔑 {owner}",
+  "biome_changed": "Bu köylünün biyomu &l{biome} olarak değiştirildi.",
+  "write_error": "Köylü verisi yazılamadı.",
+  "read_error": "Köylü verisi okunamadı.",
+  "trades_reset": "Bu köylünün ticaretlerini sıfırladınız.",
+  "info_owner": "Sahip",
+  "info_anchored": "Sabitlenmiş",
+  "info_trade_closed": "Ticaret Kapalı",
+  "info_trades": "Ticaretler",
+  "villager": "Köylü",
+  "baby_villager": "Bebek Köylü",
+  "zombie_villager": "Zombi Köylü",
+  "baby_zombie_villager": "Bebek Zombi Köylü",
+  "villager_with_profession": "{profession} Köylüsü",
+  "villager.lore": [
+    "&8Köylüyü geri yerleştirmek için sağ tıklayın."
+  ],
+  "villager_hopper": "Köylü Hunisi",
+  "villager_hopper.lore": [
+    "&8Köylüleri otomatik olarak toplamak için kullanın."
+  ],
+  "title_claim_villager": "Köylüyü Sahiplen",
+  "title_edit": "&l{owner}&2'nin Köylüsü",
+  "title_change_biome": "Köylünün Biyomunu Seç",
+  "button_claim_villager": "&6🔒 &lKÖYLÜYÜ SAHİPLEN",
+  "button_claim_villager.lore": [
+    "&e&lBu köylüyü sahiplenmek için tıklayın.",
+    "&eSahiplenilen köylüler yalnızca",
+    "&esahibi tarafından alınabilir."
+  ],
+  "button_unclaim_villager": "&4🔓 &lKÖYLÜDEN VAZGEÇ",
+  "button_unclaim_villager.lore": [
+    "&c&lBu köylüden vazgeçmek için tıklayın.",
+    "&cSahipsiz köylüler herkes tarafından",
+    "&calınabilir."
+  ],
+  "button_pick_up_villager": "&6&l↑ &lKÖYLÜYÜ AL &6&l↑",
+  "button_pick_up_villager.lore": [
+    "&eBu köylüyü almak için tıklayın."
+  ],
+  "button_partner": "&6✍ &f&lTİCARET ORTAĞI EKLE",
+  "button_partner.lore": [
+    "&7Ticaret ortağı eklemek/çıkarmak için tıklayın.",
+    "&7Ticaret ortakları tüm",
+    "&7köylülerinizle ticaret yapabilir."
+  ],
+  "button_trade_open": "&2$ &lTİCARET AÇIK",
+  "button_trade_open.lore": [
+    "&aHerkes bu köylüyle ticaret yapabilir."
+  ],
+  "button_trade_closed": "&4❌ &lTİCARET KAPALI",
+  "button_trade_closed.lore": [
+    "&cYalnızca siz ve ticaret ortaklarınız",
+    "&cbu köylüyle ticaret yapabilir."
+  ],
+  "button_redirect_change_biome_menu": "&6🌲 &lBİYOMU DEĞİŞTİR",
+  "button_redirect_change_biome_menu.lore": [
+    "&eBu köylünün biyomunu değiştirmek için tıklayın."
+  ],
+  "button_change_biome.lore": [
+    "&aBu köylünün biyomunu değiştirmek için tıklayın."
+  ],
+  "button_back": "&f◀ &lGERİ",
+  "button_back.lore": [
+    "&7Önceki menüye dön."
+  ],
+  "button_reset_trades": "&4♻ &lTİCARETLERİ SIFIRLA",
+  "button_reset_trades.lore": [
+    "&cTicaretleri sıfırlamak için bu tarife tıklayın.",
+    "&c&lBu işlem geri alınamaz."
+  ],
+  "biome.desert": "ÇÖL",
+  "biome.jungle": "ORMAN",
+  "biome.plains": "OVALAR",
+  "biome.savanna": "SAVAN",
+  "biome.snow": "KAR",
+  "biome.swamp": "BATAKLIK",
+  "biome.taiga": "TAIGA",
+  "profession.armorer": "Zırhçı",
+  "profession.butcher": "Kasap",
+  "profession.cartographer": "Haritacı",
+  "profession.cleric": "Rahip",
+  "profession.farmer": "Çiftçi",
+  "profession.fisherman": "Balıkçı",
+  "profession.fletcher": "Okçu",
+  "profession.leatherworker": "Deri İşçisi",
+  "profession.librarian": "Kütüphaneci",
+  "profession.mason": "Taş Ustası",
+  "profession.nitwit": "Ahmak",
+  "profession.shepherd": "Çoban",
+  "profession.toolsmith": "Alet Ustası",
+  "profession.weaponsmith": "Silah Ustası",
+  "usage": "&cKullanım: {usage}",
+  "pick_up_cooldown": "Bu köylüyü almak için &l{seconds} saniye &cbeklemeniz gerekiyor",
+  "claim_cooldown": "Bu köylüyü sahiplenmek için &l{seconds} saniye &cbeklemeniz gerekiyor",
+  "config_set": "Yapılandırma seçeneği \"&l{option}&a\" değeri &l{value} olarak ayarlandı.",
+  "config_get": "Yapılandırma seçeneği \"&l{option}&a\" değeri: &l{value}.",
+  "config_path": "Yapılandırma dosyası şu konumda: &f{path}",
+  "config_reload": "Yapılandırma dosyası yeniden yüklendi."
+}
