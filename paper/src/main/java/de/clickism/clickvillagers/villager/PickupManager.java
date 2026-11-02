@@ -110,6 +110,14 @@ public class PickupManager implements Listener {
         if (!(entity instanceof Villager) && !(entity instanceof ZombieVillager)) {
             throw new IllegalArgumentException("Entity is not a villager");
         }
+        // Fix discount bug @Sylvye
+        if (entity instanceof Villager villager && villager.isTrading()) {
+            var trader = villager.getTrader();
+            if (trader != null) {
+                trader.closeInventory();
+            }
+            throw new IllegalArgumentException("Villager is currently trading");
+        }
         ItemStack item = createItem(entity);
         writeData(entity, item);
         entity.remove();

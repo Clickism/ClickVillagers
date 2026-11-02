@@ -1,1 +1,2 @@
-- Fixed: Occasional crash when resetting villager trades.
+- Fixed #111: Occasional crash when resetting villager trades. (ggtylerr)
+- Fixed #108: Infinite discount exploit using illegal client modifications. (Sylvye)
