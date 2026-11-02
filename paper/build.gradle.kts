@@ -51,7 +51,7 @@ java {
 
 tasks.runServer {
     dependsOn(tasks.build)
-    minecraftVersion("26.1.2")
+    minecraftVersion("26.3")
     javaLauncher.set(javaToolchains.launcherFor {
         languageVersion.set(JavaLanguageVersion.of(25))
     })
