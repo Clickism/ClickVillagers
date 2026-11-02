@@ -100,7 +100,7 @@ public class PickupManager implements Listener {
             Block blockBelow = block.getRelative(BlockFace.DOWN);
             world.spawnParticle(Particle.BLOCK, location, 30, blockBelow.getBlockData());
         } catch (IllegalArgumentException exception) {
-            Message.READ_ERROR.send(player);
+            Message.READ_ERROR.send(player, exception.getMessage());
             ClickVillagers.LOGGER.severe("Failed to read villager data: " + exception.getMessage());
         }
     }

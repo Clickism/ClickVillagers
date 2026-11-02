@@ -49,7 +49,9 @@ public enum Message implements LocalizationKey {
     @Parameters("biome")
     BIOME_CHANGED(MessageType.CONFIRM),
 
+    @Parameters("error")
     WRITE_ERROR(MessageType.FAIL),
+    @Parameters("error")
     READ_ERROR(MessageType.FAIL),
 
     TRADES_RESET(MessageType.WARN),
@@ -107,7 +109,7 @@ public enum Message implements LocalizationKey {
             Localization.of(lang -> "plugins/ClickVillagers/lang/" + lang + ".json")
                     .resourceProvider(ClickVillagers.class, lang -> "/lang/" + lang + ".json")
                     .fallbackLanguage("en_US")
-                    .version(7);
+                    .version(8);
 
     private final @Nullable MessageType type;
 

@@ -127,7 +127,7 @@ public class InteractListener implements Listener {
             }
             entity.addPassenger(villager);
         } catch (IllegalArgumentException exception) {
-            Message.READ_ERROR.send(player);
+            Message.READ_ERROR.send(player, exception.getMessage());
             ClickVillagers.LOGGER.severe("Failed to read villager data: " + exception.getMessage());
         }
     }
@@ -214,7 +214,7 @@ public class InteractListener implements Listener {
         try {
             item = pickupManager.toItemStack(villager);
         } catch (IllegalArgumentException exception) {
-            Message.WRITE_ERROR.send(player);
+            Message.WRITE_ERROR.send(player, exception.getMessage());
             ClickVillagers.LOGGER.severe("Failed to write villager data: " + exception.getMessage());
             return;
         }
