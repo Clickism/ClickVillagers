@@ -2,7 +2,7 @@ plugins {
     id("java")
     id("com.gradleup.shadow") version "9.4.2"
     id("xyz.jpenilla.run-paper") version "3.0.2"
-    id("me.modmuss50.mod-publish-plugin") version "0.8.4"
+    id("me.modmuss50.mod-publish-plugin") version "2.2.0"
 }
 
 val pluginVersion = property("plugin_version").toString()
@@ -101,7 +101,7 @@ publishMods {
     modLoaders.add("purpur")
     modLoaders.add("folia")
     val mcVersionStart = "1.21"
-    val mcVersionEnd = "1.21.11"
+    val mcVersionEnd = "26.3"
     modrinth {
         accessToken.set(System.getenv("MODRINTH_TOKEN"))
         projectId.set("BITzwT7B")
@@ -115,5 +115,6 @@ publishMods {
         accessToken.set(System.getenv("GITHUB_TOKEN"))
         repository.set("Clickism/ClickVillagers")
         changelog.set(rootProject.file("mod/CHANGELOG.md").readText())
+        commitish.set("master")
     }
 }
